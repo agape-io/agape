@@ -1,0 +1,24 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "server side code for agape",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cybunayog/agape.git"
+  },
+  "keywords": [
+    "agape",
+    "server",
+    "node"
+  ],
+  "author": "agape",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cybunayog/agape/issues"
+  },
+  "homepage": "https://github.com/cybunayog/agape#readme"
+}
