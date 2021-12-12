@@ -1,0 +1,5 @@
+use YARN to download deps to anything react native related
+
+extensions to get for VSCode:
+ESLint
+Prettier
