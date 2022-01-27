@@ -16,7 +16,6 @@ const SignUp: FC<Props> = ({
 
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
       <Text style={styles.title}>Sign Up Test Text</Text>
     </View>
   )
