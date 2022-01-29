@@ -1,9 +1,11 @@
 import mongoose from "mongoose";
-import dotenv from "dotenv";
+import { env } from "../config/env";
 
-export default function connect() {
-    mongoose
-        .connect(process.env.DEV_DB)
+const { MongoDB } = env;
+
+export default async function connect() {
+    await mongoose
+        .connect(`${MongoDB.ConnString}`)
         .then(() => {
             console.log("MongoDB is connected");
         })

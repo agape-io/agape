@@ -7,12 +7,13 @@ const router = Router();
 //     // login with google
 // });
 
-router.post('/facebook', (req: Request, res: Response) => {
-    // login with facebook
-});
+// TODO: will implement if time permits
+// router.post('/facebook', (req: Request, res: Response) => {
+//     // login with facebook
+// });
 
-router.post('/username', (req: Request, res: Response) => {
-    // login with username and password
+router.post('/email', (req: Request, res: Response) => {
+    // login with email and password
 });
 
 export default router;
