@@ -1,4 +1,6 @@
-// Index file for all screens
+/**
+ * Index file for all screens
+ */
 import SignUp from './SignUp';
 
 export {

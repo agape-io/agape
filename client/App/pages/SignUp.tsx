@@ -1,18 +1,17 @@
-import React, { useState, FC } from 'react';
-import { StatusBar } from 'expo-status-bar';
+/**
+ * Sign In Screen
+ */
+import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-type Props = {
+interface State {
   username: string;
   password: string;
 };
 
-const SignUp: FC<Props> = ({
-  username,
-  password
-}) => {
-  // const [username, setUsername] = useState(username);
-  // const [password, setPassword] = useState(password);
+function SignUp({ username, password }: State) {
+  const [user, setUser] = useState(username);
+  const [credentials, setCredentials] = useState(password);
 
   return (
     <View style={styles.container}>
