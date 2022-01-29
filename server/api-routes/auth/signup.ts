@@ -1,11 +1,12 @@
 import { Router, Request, Response } from 'express';
 import mongoose from 'mongoose';
-import passport from 'passport';
-import { env } from '../../config/env';
+// import passport from 'passport';
+// import { env } from '../../config/env';
 import connect from '../../config/db';
-import strategy from 'passport-facebook';
+// import strategy from 'passport-facebook';
 import passwordValidator from 'password-validator';
 import { UserModel } from "../../models/user";
+import bcrypt from 'bcrypt';
 
 const schema = new passwordValidator();
 schema
@@ -53,23 +54,36 @@ const router = Router();
 
 router.post('/email', async (req: Request, res: Response) => {
     if (req.body.email && req.body.password) {
-        if (schema.validate(req.body.password, { details: true })) {
-            await connect();
-            const userModel = mongoose.model('UserModel', UserModel);
-            const user = new userModel({
-                email: req.body.email,
-                password: req.body.password,
+        const errorDetails = schema.validate(req.body.password, { details: true });
+        if ((errorDetails as []).length === 0) {
+            const saltRounds = 10;
+            await bcrypt.genSalt(saltRounds, async function (err, salt) {
+                await bcrypt.hash(req.body.password, salt, async function (err, hash) {
+                    await connect();
+                    const userModel = mongoose.model('UserModel', UserModel);
+                    userModel.findOne({ email: req.body.email }, function (err, existingUser) {
+                        if (existingUser) {
+                            res.status(500).send({
+                                error: 'Email already exists!'
+                            });
+                        } else {
+                            const user = new userModel({
+                                email: req.body.email,
+                                password: hash,
+                            });
+                            user.save(function (err, result) {
+                                if (err) console.log(err);
+                                else res.status(200).send();
+                            });
+                        };
+                    });
+                });
             });
-            user.save(function (err, result) {
-                if (err) {
-                    console.log(err);
-                }
-                else {
-                    console.log(result)
-                }
-            })
         } else {
-            throw new Error('Error: Invalid password!')
+            res.status(500).send({
+                error: 'Invalid password!',
+                details: errorDetails,
+            });
         }
     }
 });
