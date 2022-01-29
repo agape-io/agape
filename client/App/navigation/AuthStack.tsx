@@ -13,8 +13,8 @@ const Auth = createNativeStackNavigator();
 
 function AuthStack() {
   return (
-    <Auth.Navigator>
-      <Auth.Screen name="Auth Stack" component={SignUp} />
+    <Auth.Navigator initialRouteName='Sign In'>
+      <Auth.Screen name="Sign Up" component={SignUp} options={{headerShown: false}}/>
     </Auth.Navigator>
   )
 } 

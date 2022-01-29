@@ -2,43 +2,112 @@
  * Sign In Screen
  */
 import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  Image,
+  KeyboardAvoidingView
+} from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
 
 interface State {
-  username: string;
+  email: string;
   password: string;
 };
 
-function SignUp({ username, password }: State) {
-  const [user, setUser] = useState(username);
+function SignUp() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [verify, setVerify] = useState(false);
   const [credentials, setCredentials] = useState(password);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Sign Up Test Text</Text>
-    </View>
+    <SafeAreaView style={{ flex:1, backgroundColor:'#fff'}}>
+      <KeyboardAvoidingView style={styles.container} behavior="padding">
+        <Image
+          source={require('../../assets/icons/agape-temp.png')}
+          resizeMode='center'
+        />
+        <View style={styles.form}>
+          <TextInput
+            style={styles.input}
+            placeholder='Email'
+            placeholderTextColor="#b1b1b1"
+            returnKeyType="next"
+            keyboardType="email-address"
+            textContentType="emailAddress"
+            value={email}
+            onChangeText={email => setEmail(email)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder='Password'
+            placeholderTextColor="#b1b1b1"
+            returnKeyType="done"
+            textContentType="newPassword"
+            secureTextEntry={true}
+            value={password}
+            onChangeText={password => setPassword(password)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder='Verify Password'
+            placeholderTextColor="#b1b1b1"
+            returnKeyType="done"
+            textContentType="newPassword"
+            secureTextEntry={true}
+            value={password}
+            onChangeText={password => setPassword(password)}
+          />
+          </View>
+          <TouchableOpacity
+            style={{ width: '86%', marginTop: 20 }}
+            onPress={() => console.log('TODO AUTH')}
+          >
+            <View style={styles.button}>
+              <Text>Create Account!</Text>
+            </View>
+        </TouchableOpacity>
+        <View style={{ marginTop: 10}}>
+          <Text
+            style={{ fontWeight: '200', fontSize: 20, textAlign: 'center'}}
+            onPress={() => console.log('TODO NAVIGATION')}
+          >
+            Already have an account?
+          </Text>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
-    backgroundColor: "#eaeaea",
-    alignItems: "center"
+    flexDirection: 'column',
+    alignItems: 'center',
   },
-  title: {
-    marginTop: 16,
-    paddingVertical: 8,
-    borderWidth: 4,
-    borderColor: "#20232a",
-    borderRadius: 6,
-    backgroundColor: "#61dafb",
-    color: "#20232a",
-    textAlign: "center",
-    fontSize: 30,
-    fontWeight: "bold"
+  form: {
+    width: '86%',
+  },
+  input: {
+    fontSize: 20,
+    borderColor: '#707070',
+    borderBottomWidth: 1,
+    paddingBottom: 1.5,
+    marginTop: 25.5,
+  },
+  button: {
+    backgroundColor: '#F0ABC1',
+    height: 44,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 22
   }
-})
+});
 
 export default SignUp;

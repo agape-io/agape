@@ -14,7 +14,7 @@ const Home = createNativeStackNavigator();
 function HomeStack() {
   return (
     <Home.Navigator>
-      <Home.Screen name="Main Stack" component={SignUp} />
+      <Home.Screen name="Main Stack" component={SignUp} options={{headerShown: false}}/>
     </Home.Navigator>
   );
 }
