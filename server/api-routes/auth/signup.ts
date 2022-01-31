@@ -1,12 +1,13 @@
 import { Router, Request, Response } from 'express';
 import mongoose from 'mongoose';
-// import passport from 'passport';
-// import { env } from '../../config/env';
-import connect from '../../config/db';
-// import strategy from 'passport-facebook';
-import passwordValidator from 'password-validator';
-import { UserModel } from "../../models/user";
 import bcrypt from 'bcrypt';
+import passwordValidator from 'password-validator';
+// import passport from 'passport';
+// import strategy from 'passport-facebook';
+
+import { UserModel } from "../../models/user";
+import connect from '../../config/db';
+// import { env } from '../../config/env';
 
 const schema = new passwordValidator();
 schema
@@ -64,7 +65,7 @@ router.post('/email', async (req: Request, res: Response) => {
                     userModel.findOne({ email: req.body.email }, function (err, existingUser) {
                         if (existingUser) {
                             res.status(500).send({
-                                error: 'Email already exists!'
+                                error: '500: Email already exists!'
                             });
                         } else {
                             const user = new userModel({
@@ -81,10 +82,14 @@ router.post('/email', async (req: Request, res: Response) => {
             });
         } else {
             res.status(500).send({
-                error: 'Invalid password!',
+                error: '500: Invalid password!',
                 details: errorDetails,
             });
         }
+    } else {
+        res.status(500).send({
+            error: "500: Missing Email or Password"
+        })
     }
 });
 
