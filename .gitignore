@@ -1,3 +1,13 @@
 server/dist
 server/node_modules
+client/node_modules
 server/.env
+
+client/node_modules/
+client/.expo/
+client/dist/
+client/npm-debug.*
+client/web-build/
+
+# macOS
+client/.DS_Store
