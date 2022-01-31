@@ -1,5 +1,5 @@
 /**
- * Sign Up Screen
+ * Sign In Screen
  */
 import React, { useState } from 'react';
 import {
@@ -18,7 +18,7 @@ interface State {
   password: string;
 };
 
-function SignUp() {
+function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [verify, setVerify] = useState(false);
@@ -52,23 +52,14 @@ function SignUp() {
             value={password}
             onChangeText={password => setPassword(password)}
           />
-          <TextInput
-            style={styles.input}
-            placeholder='Verify Password'
-            placeholderTextColor="#b1b1b1"
-            returnKeyType="done"
-            textContentType="newPassword"
-            secureTextEntry={true}
-            value={password}
-            onChangeText={password => setPassword(password)}
-          />
+
         </View>
         <TouchableOpacity
           style={{ width: '86%', marginTop: 20 }}
           onPress={() => console.log('TODO AUTH')}
         >
           <View style={styles.button}>
-            <Text>Create Account!</Text>
+            <Text>Log In</Text>
           </View>
         </TouchableOpacity>
         <View style={{ marginTop: 10 }}>
@@ -110,4 +101,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default SignUp;
+export default SignIn;
