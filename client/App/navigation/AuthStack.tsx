@@ -7,8 +7,7 @@ import React, { useContext, useEffect, useState, FC } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 // Screens
-import { SignUp } from '../pages';
-import { SignIn } from '../pages';
+import { SignUp, SignIn } from '../pages';
 
 const Auth = createNativeStackNavigator();
 

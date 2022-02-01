@@ -29,7 +29,7 @@ function SignUp() {
       <KeyboardAvoidingView style={styles.container} behavior="padding">
         <Image
           source={require('../../assets/icons/agape-temp.png')}
-          resizeMode='center'
+          resizeMode='contain'
         />
         <View style={styles.form}>
           <TextInput
@@ -68,7 +68,7 @@ function SignUp() {
           onPress={() => console.log('TODO AUTH')}
         >
           <View style={styles.button}>
-            <Text>Create Account!</Text>
+            <Text>Create Account</Text>
           </View>
         </TouchableOpacity>
         <View style={{ marginTop: 10 }}>
@@ -92,6 +92,7 @@ const styles = StyleSheet.create({
   },
   form: {
     width: '86%',
+    paddingTop: 35
   },
   input: {
     fontSize: 20,
