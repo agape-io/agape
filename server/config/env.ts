@@ -8,5 +8,8 @@ export const env = {
     },
     MongoDB: {
         ConnString: process.env.MONGO_DB_URL,
+    },
+    JSONWebToken: {
+        Key: process.env.JWT_TOKEN_KEY,
     }
 }
