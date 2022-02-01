@@ -79,7 +79,6 @@ router.post('/email', async (req: Request, res: Response) => {
                                     message: 'User created!',
                                     user: {
                                         email: req.body.email,
-                                        accessToken: 'setthisbabyup'
                                     }
                                 });
                             });
