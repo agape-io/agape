@@ -23,7 +23,7 @@ const router = Router();
 
 router.post('/email', async (req: Request, res: Response) => {
     if (req.body.email && req.body.password) {
-        const userModel = mongoose.model('UserModel', UserModel);
+        const userModel = mongoose.model('users', UserModel);
         await connect();
         userModel.findOne({ email: req.body.email }, async function (err, existingUser) {
             if (existingUser) {
