@@ -53,7 +53,7 @@ const router = Router();
 // router.post('/facebook', passport.authenticate("facebook"));
 
 router.post('/email', async (req: Request, res: Response) => {
-    if (req.body.email && req.body.password) {
+    if (req.body.email && req.body.password && req.body.verifyPassword) {
         const errorDetails = schema.validate(req.body.password, { details: true });
         if ((errorDetails as []).length === 0) {
             const saltRounds = 10;
@@ -68,20 +68,27 @@ router.post('/email', async (req: Request, res: Response) => {
                                 message: 'Email already exists!'
                             });
                         } else {
-                            const user = new userModel({
-                                email: req.body.email,
-                                password: hash,
-                            });
-                            user.save(function (err, result) {
-                                if (err) console.log(err);
-                                else res.status(200).send({
-                                    status: 200,
-                                    message: 'User created!',
-                                    user: {
-                                        email: req.body.email,
-                                    }
+                            if (req.body.password == req.body.verifyPassword) {
+                                const user = new userModel({
+                                    email: req.body.email,
+                                    password: hash,
                                 });
-                            });
+                                user.save(function (err, result) {
+                                    if (err) console.log(err);
+                                    else res.status(200).send({
+                                        status: 200,
+                                        message: 'User created!',
+                                        user: {
+                                            email: req.body.email,
+                                        }
+                                    });
+                                });
+                            } else {
+                                res.status(500).send({
+                                    status: 500,
+                                    message: 'Passwords do not match!'
+                                });
+                            }
                         };
                     });
                 });
