@@ -8,15 +8,17 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 // Screens
 import { SignUp } from '../pages';
+import { SignIn } from '../pages';
 
 const Auth = createNativeStackNavigator();
 
 function AuthStack() {
   return (
     <Auth.Navigator initialRouteName='Sign In'>
-      <Auth.Screen name="Sign Up" component={SignUp} options={{headerShown: false}}/>
+      <Auth.Screen name="Sign Up" component={SignUp} options={{ headerShown: false }} />
+      <Auth.Screen name="Sign In" component={SignIn} options={{ headerShown: false }} />
     </Auth.Navigator>
   )
-} 
+}
 
 export default AuthStack;
