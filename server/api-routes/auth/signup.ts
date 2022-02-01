@@ -60,7 +60,7 @@ router.post('/email', async (req: Request, res: Response) => {
             await bcrypt.genSalt(saltRounds, async function (err, salt) {
                 await bcrypt.hash(req.body.password, salt, async function (err, hash) {
                     await connect();
-                    const userModel = mongoose.model('UserModel', UserModel);
+                    const userModel = mongoose.model('users', UserModel);
                     userModel.findOne({ email: req.body.email }, function (err, existingUser) {
                         if (existingUser) {
                             res.status(500).send({
