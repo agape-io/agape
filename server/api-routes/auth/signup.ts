@@ -52,7 +52,6 @@ const router = Router();
 // TODO: will implement if time permits
 // router.post('/facebook', passport.authenticate("facebook"));
 
-
 router.post('/email', async (req: Request, res: Response) => {
     if (req.body.email && req.body.password) {
         const errorDetails = schema.validate(req.body.password, { details: true });
@@ -65,7 +64,8 @@ router.post('/email', async (req: Request, res: Response) => {
                     userModel.findOne({ email: req.body.email }, function (err, existingUser) {
                         if (existingUser) {
                             res.status(500).send({
-                                error: '500: Email already exists!'
+                                status: 500,
+                                message: 'Email already exists!'
                             });
                         } else {
                             const user = new userModel({
@@ -74,7 +74,14 @@ router.post('/email', async (req: Request, res: Response) => {
                             });
                             user.save(function (err, result) {
                                 if (err) console.log(err);
-                                else res.status(200).send();
+                                else res.status(200).send({
+                                    status: 200,
+                                    message: 'User created!',
+                                    user: {
+                                        email: req.body.email,
+                                        accessToken: 'setthisbabyup'
+                                    }
+                                });
                             });
                         };
                     });
@@ -82,15 +89,16 @@ router.post('/email', async (req: Request, res: Response) => {
             });
         } else {
             res.status(500).send({
-                error: '500: Invalid password!',
-                details: errorDetails,
+                status: 500,
+                message: `Invalid password: ${errorDetails}`
             });
         }
     } else {
         res.status(500).send({
-            error: "500: Missing Email or Password"
-        })
-    }
+            status: 500,
+            error: "Missing Email or Password"
+        });
+    };
 });
 
 export default router;
