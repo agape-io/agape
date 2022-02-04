@@ -5,6 +5,7 @@ server/.env
 
 client/.expo/
 client/dist/
+client/.env
 client/npm-debug.*
 client/web-build/
 
