@@ -24,7 +24,9 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
       <TouchableOpacity
         onPress={() => {
           logOut(token);
-          navigation.navigate('SignIn');
+          navigation.navigate('Auth', {
+            screen: 'SignIn'
+          });
         }}
       >
         Log Out
