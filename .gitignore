@@ -5,9 +5,10 @@ server/.env
 
 client/.expo/
 client/dist/
-client/App/.env
+client/.env
 client/npm-debug.*
 client/web-build/
+client/yarn-error.log
 
 # macOS
 client/.DS_Store
