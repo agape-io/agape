@@ -8,13 +8,13 @@
 import React, { createContext, useState, useEffect, FC } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-interface IAuth {
+export interface IAuth {
   token?: string | null;
   getToken?: () => void;
   children?: React.ReactNode;
 }
 
-const AuthContext = createContext<IAuth | null >(null);
+const AuthContext = createContext({} as IAuth);
 
 const AuthContextProvider: FC<IAuth> = ({ children }) => {
   const [token, setToken] = useState('');
@@ -45,7 +45,6 @@ const AuthContextProvider: FC<IAuth> = ({ children }) => {
       {children}
     </AuthContext.Provider>
   )
-
 }
 
 export {

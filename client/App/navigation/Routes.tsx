@@ -3,23 +3,63 @@
  */
 import React, { useState, useEffect, useContext, FC } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+// Types
+import {
+  HomeStackParamList,
+  AuthStackParamList,
+  RootNavigatorParamsList
+} from './types';
 
 // Stacks
-import { AuthStack, HomeStack, AuthContext } from "../navigation";
+import { AuthContext } from "../navigation";
 
 // Screens
-import { LandingPage } from '../pages';
+import {
+  TestPage,
+  SignIn,
+  SignUp,
+  LandingPage,
+} from '../pages';
 
 interface State {
   loading?: boolean;
   initializing?: boolean;
 }
 
-export const Routes: FC < State > = () => {
+const RootStack = createNativeStackNavigator<RootNavigatorParamsList>();
+const HomeStack = createNativeStackNavigator<HomeStackParamList>();
+const AuthStack = createNativeStackNavigator<AuthStackParamList>();
+
+const Home:FC = () => {
+  const { Navigator, Screen } = HomeStack;
+
+  return (
+    <Navigator>
+      <Screen name="Test" component={TestPage} options={{ headerShown: false }} />
+    </Navigator>
+  )
+}
+
+const Auth:FC = () => {
+  const { Navigator , Screen } = AuthStack;
+
+  return (
+    <Navigator>
+      <Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
+      <Screen name="SignIn" component={SignIn} options={{ headerShown: false }} />
+      <Screen name="Landing" component={LandingPage} options={{ headerShown: false }} />
+    </Navigator>
+  )
+}
+
+const Routes:FC<State> = () => {
   const userToken = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(true);
   const [initializing, setInitializing] = useState<boolean>(true);
 
+  const { Group, Screen, Navigator } = RootStack;
   // handle auth change
   const handleAuthState = () => {
     // get the token
@@ -48,7 +88,19 @@ export const Routes: FC < State > = () => {
 
   return (
     <NavigationContainer>
-      { userToken?.token ? <HomeStack /> : <AuthStack />}
+      <Navigator>
+        {userToken?.token ? (
+          <Group>
+            <Screen name="Home" component={Home} options={{ headerShown: false }}/>
+          </Group>
+        ) : (
+            <Group>
+              <Screen name="Auth" component={Auth} options={{ headerShown: false }}/>
+          </Group>
+        )}
+      </Navigator>
     </NavigationContainer>
   )
 }
+
+export default Routes;

@@ -1,7 +1,7 @@
 /**
  * Sign In Screen
  */
-import React, { useState, FC } from 'react';
+import React, { useState, FC, useContext } from 'react';
 import {
   View,
   Text,
@@ -11,21 +11,28 @@ import {
   Image,
   KeyboardAvoidingView
 } from 'react-native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TextInput } from 'react-native-gesture-handler';
 
-import { signIn } from '../utils';
+// Types
+import { AuthStackParamList } from '../navigation';
 
-interface State {
+// API
+import { signIn } from '../utils';
+import { AuthContext } from '../navigation';
+
+export interface SignInProps {
+  navigation: NativeStackNavigationProp<AuthStackParamList, 'SignIn'>
   email: string;
   password: string;
-  verifyPassword: string;
-};
+}
 
-export const SignIn: FC<State> = () => {
+const SignIn: FC<SignInProps> = ({ navigation }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [verify, setVerify] = useState<boolean>(false);
   //const [credentials, setCredentials] = useState(password);
+  const { token, getToken } = useContext(AuthContext);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -67,7 +74,7 @@ export const SignIn: FC<State> = () => {
         <View style={{ marginTop: 10 }}>
           <Text
             style={{ fontWeight: '200', fontSize: 20, textAlign: 'center' }}
-            onPress={() => console.log('TODO NAVIGATION')}
+            onPress={() => navigation.navigate('SignUp')}
           >
             Don't have an account?
           </Text>
@@ -103,3 +110,5 @@ const styles = StyleSheet.create({
     borderRadius: 22
   }
 });
+
+export default SignIn;

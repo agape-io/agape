@@ -1,17 +1,22 @@
 /**
  * Index file for navigation
  */
-
-// TODO: Refactor
-import HomeStack from './HomeStack';
-import { AuthStack } from './AuthStack';
-import { Routes } from './Routes';
-import { AuthContext, AuthContextProvider } from './AuthProvider';
-
-export {
-  HomeStack,
-  AuthStack,
-  Routes,
+import Routes from './Routes';
+import {
   AuthContext,
   AuthContextProvider
+} from './AuthProvider';
+import {
+  AuthStackParamList,
+  RootNavigatorParamsList,
+  HomeStackParamList
+} from './types';
+
+export {
+  Routes,
+  AuthContext,
+  AuthContextProvider,
+  AuthStackParamList,
+  RootNavigatorParamsList,
+  HomeStackParamList
 }

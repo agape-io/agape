@@ -12,13 +12,23 @@ import {
   KeyboardAvoidingView
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-interface State {
+// Types
+import { AuthStackParamList } from '../navigation';
+
+// API
+import { signIn } from '../utils';
+import { AuthContext } from '../navigation';
+
+export interface SignUpProps {
+  navigation: NativeStackNavigationProp<AuthStackParamList, 'SignUp'>;
   email: string;
   password: string;
+  verifyPassword: string;
 };
 
-export const SignUp: FC<State> = () => {
+const SignUp: FC<SignUpProps> = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [verify, setVerify] = useState(false);
@@ -65,7 +75,7 @@ export const SignUp: FC<State> = () => {
         </View>
         <TouchableOpacity
           style={{ width: '86%', marginTop: 20 }}
-          onPress={() => console.log('TODO AUTH')}
+          onPress={() => console.log('TODO SIGN UP')}
         >
           <View style={styles.button}>
             <Text>Create Account</Text>
@@ -74,7 +84,7 @@ export const SignUp: FC<State> = () => {
         <View style={{ marginTop: 10 }}>
           <Text
             style={{ fontWeight: '200', fontSize: 20, textAlign: 'center' }}
-            onPress={() => console.log('TODO NAVIGATION')}
+            onPress={() => navigation.navigate("SignIn")}
           >
             Already have an account?
           </Text>
@@ -110,3 +120,5 @@ const styles = StyleSheet.create({
     borderRadius: 22
   }
 });
+
+export default SignUp;
