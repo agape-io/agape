@@ -5,9 +5,10 @@ server/.env
 
 client/.expo/
 client/dist/
-client/.env
+client/App/.env
 client/npm-debug.*
 client/web-build/
 
 # macOS
 client/.DS_Store
+.DS_Store
