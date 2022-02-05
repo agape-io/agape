@@ -7,15 +7,14 @@ import * as React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 // Screens
-import { SignUp, SignIn } from '../pages';
-
+import { TestPage } from '../pages';
 
 const Home = createNativeStackNavigator();
 
-function HomeStack() {
+export const HomeStack = () => {
   return (
     <Home.Navigator>
-      <Home.Screen name="Main Stack" component={SignUp} options={{ headerShown: false }} />
+      <Home.Screen name="Main Stack" component={TestPage} options={{ headerShown: false }} />
     </Home.Navigator>
   );
 }

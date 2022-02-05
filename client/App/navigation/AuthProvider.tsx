@@ -6,56 +6,49 @@
 
 //TODO: Create auth provider once backend is created
 import React, { createContext, useState, useEffect, FC } from 'react';
-import axios from 'axios';
-import { API_URL } from '@env';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface IAuth {
-  token: string | null;
-  signIn?: (email: string, password: string) => void;
-  signUp?: (email: string, password: string, verifyPassword: string) => void;
-  logout?: (token: string) => void;
+  token?: string | null;
+  getToken?: () => void;
+  children?: React.ReactNode;
 }
 
-export const AuthContext = createContext<IAuth>({} as IAuth);
+const AuthContext = createContext<IAuth | null >(null);
 
+const AuthContextProvider: FC<IAuth> = ({ children }) => {
+  const [token, setToken] = useState('');
 
-export const AuthContextProvider: FC<IAuth> = ({ children }) => {
-
-  const getToken = async (token: string) => {
+  const getToken = async () => {
     // check if token is retrieved
-
-    return token;
+    return AsyncStorage.getItem('token').then(token => {
+      if (token) {
+        setToken(token);
+      }
+    }).catch(e => {
+      // error is read
+      console.log('On Auth Context: ', e);
+    })
   }
+
+  useEffect(() => {
+    getToken();
+  }, []);
 
   return (
     <AuthContext.Provider
       value={{
         getToken,
-        signIn: async (email, password) => {
-          // set sign in
-          console.log("sign in");
-          
-          // Call to axios API
-          axios.post(`${API_URL}`)
-        },
-        signUp: async (email, password, verifyPassword) => {
-          // set sign up
-          console.log('sign up');
-          try {
-
-          } catch (e) {
-
-          }
-        },
-        logout: (token) => {
-          // remove token
-          console.log('log out')
-        }
-
+        token
       }}
     >
       {children}
     </AuthContext.Provider>
   )
 
+}
+
+export {
+  AuthContext,
+  AuthContextProvider
 }

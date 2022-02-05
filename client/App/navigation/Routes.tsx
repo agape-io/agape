@@ -1,40 +1,54 @@
 /**
  * Main Handler for Routes
  */
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, FC } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 
 // Stacks
-import { AuthStack, HomeStack } from "../navigation";
+import { AuthStack, HomeStack, AuthContext } from "../navigation";
 
 // Screens
-
+import { LandingPage } from '../pages';
 
 interface State {
-  loading: boolean;
+  loading?: boolean;
+  initializing?: boolean;
 }
 
-function Routes({ loading }: State) {
-  // const { user, setUser } = useContext(AuthContext);
-  const [user, setUser] = useState(false);
-  const [load, setLoad] = useState(true);
-  const [initializing, setInitializing] = useState(true);
+export const Routes: FC < State > = () => {
+  const userToken = useContext(AuthContext);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [initializing, setInitializing] = useState<boolean>(true);
 
   // handle auth change
+  const handleAuthState = () => {
+    // get the token
+    // if the token is there, stop loading
+    const usertoken = userToken?.getToken?.();
+    if (usertoken) {
+      if (initializing) setInitializing(false);
+      setLoading(false);
+    }
+  }
 
-  // check if user is logged in
+  // always checks if user has token
+  useEffect(() => {
+    const subscriber = handleAuthState();
 
+    // unsubscribes when unmounted
+    return subscriber;
+  }, []);
+
+  
   // if loading, render screen
-  // if (loading) {
-  //   // render loading screen
-  // }
+  if (loading) {
+    // render loading screen
+    return <LandingPage />;
+  }
 
   return (
     <NavigationContainer>
-      { user ? <HomeStack /> : <AuthStack />}
+      { userToken?.token ? <HomeStack /> : <AuthStack />}
     </NavigationContainer>
   )
-
 }
-
-export default Routes;

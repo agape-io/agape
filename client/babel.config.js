@@ -1,5 +1,3 @@
-const { gestureHandlerRootHOC } = require("react-native-gesture-handler");
-
 module.exports = function(api) {
   api.cache(true);
   return {

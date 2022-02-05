@@ -1,7 +1,7 @@
 /**
  * Sign In Screen
  */
-import React, { useState } from 'react';
+import React, { useState, FC } from 'react';
 import {
   View,
   Text,
@@ -13,16 +13,19 @@ import {
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 
+import { signIn } from '../utils';
+
 interface State {
   email: string;
   password: string;
+  verifyPassword: string;
 };
 
-function SignIn() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [verify, setVerify] = useState(false);
-  const [credentials, setCredentials] = useState(password);
+export const SignIn: FC<State> = () => {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [verify, setVerify] = useState<boolean>(false);
+  //const [credentials, setCredentials] = useState(password);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -100,5 +103,3 @@ const styles = StyleSheet.create({
     borderRadius: 22
   }
 });
-
-export default SignIn;

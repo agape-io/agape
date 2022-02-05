@@ -1,7 +1,7 @@
 /**
  * Sign Up Screen
  */
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import {
   View,
   Text,
@@ -18,7 +18,7 @@ interface State {
   password: string;
 };
 
-function SignUp() {
+export const SignUp: FC<State> = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [verify, setVerify] = useState(false);
@@ -110,5 +110,3 @@ const styles = StyleSheet.create({
     borderRadius: 22
   }
 });
-
-export default SignUp;
