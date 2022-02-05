@@ -2,9 +2,8 @@
  * Auth Provider for authentication
  * 
  * @param token the user's token is accessed.
+ * @function getToken gets the user's token before storing it into the storage
  */
-
-//TODO: Create auth provider once backend is created
 import React, { createContext, useState, useEffect, FC } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 

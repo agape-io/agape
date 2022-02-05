@@ -20,7 +20,7 @@ import {
   TestPage,
   SignIn,
   SignUp,
-  LandingPage,
+  Landing,
 } from '../pages';
 
 interface State {
@@ -49,7 +49,7 @@ const Auth:FC = () => {
     <Navigator>
       <Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
       <Screen name="SignIn" component={SignIn} options={{ headerShown: false }} />
-      <Screen name="Landing" component={LandingPage} options={{ headerShown: false }} />
+      <Screen name="Landing" component={Landing} options={{ headerShown: false }} />
     </Navigator>
   )
 }
@@ -83,7 +83,7 @@ const Routes:FC<State> = () => {
   // if loading, render screen
   if (loading) {
     // render loading screen
-    return <LandingPage />;
+    return <Landing />;
   }
 
   return (

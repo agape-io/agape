@@ -4,7 +4,7 @@
 import React from 'react';
 import { ActivityIndicator, View, Text, StyleSheet, Image } from 'react-native';
 
-const LandingPage = () => {
+const Landing = () => {
   return(
     <View style={styles.container}>
         <Image style={styles.horizontal} source={require('../../assets/icons/agape-temp.png')} resizeMode='center'/>
@@ -26,4 +26,4 @@ const styles = StyleSheet.create({
     }
 });
   
-export default LandingPage;
+export default Landing;

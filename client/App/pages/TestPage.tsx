@@ -1,3 +1,6 @@
+/**
+ * Landing Screen
+ */
 import React, { FC, useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
