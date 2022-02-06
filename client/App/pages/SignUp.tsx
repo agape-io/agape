@@ -11,18 +11,18 @@ import {
   Image,
   KeyboardAvoidingView
 } from 'react-native';
+import axios from 'axios';
 import { TextInput } from 'react-native-gesture-handler';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 // Types
-import { AuthStackParamList } from '../navigation';
+import { AuthNavigatorParamList } from '../types';
 
 // API
-import { signIn } from '../utils';
-import { AuthContext } from '../navigation';
+import { API_URL } from '@env';
 
 export interface SignUpProps {
-  navigation: NativeStackNavigationProp<AuthStackParamList, 'SignUp'>;
+  navigation: NativeStackNavigationProp<AuthNavigatorParamList, 'SignUp'>;
   email: string;
   password: string;
   verifyPassword: string;
@@ -31,8 +31,25 @@ export interface SignUpProps {
 const SignUp: FC<SignUpProps> = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [verify, setVerify] = useState(false);
-  const [credentials, setCredentials] = useState(password);
+  const [verifyPassword, setVerifyPassword] = useState('');
+
+  const runSignUp = async (email: string, password: string, verifyPassword: string) => {
+    axios.post(`${API_URL}/signup/email`, {
+        email,
+        password,
+        verifyPassword
+      })
+    .then(res => {
+      // check if there is a response
+      console.log(res);
+      
+      // Tell the user try signing in
+      if (res) navigation.navigate("SignIn");  
+    })
+    .catch(e => {
+      console.log(e);
+  })
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -69,13 +86,13 @@ const SignUp: FC<SignUpProps> = ({ navigation }) => {
             returnKeyType="done"
             textContentType="newPassword"
             secureTextEntry={true}
-            value={password}
-            onChangeText={password => setPassword(password)}
+            value={verifyPassword}
+            onChangeText={verifyPassword => setVerifyPassword(verifyPassword)}
           />
         </View>
         <TouchableOpacity
           style={{ width: '86%', marginTop: 20 }}
-          onPress={() => console.log('TODO SIGN UP')}
+          onPress={() => runSignUp(email, password, verifyPassword)}
         >
           <View style={styles.button}>
             <Text>Create Account</Text>

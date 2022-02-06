@@ -8,7 +8,7 @@ import React, { createContext, useState, useEffect, FC } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface IAuth {
-  token?: string | null;
+  token: string;
   getToken?: () => void;
   children?: React.ReactNode;
 }
@@ -20,14 +20,12 @@ const AuthContextProvider: FC<IAuth> = ({ children }) => {
 
   const getToken = async () => {
     // check if token is retrieved
-    return AsyncStorage.getItem('token').then(token => {
-      if (token) {
-        setToken(token);
-      }
+    AsyncStorage.getItem('token').then(token => {
+      setToken(token);
     }).catch(e => {
       // error is read
-      console.log('On Auth Context: ', e);
-    })
+      console.log(e);
+    });
   }
 
   useEffect(() => {

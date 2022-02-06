@@ -2,7 +2,12 @@
  * Landing Page
  */
 import React from 'react';
-import { ActivityIndicator, View, Text, StyleSheet, Image } from 'react-native';
+import {
+  ActivityIndicator,
+  View,
+  StyleSheet,
+  Image
+} from 'react-native';
 
 const Landing = () => {
   return(

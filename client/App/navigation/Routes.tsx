@@ -1,16 +1,21 @@
 /**
  * Main Handler for Routes
  */
-import React, { useState, useEffect, useContext, FC } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  FC
+} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 // Types
 import {
-  HomeStackParamList,
-  AuthStackParamList,
+  HomeNavigatorParamList,
+  AuthNavigatorParamList,
   RootNavigatorParamsList
-} from './types';
+} from '../types';
 
 // Stacks
 import { AuthContext } from "../navigation";
@@ -29,15 +34,15 @@ interface State {
 }
 
 const RootStack = createNativeStackNavigator<RootNavigatorParamsList>();
-const HomeStack = createNativeStackNavigator<HomeStackParamList>();
-const AuthStack = createNativeStackNavigator<AuthStackParamList>();
+const HomeStack = createNativeStackNavigator<HomeNavigatorParamList>();
+const AuthStack = createNativeStackNavigator<AuthNavigatorParamList>();
 
 const Home:FC = () => {
   const { Navigator, Screen } = HomeStack;
 
   return (
     <Navigator>
-      <Screen name="Test" component={TestPage} options={{ headerShown: false }} />
+      <Screen name="Test" component={TestPage} />
     </Navigator>
   )
 }
@@ -46,10 +51,10 @@ const Auth:FC = () => {
   const { Navigator , Screen } = AuthStack;
 
   return (
-    <Navigator>
-      <Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
-      <Screen name="SignIn" component={SignIn} options={{ headerShown: false }} />
-      <Screen name="Landing" component={Landing} options={{ headerShown: false }} />
+    <Navigator screenOptions={{ headerShown: false }}>
+      <Screen name="SignUp" component={SignUp} />
+      <Screen name="SignIn" component={SignIn} />
+      <Screen name="Landing" component={Landing} />
     </Navigator>
   )
 }
@@ -91,7 +96,7 @@ const Routes:FC<State> = () => {
       <Navigator>
         {userToken?.token ? (
           <Group>
-            <Screen name="Home" component={Home} options={{ headerShown: false }}/>
+            <Screen name="Home" component={Home} />
           </Group>
         ) : (
             <Group>

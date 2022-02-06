@@ -2,21 +2,28 @@
  * Landing Screen
  */
 import React, { FC, useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text, 
+  StyleSheet,
+  TouchableOpacity
+} from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { CompositeNavigationProp } from '@react-navigation/native';
+import { CompositeNavigationProp, getStateFromPath } from '@react-navigation/native';
 
 // Types
-import { HomeStackParamList, RootNavigatorParamsList } from '../navigation';
+import {
+  HomeNavigatorParamList,
+  RootNavigatorParamsList
+} from '../types';
 
 // API
 import { logOut } from '../utils';
 import { AuthContext } from '../navigation';
 
 export interface TestPageProps {
-  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeStackParamList, 'Test'>,
-    NativeStackNavigationProp<RootNavigatorParamsList>
-  >
+  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeNavigatorParamList, 'Test'>,
+    NativeStackNavigationProp<RootNavigatorParamsList>>;
 }
 
 const TestPage:FC<TestPageProps> = ({ navigation }) => {
@@ -27,9 +34,7 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
       <TouchableOpacity
         onPress={() => {
           logOut(token);
-          navigation.navigate('Auth', {
-            screen: 'SignIn'
-          });
+          if (token === null) navigation.navigate('Auth', { screen: 'SignIn' });
         }}
       >
         Log Out
