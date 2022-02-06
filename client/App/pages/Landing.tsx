@@ -12,7 +12,7 @@ import {
 const Landing = () => {
   return(
     <View style={styles.container}>
-        <Image style={styles.horizontal} source={require('../../assets/icons/agape-temp.png')} resizeMode='center'/>
+        <Image style={styles.horizontal} source={require('../../assets/icons/agape-temp.png')} resizeMode='contain'/>
         <ActivityIndicator size="large" color="#F0ABC1" />
     </View>
   );

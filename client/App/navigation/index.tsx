@@ -4,11 +4,13 @@
 import Routes from './Routes';
 import {
   AuthContext,
-  AuthContextProvider
+  AuthProvider,
+  useAuth
 } from './AuthProvider';
 
 export {
   Routes,
   AuthContext,
-  AuthContextProvider,
+  AuthProvider,
+  useAuth
 }

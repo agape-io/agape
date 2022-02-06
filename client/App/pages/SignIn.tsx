@@ -1,11 +1,7 @@
 /**
  * Sign In Screen
  */
-import React, {
-  useState,
-  FC,
-  useContext
-} from 'react';
+import React, { useState, FC } from 'react';
 import {
   View,
   Text,
@@ -13,9 +9,9 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Image,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  ActivityIndicator
 } from 'react-native';
-import axios from 'axios';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { TextInput } from 'react-native-gesture-handler';
@@ -27,8 +23,7 @@ import {
 } from '../types';
 
 // API
-import { API_URL } from '@env';
-import { AuthContext } from '../navigation';
+import { useAuth } from '../navigation';
 
 export interface SignInProps {
   navigation: CompositeNavigationProp<NativeStackNavigationProp<AuthNavigatorParamList, 'SignIn'>,
@@ -40,30 +35,27 @@ export interface SignInProps {
 const SignIn: FC<SignInProps> = ({ navigation }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [loading, isLoading] = useState<boolean>(false);
 
-  const { storeToken } = useContext(AuthContext);
+  const auth = useAuth();
 
-  const runSignIn = async (email: string, password: string) => {
-      axios.post(`${API_URL}/signin/email`, {
-        email,
-        password
-      })
-      .then(res => {
-        // set token to local storage
-        const token = res.data.user.token;
-        storeToken(token);
-        
-        // if token is in the storage, navigate to Home
-        if (token) navigation.navigate('Home', { screen: 'Test' });
-      })
-      .catch(e => {
-        console.log(e);
-      });
+  const signIn = async (email: string, password: string) => {
+    isLoading(true);
+    auth.signIn(email, password)
+      .finally(() => {
+      navigation.navigate("Home", { screen: "Test" });
+    })
+    .catch(e => {
+      navigation.navigate("Auth", { screen: "SignIn" });
+    });
   }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      <KeyboardAvoidingView style={styles.container} behavior="padding">
+      {loading ? (
+        <ActivityIndicator size="large" color="#F0ABC1" />
+      ): (
+        <KeyboardAvoidingView style={styles.container} behavior="padding">
         <Image
           source={require('../../assets/icons/agape-temp.png')}
           resizeMode='contain'
@@ -92,7 +84,7 @@ const SignIn: FC<SignInProps> = ({ navigation }) => {
         </View>
         <TouchableOpacity
           style={{ width: '86%', marginTop: 20 }}
-          onPress={() => runSignIn(email, password)}
+              onPress={() => signIn(email, password)}
         >
           <View style={styles.button}>
             <Text>Sign In</Text>
@@ -107,6 +99,7 @@ const SignIn: FC<SignInProps> = ({ navigation }) => {
           </Text>
         </View>
       </KeyboardAvoidingView>
+      )}
     </SafeAreaView>
   )
 }

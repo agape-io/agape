@@ -1,3 +1,4 @@
+import React from 'react';
 import { NavigatorScreenParams } from "@react-navigation/native";
 
 type AuthNavigatorParamList = {
@@ -15,9 +16,23 @@ type RootNavigatorParamsList = {
   Auth: NavigatorScreenParams<AuthNavigatorParamList>
   Home: NavigatorScreenParams<HomeNavigatorParamList>
 }
+type AuthContextData = {
+  authData?: AuthData;
+  loading: boolean;
+  signIn(email: string, password: string): Promise<void>;
+  signOut(): Promise<void>;
+  children?: React.ReactNode;
+}
+
+type AuthData = {
+  token: string,
+  email: string
+}
 
 export {
   HomeNavigatorParamList,
   RootNavigatorParamsList,
-  AuthNavigatorParamList
+  AuthNavigatorParamList,
+  AuthContextData,
+  AuthData
 }

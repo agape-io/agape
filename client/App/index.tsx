@@ -4,12 +4,12 @@
  * Top level for the client side
  */
 import * as React from 'react';
-import { Routes, AuthContextProvider } from './navigation';
+import { Routes, AuthProvider } from './navigation';
 
 export default function App() {
   return (
-    <AuthContextProvider>
+    <AuthProvider>
       <Routes />
-    </AuthContextProvider>
+    </AuthProvider>
   );
 }

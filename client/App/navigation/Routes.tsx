@@ -9,8 +9,6 @@ import React, {
 } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
 
 // Types
 import {
@@ -20,7 +18,7 @@ import {
 } from '../types';
 
 // Stacks
-import { AuthContext } from "../navigation";
+import { useAuth } from "../navigation";
 
 // Screens
 import {
@@ -43,7 +41,7 @@ const Home:FC = () => {
   const { Navigator, Screen } = HomeStack;
 
   return (
-    <Navigator>
+    <Navigator screenOptions={{ headerShown: false }}>
       <Screen name="Test" component={TestPage} />
     </Navigator>
   )
@@ -62,48 +60,21 @@ const Auth:FC = () => {
 }
 
 const Routes:FC<State> = () => {
-  const { token } = useContext(AuthContext);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [initializing, setInitializing] = useState<boolean>(true);
-
-  const { Group, Screen, Navigator } = RootStack;
-  // handle auth change
-  const handleAuthState = () => {
-    // get the token
-    // if the token is there, stop loading
-    const usertoken = AsyncStorage.getItem('token');
-    if (usertoken) {
-      if (initializing) setInitializing(false);
-      setLoading(false);
-    }
-  }
-
-  // always checks if user has token
-  useEffect(() => {
-    const subscriber = handleAuthState();
-
-    // unsubscribes when unmounted
-    return subscriber;
-  }, []);
-
+  const { authData, loading } = useAuth();
+  const { Screen, Navigator } = RootStack;
   
   // if loading, render screen
   if (loading) {
-    // render loading screen
     return <Landing />;
   }
 
   return (
     <NavigationContainer>
       <Navigator>
-        {userToken?.token ? (
-          <Group>
-            <Screen name="Home" component={Home} />
-          </Group>
+        {authData ? (
+          <Screen name="Home" component={Home} />
         ) : (
-            <Group>
-              <Screen name="Auth" component={Auth} options={{ headerShown: false }}/>
-          </Group>
+          <Screen name="Auth" component={Auth} options={{ headerShown: false }} />
         )}
       </Navigator>
     </NavigationContainer>

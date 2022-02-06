@@ -2,51 +2,69 @@
  * Auth Provider for authentication
  * 
  */
-import React, { createContext, useState, useEffect, FC } from 'react';
+import React, { createContext, useState, useEffect, FC, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
-export interface IAuth {
-  token: string;
-  storeToken: (param: string) => void;
-  grabToken?: () => void;
-  children?: React.ReactNode;
-}
+// Types
+import { AuthContextData, AuthData } from '../types';
 
-const AuthContext = createContext({} as IAuth);
+// API
+import { API_URL } from '@env';
 
-const AuthContextProvider: FC<IAuth> = ({ children }) => {
-  const [token, setToken] = useState<string>('');
+const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
-  const grabToken = async () => {
-    // check if token is retrieved
-    AsyncStorage.getItem('token').then(token => {
-      const usertoken = JSON.stringify(token || '');
-      setToken(usertoken);
-    }).catch(e => {
-      console.log(e);
-      setToken('');
-    });
-  }
-
-  const storeToken = async (token:string) => {
-    AsyncStorage.setItem('token', token)
-      .then(() => {
-        setToken(token);
-      })
-      .catch(e => {
-        Promise.reject(e);
-      });
-  }
+const AuthProvider:FC = ({ children }) => {
+  const [authData, setAuthData] = useState<AuthData>();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    grabToken();
+    loadStorageData();
   }, []);
+
+  const loadStorageData = async () => {
+    AsyncStorage.getItem('@auth')
+      .then(authDataSerialized => {
+        const _authData: AuthData = JSON.parse(authDataSerialized);
+        
+        console.log(_authData);
+        setAuthData(_authData);
+        setLoading(false);
+      }).catch(e => { 
+        Promise.reject(e);
+      })
+  }
+
+  const signIn = async (email: string, password: string) => {
+    // call API, add to storage
+    axios.post(`${API_URL}/signin/email`, {
+      email,
+      password
+    }).then(res => {
+      const _auth = res.data.user || {};
+      AsyncStorage.setItem('@auth', JSON.stringify(_auth));
+      console.log(_auth);
+      setAuthData(_auth);
+    }).catch(e => {
+      Promise.reject(e);
+    })
+  }
+
+  const signOut = async () => {
+    // remove auth from async storage and state
+    setAuthData(undefined);
+    AsyncStorage.removeItem('@auth');
+
+    Promise.resolve('User is signed out!');
+  }
 
   return (
     <AuthContext.Provider
       value={{
-        storeToken,
-        token
+        authData,
+        signIn,
+        signOut,
+        loading
       }}
     >
       {children}
@@ -54,7 +72,16 @@ const AuthContextProvider: FC<IAuth> = ({ children }) => {
   )
 }
 
+function useAuth():AuthContextData {
+  const context = useContext(AuthContext);
+
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
+
+  return context;
+}
+
 export {
   AuthContext,
-  AuthContextProvider
+  AuthProvider,
+  useAuth
 }
