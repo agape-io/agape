@@ -41,8 +41,6 @@ const SignUp: FC<SignUpProps> = ({ navigation }) => {
       })
     .then(res => {
       // check if there is a response
-      console.log(res);
-      
       // Tell the user try signing in
       if (res) navigation.navigate("SignIn");  
     })

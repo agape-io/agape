@@ -9,6 +9,8 @@ import React, {
 } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 // Types
 import {
@@ -60,7 +62,7 @@ const Auth:FC = () => {
 }
 
 const Routes:FC<State> = () => {
-  const userToken = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(true);
   const [initializing, setInitializing] = useState<boolean>(true);
 
@@ -69,7 +71,7 @@ const Routes:FC<State> = () => {
   const handleAuthState = () => {
     // get the token
     // if the token is there, stop loading
-    const usertoken = userToken?.getToken?.();
+    const usertoken = AsyncStorage.getItem('token');
     if (usertoken) {
       if (initializing) setInitializing(false);
       setLoading(false);

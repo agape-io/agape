@@ -15,7 +15,6 @@ import {
   Image,
   KeyboardAvoidingView
 } from 'react-native';
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from 'axios';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { CompositeNavigationProp } from '@react-navigation/native';
@@ -42,7 +41,7 @@ const SignIn: FC<SignInProps> = ({ navigation }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  const { getToken } = useContext(AuthContext);
+  const { storeToken } = useContext(AuthContext);
 
   const runSignIn = async (email: string, password: string) => {
       axios.post(`${API_URL}/signin/email`, {
@@ -52,13 +51,10 @@ const SignIn: FC<SignInProps> = ({ navigation }) => {
       .then(res => {
         // set token to local storage
         const token = res.data.user.token;
-        AsyncStorage.setItem('token', token);
-        
-        // get the token before navigating
-        const retrieveToken = getToken?.();
+        storeToken(token);
         
         // if token is in the storage, navigate to Home
-        if (retrieveToken) navigation.navigate('Home', { screen: 'Test' });
+        if (token) navigation.navigate('Home', { screen: 'Test' });
       })
       .catch(e => {
         console.log(e);
