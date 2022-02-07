@@ -1,40 +1,84 @@
 /**
  * Main Handler for Routes
  */
-import React, { useState, useEffect, useContext } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  FC
+} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+// Types
+import {
+  HomeNavigatorParamList,
+  AuthNavigatorParamList,
+  RootNavigatorParamsList
+} from '../types';
 
 // Stacks
-import { AuthStack, HomeStack } from "../navigation";
+import { useAuth } from "../navigation";
 
 // Screens
-
+import {
+  TestPage,
+  SignIn,
+  SignUp,
+  Landing,
+} from '../pages';
 
 interface State {
-  loading: boolean;
+  loading?: boolean;
+  initializing?: boolean;
 }
 
-function Routes({ loading }: State) {
-  // const { user, setUser } = useContext(AuthContext);
-  const [user, setUser] = useState(false);
-  const [load, setLoad] = useState(true);
-  const [initializing, setInitializing] = useState(true);
+const RootStack = createNativeStackNavigator<RootNavigatorParamsList>();
+const HomeStack = createNativeStackNavigator<HomeNavigatorParamList>();
+const AuthStack = createNativeStackNavigator<AuthNavigatorParamList>();
 
-  // handle auth change
+const Home:FC = () => {
+  const { Navigator, Screen } = HomeStack;
 
-  // check if user is logged in
+  return (
+    <Navigator screenOptions={{ headerShown: false }}>
+      <Screen name="Test" component={TestPage} />
+    </Navigator>
+  )
+}
 
+const Auth:FC = () => {
+  const { Navigator , Screen } = AuthStack;
+
+  return (
+    <Navigator screenOptions={{ headerShown: false }}>
+      <Screen name="SignUp" component={SignUp} />
+      <Screen name="SignIn" component={SignIn} />
+      <Screen name="Landing" component={Landing} />
+    </Navigator>
+  )
+}
+
+const Routes:FC<State> = () => {
+  const { authData, loading } = useAuth();
+  const { Screen, Navigator } = RootStack;
+  
   // if loading, render screen
-  // if (loading) {
-  //   // render loading screen
-  // }
+  if (loading) {
+    return <Landing />;
+  }
 
   return (
     <NavigationContainer>
-      { user ? <HomeStack /> : <AuthStack />}
+      <Navigator>
+        {authData ? (
+          <Screen name="Home" component={Home} />
+        ) : (
+          <Screen name="Auth" component={Auth} options={{ headerShown: false }} />
+        )}
+      </Navigator>
     </NavigationContainer>
   )
-
 }
 
 export default Routes;
