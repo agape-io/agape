@@ -7,10 +7,10 @@ import connect from "../../config/db";
 const router = Router();
 
 router.get('/get', async (req: Request, res: Response) => {
-    if (req.body.id) {
+    if (req.body.userId) {
         await connect();
         const userModel = mongoose.model('users', UserModel);
-        userModel.findOne({ email: req.body.email }, async function (err, existingUser) {
+        userModel.findOne({ userId: req.body.userId }, async function (err, existingUser) {
             if (existingUser) {
                 res.status(200).send({
                     status: 200,
@@ -33,7 +33,7 @@ router.get('/get', async (req: Request, res: Response) => {
 });
 
 router.post('/create', async (req: Request, res: Response) => {
-    if (req.body.id && req.body.name && req.body.gender && req.body.yearBorn && req.body.religion && req.body.location && req.body.hobbies) {
+    if (req.body.userId && req.body.name && req.body.gender && req.body.yearBorn && req.body.religion && req.body.location && req.body.hobbies) {
         await connect();
         const userModel = mongoose.model('users', UserModel);
         const profile = {
@@ -45,7 +45,7 @@ router.post('/create', async (req: Request, res: Response) => {
             hobbies: req.body.hobbies
         };
         userModel.findOneAndUpdate(
-            { _id: req.body.id },
+            { userId: req.body.userId },
             {
                 $set: {
                     profile
@@ -77,7 +77,7 @@ router.post('/create', async (req: Request, res: Response) => {
 });
 
 router.post('/update', async (req: Request, res: Response) => {
-    if (req.body.id && req.body.name && req.body.gender && req.body.yearBorn && req.body.religion && req.body.location && req.body.hobbies) {
+    if (req.body.userId && req.body.name && req.body.gender && req.body.yearBorn && req.body.religion && req.body.location && req.body.hobbies) {
         await connect();
         const userModel = mongoose.model('users', UserModel);
         const profile = {
@@ -89,7 +89,7 @@ router.post('/update', async (req: Request, res: Response) => {
             hobbies: req.body.hobbies
         }
         userModel.findOneAndUpdate(
-            { _id: req.body.id },
+            { userId: req.body.userId },
             {
                 $set: {
                     profile

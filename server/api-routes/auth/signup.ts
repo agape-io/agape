@@ -71,7 +71,7 @@ router.post('/email', async (req: Request, res: Response) => {
                         } else {
                             if (req.body.password == req.body.verifyPassword) {
                                 const user = new userModel({
-                                    _id: uuidv4(),
+                                    userId: uuidv4(),
                                     email: req.body.email,
                                     password: hash,
                                 });
@@ -81,7 +81,7 @@ router.post('/email', async (req: Request, res: Response) => {
                                         status: 200,
                                         message: 'User created!',
                                         user: {
-                                            _id: result._id,
+                                            userId: result.userId,
                                             email: result.email,
                                         }
                                     });
