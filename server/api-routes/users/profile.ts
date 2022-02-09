@@ -7,7 +7,7 @@ import connect from "../../config/db";
 const router = Router();
 
 router.get('/get', async (req: Request, res: Response) => {
-    if (req.body.email) {
+    if (req.body.id) {
         await connect();
         const userModel = mongoose.model('users', UserModel);
         userModel.findOne({ email: req.body.email }, async function (err, existingUser) {
@@ -27,13 +27,13 @@ router.get('/get', async (req: Request, res: Response) => {
     } else {
         res.status(500).send({
             status: 500,
-            message: "Missing email!"
+            message: "Missing User Id!"
         })
     }
 });
 
 router.post('/create', async (req: Request, res: Response) => {
-    if (req.body.email && req.body.name && req.body.gender && req.body.yearBorn && req.body.religion && req.body.location && req.body.hobbies) {
+    if (req.body.id && req.body.name && req.body.gender && req.body.yearBorn && req.body.religion && req.body.location && req.body.hobbies) {
         await connect();
         const userModel = mongoose.model('users', UserModel);
         const profile = {
@@ -45,7 +45,7 @@ router.post('/create', async (req: Request, res: Response) => {
             hobbies: req.body.hobbies
         };
         userModel.findOneAndUpdate(
-            { email: req.body.email },
+            { _id: req.body.id },
             {
                 $set: {
                     profile
@@ -61,8 +61,8 @@ router.post('/create', async (req: Request, res: Response) => {
                     console.error(err);
                 }
                 else {
-                    res.status(200).send({
-                        status: 200,
+                    res.status(201).send({
+                        status: 201,
                         message: "Profile created!"
                     })
                 };
@@ -77,7 +77,7 @@ router.post('/create', async (req: Request, res: Response) => {
 });
 
 router.post('/update', async (req: Request, res: Response) => {
-    if (req.body.email && req.body.name && req.body.gender && req.body.yearBorn && req.body.religion && req.body.location && req.body.hobbies) {
+    if (req.body.id && req.body.name && req.body.gender && req.body.yearBorn && req.body.religion && req.body.location && req.body.hobbies) {
         await connect();
         const userModel = mongoose.model('users', UserModel);
         const profile = {
@@ -89,7 +89,7 @@ router.post('/update', async (req: Request, res: Response) => {
             hobbies: req.body.hobbies
         }
         userModel.findOneAndUpdate(
-            { email: req.body.email },
+            { _id: req.body.id },
             {
                 $set: {
                     profile
@@ -97,11 +97,19 @@ router.post('/update', async (req: Request, res: Response) => {
             },
             { upsert: true },
             function (err, doc) {
-                if (err) console.log(err);
-                else res.status(200).send({
-                    status: 200,
-                    message: "Profile updated!"
-                });
+                if (err) {
+                    res.status(500).send({
+                        status: 500,
+                        message: 'Error updating profile!'
+                    });
+                    console.error(err);
+                }
+                else {
+                    res.status(204).send({
+                        status: 204,
+                        message: "Profile updated!"
+                    })
+                };
             }
         );
     } else {

@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import passwordValidator from 'password-validator';
+import { v4 as uuidv4 } from 'uuid';
 // import passport from 'passport';
 // import strategy from 'passport-facebook';
 
@@ -70,6 +71,7 @@ router.post('/email', async (req: Request, res: Response) => {
                         } else {
                             if (req.body.password == req.body.verifyPassword) {
                                 const user = new userModel({
+                                    _id: uuidv4(),
                                     email: req.body.email,
                                     password: hash,
                                 });
@@ -79,7 +81,8 @@ router.post('/email', async (req: Request, res: Response) => {
                                         status: 200,
                                         message: 'User created!',
                                         user: {
-                                            email: req.body.email,
+                                            _id: result._id,
+                                            email: result.email,
                                         }
                                     });
                                 });
@@ -98,7 +101,7 @@ router.post('/email', async (req: Request, res: Response) => {
                 status: 500,
                 message: `Invalid password: ${errorDetails}`
             });
-        }
+        };
     } else {
         res.status(500).send({
             status: 500,
