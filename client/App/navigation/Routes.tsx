@@ -26,6 +26,7 @@ import {
   SignIn,
   SignUp,
   Landing,
+  Discover
 } from '../pages';
 
 interface State {
@@ -37,18 +38,19 @@ const RootStack = createNativeStackNavigator<RootNavigatorParamsList>();
 const HomeStack = createNativeStackNavigator<HomeNavigatorParamList>();
 const AuthStack = createNativeStackNavigator<AuthNavigatorParamList>();
 
-const Home:FC = () => {
+const Home: FC = () => {
   const { Navigator, Screen } = HomeStack;
 
   return (
     <Navigator screenOptions={{ headerShown: false }}>
       <Screen name="Test" component={TestPage} />
+      <Screen name="Discover" component={Discover} />
     </Navigator>
   )
 }
 
-const Auth:FC = () => {
-  const { Navigator , Screen } = AuthStack;
+const Auth: FC = () => {
+  const { Navigator, Screen } = AuthStack;
 
   return (
     <Navigator screenOptions={{ headerShown: false }}>
@@ -59,10 +61,10 @@ const Auth:FC = () => {
   )
 }
 
-const Routes:FC<State> = () => {
+const Routes: FC<State> = () => {
   const { authData, loading } = useAuth();
   const { Screen, Navigator } = RootStack;
-  
+
   // if loading, render screen
   if (loading) {
     return <Landing />;

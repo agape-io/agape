@@ -43,62 +43,62 @@ const SignIn: FC<SignInProps> = ({ navigation }) => {
     isLoading(true);
     auth.signIn(email, password)
       .finally(() => {
-      navigation.navigate("Home", { screen: "Test" });
-    })
-    .catch(e => {
-      navigation.navigate("Auth", { screen: "SignIn" });
-    });
+        navigation.navigate("Home", { screen: "Test" });
+      })
+      .catch(e => {
+        navigation.navigate("Auth", { screen: "SignIn" });
+      });
   }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       {loading ? (
         <ActivityIndicator size="large" color="#F0ABC1" />
-      ): (
+      ) : (
         <KeyboardAvoidingView style={styles.container} behavior="padding">
-        <Image
-          source={require('../../assets/icons/agape-temp.png')}
-          resizeMode='contain'
-        />
-        <View style={styles.form}>
-          <TextInput
-            style={styles.input}
-            placeholder='Email'
-            placeholderTextColor="#b1b1b1"
-            returnKeyType="next"
-            keyboardType="email-address"
-            textContentType="emailAddress"
-            value={email}
-            onChangeText={email => setEmail(email)}
+          <Image
+            source={require('../../assets/icons/agape-temp.png')}
+            resizeMode='contain'
           />
-          <TextInput
-            style={styles.input}
-            placeholder='Password'
-            placeholderTextColor="#b1b1b1"
-            returnKeyType="done"
-            textContentType="newPassword"
-            secureTextEntry={true}
-            value={password}
-            onChangeText={password => setPassword(password)}
-          />
-        </View>
-        <TouchableOpacity
-          style={{ width: '86%', marginTop: 20 }}
-              onPress={() => signIn(email, password)}
-        >
-          <View style={styles.button}>
-            <Text>Sign In</Text>
+          <View style={styles.form}>
+            <TextInput
+              style={styles.input}
+              placeholder='Email'
+              placeholderTextColor="#b1b1b1"
+              returnKeyType="next"
+              keyboardType="email-address"
+              textContentType="emailAddress"
+              value={email}
+              onChangeText={email => setEmail(email)}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder='Password'
+              placeholderTextColor="#b1b1b1"
+              returnKeyType="done"
+              textContentType="newPassword"
+              secureTextEntry={true}
+              value={password}
+              onChangeText={password => setPassword(password)}
+            />
           </View>
-        </TouchableOpacity>
-        <View style={{ marginTop: 10 }}>
-          <Text
-            style={{ fontWeight: '200', fontSize: 20, textAlign: 'center' }}
-            onPress={() => navigation.navigate('SignUp')}
+          <TouchableOpacity
+            style={{ width: '86%', marginTop: 20 }}
+            onPress={() => signIn(email, password)}
           >
-            Don't have an account?
-          </Text>
-        </View>
-      </KeyboardAvoidingView>
+            <View style={styles.button}>
+              <Text>Sign In</Text>
+            </View>
+          </TouchableOpacity>
+          <View style={{ marginTop: 10 }}>
+            <Text
+              style={{ fontWeight: '200', fontSize: 20, textAlign: 'center' }}
+              onPress={() => navigation.navigate('SignUp')}
+            >
+              Don't have an account?
+            </Text>
+          </View>
+        </KeyboardAvoidingView>
       )}
     </SafeAreaView>
   )
