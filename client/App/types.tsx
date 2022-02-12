@@ -10,7 +10,6 @@ type AuthNavigatorParamList = {
 type HomeNavigatorParamList = {
   Discover: undefined;
   Test: undefined;
-
 }
 
 type RootNavigatorParamsList = {
@@ -30,7 +29,17 @@ type AuthData = {
   email: string
 }
 
-export type IconT = {
+type CardItemT = {
+  description?: string;
+  hasActions?: boolean;
+  hasVariant?: boolean;
+  image: any;
+  isOnline?: boolean;
+  matches?: string;
+  name: string;
+};
+
+type IconT = {
   name: any;
   size: number;
   color: string;
@@ -42,15 +51,7 @@ export {
   RootNavigatorParamsList,
   AuthNavigatorParamList,
   AuthContextData,
-  AuthData
+  AuthData,
+  CardItemT,
+  IconT
 }
-
-export type CardItemT = {
-  description?: string;
-  hasActions?: boolean;
-  hasVariant?: boolean;
-  image: any;
-  isOnline?: boolean;
-  matches?: string;
-  name: string;
-};

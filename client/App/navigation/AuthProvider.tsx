@@ -53,9 +53,9 @@ const AuthProvider:FC = ({ children }) => {
   const signOut = async () => {
     // remove auth from async storage and state
     setAuthData(undefined);
-    AsyncStorage.removeItem('@auth');
-
-    Promise.resolve('User is signed out!');
+    AsyncStorage.removeItem('@auth').then(() => {
+      Promise.resolve('User is signed out!');
+    });
   }
 
   return (
@@ -81,7 +81,6 @@ function useAuth():AuthContextData {
 }
 
 export {
-  AuthContext,
   AuthProvider,
   useAuth
 }

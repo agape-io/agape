@@ -242,6 +242,7 @@ export default StyleSheet.create({
     top: {
         paddingTop: 50,
         marginHorizontal: 10,
+        flex: 1,
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center"
@@ -255,7 +256,9 @@ export default StyleSheet.create({
     },
 
     // CONTAINER - HOME
-    containerHome: { marginHorizontal: 10 },
+    containerHome: {
+        marginHorizontal: 10,
+    },
 
     // CONTAINER - MATCHES
     containerMatches: {
@@ -339,5 +342,16 @@ export default StyleSheet.create({
         // fontFamily: ICON_FONT,
         height: 20,
         paddingBottom: 7
-    }
+    },
+    // test
+    logoutButton: {
+        backgroundColor: '#F0ABC1',
+        height: 44,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 22,
+        top: 700,
+        left: 25
+  }
 });
