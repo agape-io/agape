@@ -6,7 +6,7 @@ import connect from "../../config/db";
 
 const router = Router();
 
-router.get('/get', async (req: Request, res: Response) => {
+router.get('/', async (req: Request, res: Response) => {
     if (req.body.userId) {
         await connect();
         const userModel = mongoose.model('users', UserModel);

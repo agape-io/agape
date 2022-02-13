@@ -38,7 +38,7 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
     const signOut = async () => {
         auth.signOut()
             .catch(e => {
-               
+                console.log(e);
             });
     }
 
