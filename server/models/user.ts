@@ -10,6 +10,7 @@ export const UserModel = new Schema({
         name: String,
         gender: String,
         yearBorn: String,
+        aboutMe: String,
         religion: String,
         location: String,
         hobbies: Array<String>()
