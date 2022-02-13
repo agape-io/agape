@@ -43,8 +43,9 @@ const AuthProvider:FC = ({ children }) => {
     }).then(res => {
       const _auth = res.data.user || {};
       AsyncStorage.setItem('@auth', JSON.stringify(_auth));
-      console.log(_auth);
+      //console.log(_auth);
       setAuthData(_auth);
+      Promise.resolve('Success!');
     }).catch(e => {
       Promise.reject(e);
     })

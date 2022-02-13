@@ -52,7 +52,6 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                     {/* <City /> */}
                     {/* <Filters /> */}
                 </View>
-                {console.log(JSON.stringify(auth.authData?.userId))}
                 <CardStack
                     loop
                     verticalSwipe={false}
@@ -72,6 +71,11 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                         </Card>
                     ))}
                 </CardStack>
+                <TouchableOpacity style={ {width: '86%'}} onPress={() => navigation.navigate('Test')}>
+                    <View style={styles.logoutButton}>
+                        <Text>Goto Test Page</Text>
+                    </View>
+                </TouchableOpacity>
                 <TouchableOpacity style={ {width: '86%'}} onPress={() => signOut()}>
                     <View style={styles.logoutButton}>
                         <Text>Log Out?</Text>

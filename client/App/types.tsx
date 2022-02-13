@@ -17,7 +17,7 @@ type RootNavigatorParamsList = {
   Home: NavigatorScreenParams<HomeNavigatorParamList>
 }
 type AuthContextData = {
-  authData?: AuthData;
+  authData: AuthData;
   loading: boolean;
   signIn(email: string, password: string): Promise<void>;
   signOut(): Promise<void>;
@@ -26,7 +26,8 @@ type AuthContextData = {
 
 type AuthData = {
   token: string,
-  email: string
+  email: string,
+  userId: string
 }
 
 type CardItemT = {

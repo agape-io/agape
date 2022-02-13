@@ -351,7 +351,8 @@ export default StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 22,
-        top: 700,
+        marginTop: 10,
+        top: 650,
         left: 25
   }
 });

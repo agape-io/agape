@@ -8,15 +8,22 @@ import axios from 'axios';
 // API
 import { API_URL } from '@env';
 
-
 /**
  * Get matches
  * 
  * @param userId 
  * @param token
+ * 
+ * When calling this function, use a then() and a 
+ * catch() to get the response.
  */
-const getMatches = (userId: string, token: string) => {
-
+const getMatches = async (userId: string, token: string) => {
+  return axios.get(`${API_URL}/discover/`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    userId,
+  });
 }
 //36bc02de-6183-44d8-9166-9a5002418ac2
 
@@ -24,10 +31,18 @@ const getMatches = (userId: string, token: string) => {
  * Get user profile
  * 
  * @param userId 
- * @param token
+ * @param token Needed to access routes
+ * 
+ * When calling this function, use a then() and a 
+ * catch() to get the response.
  */
-const getProfile = (userId: string, token: string) => {
-  axios.get(`${API_URL}/`)
+const getProfile = async (userId: string, token: string) => {
+  return axios.get(`${API_URL}/profile/`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    userId,
+  });
 }
 
 /**
@@ -38,21 +53,37 @@ const getProfile = (userId: string, token: string) => {
  * @param name 
  * @param gender 
  * @param yearBorn 
+ * @param aboutMe
  * @param religion 
  * @param location 
  * @param hobbies 
+ * 
+ * When calling this function, use a then() and a 
+ * catch() to get the response.
  */
-const createProfile = (
+const createProfile = async (
   userId: string,
   token: string,
   name: string,
   gender: string,
   yearBorn: number,
+  aboutMe: string,
   religion: string,
   location: string,
-  hobbies: [],
+  hobbies: string[],
 ) => {
   // call axios to the API
+  return axios.post(`${API_URL}/profile/create`, {
+    userId,
+    token,
+    name,
+    gender,
+    yearBorn,
+    aboutMe,
+    religion,
+    location,
+    hobbies
+  });
 }
 
 /**
@@ -63,23 +94,38 @@ const createProfile = (
  * @param name 
  * @param gender 
  * @param yearBorn 
+ * @param aboutMe
  * @param religion 
  * @param location 
  * @param hobbies 
+ * 
+ * When calling this function, use a then() and a 
+ * catch() to get the response.
  */
-const updateProfile = (
+const updateProfile = async (
   userId: string,
   token: string,
   name: string,
   gender: string,
   yearBorn: number,
+  aboutMe: string,
   religion: string,
   location: string,
-  hobbies: [],
+  hobbies: string[],
 ) => {
   // call axios to the API
+  return axios.post(`${API_URL}/profile/update`, {
+    userId,
+    token,
+    name,
+    gender,
+    yearBorn,
+    aboutMe,
+    religion,
+    location,
+    hobbies
+  });
 }
-
 
 export {
   getProfile,
