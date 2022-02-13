@@ -5,7 +5,6 @@ import React, { FC } from 'react';
 import {
   View,
   Text, 
-  StyleSheet,
   TouchableOpacity
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -34,20 +33,20 @@ export interface TestPageProps {
 const TestPage:FC<TestPageProps> = ({ navigation }) => {
   const auth = useAuth();
 
-  const id = auth.authData.userId;
+  const userId = auth.authData.userId;
   const token = auth.authData.token;
 
   // Dummy test variables
-  let testName = "Cyla"
-  let testHobbies = ['Skiing', 'Hiking', 'Biking'];
+  let testName = "Pyra"
+  let testHobbies = ['Mythra', 'Hiking', 'Biking'];
   let testGender = "Female";
-  let testYearBorn = 1965;
-  let testAboutMe = "I love living life.";
-  let testReligion = "Buddhism";
-  let testLocation = "San Josay";
+  let testYearBorn = 2022;
+  let testAboutMe = "I'm in smash.";
+  let testReligion = "Shintoism";
+  let testLocation = "Japan";
 
   const testMatches = async () => {
-    getMatches(id, token).then(res => {
+    getMatches(userId, token).then(res => {
       console.log(res);
     }).catch(e => {
       console.log('something went wrong: ', e);
@@ -58,7 +57,7 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
   }
 
   const testProfile = async () => {
-    getProfile(id, token).then(res => {
+    getProfile(userId, token).then(res => {
       console.log(res);
     }).catch(e => {
       console.log('something went wrong: ', e);
@@ -77,7 +76,7 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
     location: string,
     hobbies: string[]
   ) => {
-    updateProfile(id, token, name, gender, yearBorn, aboutMe, religion, location, hobbies)
+    updateProfile(userId, token, name, gender, yearBorn, aboutMe, religion, location, hobbies)
       .then(res => {
         console.log(res.data);
       })
@@ -98,7 +97,7 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
     location: string,
     hobbies: string[]
   ) => {
-    createProfile(id, token, name, gender, yearBorn, aboutMe, religion, location, hobbies)
+    createProfile(userId, token, name, gender, yearBorn, aboutMe, religion, location, hobbies)
       .then(res => {
         console.log(res.data);
       })
@@ -119,7 +118,6 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
   
   return (
     <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-      {console.log(id, token)}
       <Text>This is a TEST page</Text>
       <TouchableOpacity onPress={() => testMatches()}>
         <Text>Test Get Matches</Text>

@@ -20,9 +20,11 @@ import { API_URL } from '@env';
 const getMatches = async (userId: string, token: string) => {
   return axios.get(`${API_URL}/discover/`, {
     headers: {
-      Authorization: `Bearer ${token}`
+      'Authorization': `Bearer ${token}`
     },
-    userId,
+    params: {
+      userId,
+    }
   });
 }
 //36bc02de-6183-44d8-9166-9a5002418ac2
@@ -39,9 +41,11 @@ const getMatches = async (userId: string, token: string) => {
 const getProfile = async (userId: string, token: string) => {
   return axios.get(`${API_URL}/profile/`, {
     headers: {
-      Authorization: `Bearer ${token}`
+      'Authorization': `Bearer ${token}`
     },
-    userId,
+    params: {
+      userId,
+    }
   });
 }
 
