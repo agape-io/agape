@@ -33,13 +33,14 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 router.post('/create', async (req: Request, res: Response) => {
-    if (req.body.userId && req.body.name && req.body.gender && req.body.yearBorn && req.body.religion && req.body.location && req.body.hobbies) {
+    if (req.body.userId && req.body.name && req.body.gender && req.body.yearBorn && req.body.aboutMe && req.body.religion && req.body.location && req.body.hobbies) {
         await connect();
         const userModel = mongoose.model('users', UserModel);
         const profile = {
             name: req.body.name,
             gender: req.body.gender,
             yearBorn: req.body.yearBorn,
+            aboutMe: req.body.aboutMe,
             religion: req.body.religion,
             location: req.body.location,
             hobbies: req.body.hobbies
@@ -77,13 +78,14 @@ router.post('/create', async (req: Request, res: Response) => {
 });
 
 router.post('/update', async (req: Request, res: Response) => {
-    if (req.body.userId && req.body.name && req.body.gender && req.body.yearBorn && req.body.religion && req.body.location && req.body.hobbies) {
+    if (req.body.userId && req.body.name && req.body.gender && req.body.yearBorn && req.body.aboutMe && req.body.religion && req.body.location && req.body.hobbies) {
         await connect();
         const userModel = mongoose.model('users', UserModel);
         const profile = {
             name: req.body.name,
             gender: req.body.gender,
             yearBorn: req.body.yearBorn,
+            aboutMe: req.body.aboutMe,
             religion: req.body.religion,
             location: req.body.location,
             hobbies: req.body.hobbies
