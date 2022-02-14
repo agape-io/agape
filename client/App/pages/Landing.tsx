@@ -13,7 +13,7 @@ const Landing = () => {
   return(
     <View style={styles.container}>
         <ActivityIndicator style={styles.loading} size="large" color="#F0ABC1" />
-        {/* <Image style={styles.horizontal} source={require('../../assets/icons/agape-temp.png')} resizeMode='contain'/> */}
+        
     </View>
   );
 }

@@ -9,10 +9,11 @@
    Image
  } from 'react-native';
  
- const Landing = () => {
+ const Splash = () => {
    return(
      <View style={styles.container}>
-        <Image style={styles.loading} source={require('../../assets/icons/agape-temp.png')} resizeMode='contain'/>
+        <Image style={styles.loading} source={require('../../assets/splash.png')} resizeMode='contain'/>
+        <ActivityIndicator style={styles.loading} size="large" color="#F0ABC1" />
      </View>
    );
  }
@@ -32,4 +33,4 @@
    }
  });
    
- export default Landing;
+ export default Splash;
