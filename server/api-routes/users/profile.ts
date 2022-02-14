@@ -15,7 +15,8 @@ router.get('/get', async (req: Request, res: Response) => {
                 res.status(200).send({
                     status: 200,
                     message: 'Profile found!',
-                    profile: existingUser.profile
+                    profile: existingUser.profile,
+                    isOnline: existingUser.isOnline
                 });
             } else {
                 res.status(500).send({
