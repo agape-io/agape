@@ -73,7 +73,7 @@ const Routes: FC<State> = () => {
   return (
     <NavigationContainer>
       <Navigator>
-        {authData ? (
+       {authData ? (
           <Screen name="Home" component={Home} />
         ) : (
           <Screen name="Auth" component={Auth} options={{ headerShown: false }} />

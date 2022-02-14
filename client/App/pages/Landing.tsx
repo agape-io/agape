@@ -12,23 +12,25 @@ import {
 const Landing = () => {
   return(
     <View style={styles.container}>
-        <Image style={styles.horizontal} source={require('../../assets/icons/agape-temp.png')} resizeMode='contain'/>
-        <ActivityIndicator size="large" color="#F0ABC1" />
+        <ActivityIndicator style={styles.loading} size="large" color="#F0ABC1" />
+        
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-    container: {
-     flex: 3,
-     flexDirection: 'column',
-     alignItems: 'center',
-    },
-    horizontal: {
-      flexDirection: "row",
-      justifyContent: "space-around",
-      padding: 10
-    }
+  container: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  horizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10
+  },
+  loading: { 
+    alignItems: 'center'
+  }
 });
   
 export default Landing;
