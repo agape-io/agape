@@ -118,7 +118,6 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
   
   return (
     <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-      {console.log(token, userId)}
       <Text>This is a TEST page</Text>
       <TouchableOpacity onPress={() => testMatches()}>
         <Text>Test Get Matches</Text>
