@@ -26,6 +26,7 @@ import {
   SignIn,
   SignUp,
   Landing,
+  Splash
 } from '../pages';
 
 interface State {
@@ -71,11 +72,13 @@ const Routes:FC<State> = () => {
   return (
     <NavigationContainer>
       <Navigator>
-        {authData ? (
+        {/*comment this out for texting*/}
+        {/* {authData ? (
           <Screen name="Home" component={Home} />
         ) : (
           <Screen name="Auth" component={Auth} options={{ headerShown: false }} />
-        )}
+        )} */}
+        <Screen name="Splash" component={Splash}/>
       </Navigator>
     </NavigationContainer>
   )

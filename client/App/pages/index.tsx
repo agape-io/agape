@@ -5,10 +5,12 @@ import SignUp from './SignUp';
 import SignIn from './SignIn';
 import Landing from './Landing';
 import TestPage from './TestPage';
+import Splash from './Splash';
 
 export {
   SignUp,
   SignIn,
   Landing,
-  TestPage
+  TestPage,
+  Splash
 };
