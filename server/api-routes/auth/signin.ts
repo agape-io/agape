@@ -30,6 +30,7 @@ router.post('/email', async (req: Request, res: Response) => {
                 await bcrypt.compare(req.body.password, existingUser.password, function (err, passwordMatch) {
                     if (passwordMatch) {
                         const user = {
+                            userId: existingUser.userId,
                             email: req.body.email,
                             token: null
                         }
