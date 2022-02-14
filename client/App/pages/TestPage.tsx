@@ -47,9 +47,9 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
 
   const testMatches = async () => {
     getMatches(userId, token).then(res => {
-      console.log(res);
+      console.log(res.data);
     }).catch(e => {
-      console.log('something went wrong: ', e);
+      console.log('something went wrong: ', e.response.data);
     })
     .then(() => {
         navigation.navigate('Test');
@@ -58,9 +58,9 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
 
   const testProfile = async () => {
     getProfile(userId, token).then(res => {
-      console.log(res);
+      console.log(res.data);
     }).catch(e => {
-      console.log('something went wrong: ', e);
+      console.log('something went wrong: ', e.response.data);
     })
     .then(() => {
         navigation.navigate('Test');
@@ -118,6 +118,7 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
   
   return (
     <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+      {console.log(token, userId)}
       <Text>This is a TEST page</Text>
       <TouchableOpacity onPress={() => testMatches()}>
         <Text>Test Get Matches</Text>
