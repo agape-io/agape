@@ -3,8 +3,17 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 export const UserModel = new Schema({
-    firstname: String,
-    lastname: String,
+    userId: String,
     email: String,
     password: String,
+    isOnline: Boolean,
+    profile: {
+        name: String,
+        gender: String,
+        yearBorn: String,
+        aboutMe: String,
+        religion: String,
+        location: String,
+        hobbies: Array<String>()
+    },
 });

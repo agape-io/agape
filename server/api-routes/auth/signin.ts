@@ -30,17 +30,20 @@ router.post('/email', async (req: Request, res: Response) => {
                 await bcrypt.compare(req.body.password, existingUser.password, function (err, passwordMatch) {
                     if (passwordMatch) {
                         const user = {
+                            userId: existingUser.userId,
                             email: req.body.email,
-                            token: null
+                            token: null,
+                            isOnline: false,
                         }
                         const token = jwt.sign(
                             { email: user.email },
                             JSONWebToken.Key,
                             {
-                                expiresIn: "2hr",
+                                expiresIn: "1hr",
                             }
                         );
                         user.token = token;
+                        user.isOnline = true;
                         res.status(200).send({
                             status: 200,
                             message: "Logged In!",
