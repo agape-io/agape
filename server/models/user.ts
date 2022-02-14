@@ -6,6 +6,7 @@ export const UserModel = new Schema({
     userId: String,
     email: String,
     password: String,
+    isOnline: Boolean,
     profile: {
         name: String,
         gender: String,
