@@ -31,7 +31,7 @@ const AuthProvider:FC = ({ children }) => {
         setAuthData(_authData);
         setLoading(false);
       }).catch(e => { 
-        Promise.reject(e);
+        Promise.reject(e.response.data);
       })
   }
 
@@ -47,7 +47,7 @@ const AuthProvider:FC = ({ children }) => {
       setAuthData(_auth);
       Promise.resolve('Success!');
     }).catch(e => {
-      Promise.reject(e);
+      Promise.reject(e.response.data);
     })
   }
 

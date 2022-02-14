@@ -45,7 +45,7 @@ const SignUp: FC<SignUpProps> = ({ navigation }) => {
       if (res) navigation.navigate("SignIn");  
     })
     .catch(e => {
-      console.log(e);
+      console.log(e.response.data.message);
   })
   }
 
