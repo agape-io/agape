@@ -10,7 +10,6 @@ type AuthNavigatorParamList = {
 type HomeNavigatorParamList = {
   Discover: undefined;
   Test: undefined;
-
 }
 
 type RootNavigatorParamsList = {
@@ -18,7 +17,7 @@ type RootNavigatorParamsList = {
   Home: NavigatorScreenParams<HomeNavigatorParamList>
 }
 type AuthContextData = {
-  authData?: AuthData;
+  authData: AuthData;
   loading: boolean;
   signIn(email: string, password: string): Promise<void>;
   signOut(): Promise<void>;
@@ -27,10 +26,21 @@ type AuthContextData = {
 
 type AuthData = {
   token: string,
-  email: string
+  email: string,
+  userId: string
 }
 
-export type IconT = {
+type CardItemT = {
+  description?: string;
+  hasActions?: boolean;
+  hasVariant?: boolean;
+  image: any;
+  isOnline?: boolean;
+  matches?: string;
+  name: string;
+};
+
+type IconT = {
   name: any;
   size: number;
   color: string;
@@ -42,15 +52,7 @@ export {
   RootNavigatorParamsList,
   AuthNavigatorParamList,
   AuthContextData,
-  AuthData
+  AuthData,
+  CardItemT,
+  IconT
 }
-
-export type CardItemT = {
-  description?: string;
-  hasActions?: boolean;
-  hasVariant?: boolean;
-  image: any;
-  isOnline?: boolean;
-  matches?: string;
-  name: string;
-};

@@ -1,12 +1,7 @@
 /**
  * Main Handler for Routes
  */
-import React, {
-  useState,
-  useEffect,
-  useContext,
-  FC
-} from 'react';
+import React, { FC } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -42,7 +37,7 @@ const Home: FC = () => {
   const { Navigator, Screen } = HomeStack;
 
   return (
-    <Navigator screenOptions={{ headerShown: false }}>
+    <Navigator screenOptions={{ headerShown: false }} initialRouteName="Discover">
       <Screen name="Test" component={TestPage} />
       <Screen name="Discover" component={Discover} />
     </Navigator>
@@ -73,8 +68,8 @@ const Routes: FC<State> = () => {
   return (
     <NavigationContainer>
       <Navigator>
-       {authData ? (
-          <Screen name="Home" component={Home} />
+        {authData ? (
+          <Screen name="Home" component={Home} options={{ headerShown: false }}/>
         ) : (
           <Screen name="Auth" component={Auth} options={{ headerShown: false }} />
         )}

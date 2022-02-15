@@ -3,6 +3,7 @@
   "scripts": {
     "start": "expo start",
     "start-cache": "expo r -c",
+    "start-prod": "expo start --no-dev --minify",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",

@@ -6,11 +6,11 @@ import connect from "../../config/db";
 
 const router = Router();
 
-router.get('/get', async (req: Request, res: Response) => {
-    if (req.body.userId) {
+router.get('/', async (req: Request, res: Response) => {
+    if (req.query.userId) {
         await connect();
         const userModel = mongoose.model('users', UserModel);
-        userModel.findOne({ userId: req.body.userId }, async function (err, existingUser) {
+        userModel.findOne({ userId: req.query.userId }, async function (err, existingUser) {
             if (existingUser) {
                 res.status(200).send({
                     status: 200,

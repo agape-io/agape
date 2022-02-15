@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import passport from "passport";
+import cors from 'cors';
 
 import { authenticateToken } from './middleware/auth';
 import signinRouter from './api-routes/auth/signin';
@@ -12,6 +13,9 @@ import discoverRouter from './api-routes/users/discover';
 
 const app = express();
 const port = 3000;
+
+// CORS Middleware
+app.use(cors());
 
 app.use(passport.initialize());
 app.use(bodyParser.json());

@@ -1,5 +1,11 @@
 import React from "react";
-import { Text, View, Image, Dimensions, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  Image,
+  Dimensions,
+  TouchableOpacity
+} from "react-native";
 import Icon from "./Icon";
 import { CardItemT } from "../types";
 import styles, {

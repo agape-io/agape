@@ -31,7 +31,7 @@ const AuthProvider:FC = ({ children }) => {
         setAuthData(_authData);
         setLoading(false);
       }).catch(e => { 
-        Promise.reject(e);
+        Promise.reject(e.response.data);
       })
   }
 
@@ -43,19 +43,21 @@ const AuthProvider:FC = ({ children }) => {
     }).then(res => {
       const _auth = res.data.user || {};
       AsyncStorage.setItem('@auth', JSON.stringify(_auth));
+
       console.log(_auth);
       setAuthData(_auth);
+      Promise.resolve('Success!');
     }).catch(e => {
-      Promise.reject(e);
+      Promise.reject(e.response.data);
     })
   }
 
   const signOut = async () => {
     // remove auth from async storage and state
     setAuthData(undefined);
-    AsyncStorage.removeItem('@auth');
-
-    Promise.resolve('User is signed out!');
+    AsyncStorage.removeItem('@auth').then(() => {
+      Promise.resolve('User is signed out!');
+    });
   }
 
   return (
@@ -81,7 +83,6 @@ function useAuth():AuthContextData {
 }
 
 export {
-  AuthContext,
   AuthProvider,
   useAuth
 }
