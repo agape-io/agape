@@ -92,7 +92,7 @@ const SignIn: FC<SignInProps> = ({ navigation }) => {
             <Text>Sign In</Text>
           </View>
         </TouchableOpacity>
-        {error && <Text>{errorMessage}</Text>}
+        {error && <Text style={styles.authError}>{errorMessage}</Text>}
         <View style={{ marginTop: 10 }}>
           <Text
             style={{ fontWeight: '200', fontSize: 20, textAlign: 'center' }}

@@ -105,7 +105,7 @@ const SignUp: FC<SignUpProps> = ({ navigation }) => {
             <Text>Create Account</Text>
           </View>
         </TouchableOpacity>
-        {error && <Text>{errorMessage}</Text>}
+        {error && <Text style={styles.authError}>{errorMessage}</Text>}
         <View style={{ marginTop: 10 }}>
           <Text
             style={{ fontWeight: '200', fontSize: 20, textAlign: 'center' }}

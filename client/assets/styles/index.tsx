@@ -5,6 +5,7 @@ const SECONDARY_COLOR = "#5636B8";
 export const WHITE = "#FFFFFF";
 export const GRAY = "#757E90";
 export const DARK_GRAY = "#363636";
+const ERROR_MESSAGE = "#ff0033";
 const BLACK = "#000000";
 
 const ONLINE_STATUS = "#46A575";
@@ -385,5 +386,9 @@ export default StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 22
+    },
+    authError: {
+        color: ERROR_MESSAGE,
+        fontSize: 20,
     }
 });
