@@ -21,6 +21,9 @@ import { AuthNavigatorParamList } from '../types';
 // API
 import { API_URL } from '@env';
 
+// Styles
+import styles from "../../assets/styles";
+
 export interface SignUpProps {
   navigation: NativeStackNavigationProp<AuthNavigatorParamList, 'SignUp'>;
   email: string;
@@ -32,6 +35,8 @@ const SignUp: FC<SignUpProps> = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [verifyPassword, setVerifyPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [error, isError] = useState(false);
 
   const runSignUp = async (email: string, password: string, verifyPassword: string) => {
     axios.post(`${API_URL}/signup/email`, {
@@ -42,16 +47,20 @@ const SignUp: FC<SignUpProps> = ({ navigation }) => {
     .then(res => {
       // check if there is a response
       // Tell the user try signing in
+      isError(false);
       if (res) navigation.navigate("SignIn");  
     })
-    .catch(e => {
+      .catch(e => {
+      // display errors to the UI
+      isError(true);
       console.log(e.response.data.message);
-  })
+      setErrorMessage(e.response.data.message);
+    });
   }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      <KeyboardAvoidingView style={styles.container} behavior="padding">
+      <KeyboardAvoidingView style={styles.authContainer} behavior="padding">
         <Image
           source={require('../../assets/icons/agape-temp.png')}
           resizeMode='contain'
@@ -92,10 +101,11 @@ const SignUp: FC<SignUpProps> = ({ navigation }) => {
           style={{ width: '86%', marginTop: 20 }}
           onPress={() => runSignUp(email, password, verifyPassword)}
         >
-          <View style={styles.button}>
+          <View style={styles.authButton}>
             <Text>Create Account</Text>
           </View>
         </TouchableOpacity>
+        {error && <Text>{errorMessage}</Text>}
         <View style={{ marginTop: 10 }}>
           <Text
             style={{ fontWeight: '200', fontSize: 20, textAlign: 'center' }}
@@ -108,32 +118,5 @@ const SignUp: FC<SignUpProps> = ({ navigation }) => {
     </SafeAreaView>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  form: {
-    width: '86%',
-    paddingTop: 35
-  },
-  input: {
-    fontSize: 20,
-    borderColor: '#707070',
-    borderBottomWidth: 1,
-    paddingBottom: 1.5,
-    marginTop: 25.5,
-  },
-  button: {
-    backgroundColor: '#F0ABC1',
-    height: 44,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 22
-  }
-});
 
 export default SignUp;

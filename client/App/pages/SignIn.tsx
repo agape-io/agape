@@ -5,7 +5,6 @@ import React, { useState, FC } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
   SafeAreaView,
   Image,
@@ -24,6 +23,9 @@ import {
 // API
 import { useAuth } from '../navigation';
 
+// Styles
+import styles from "../../assets/styles";
+
 export interface SignInProps {
   navigation: CompositeNavigationProp<NativeStackNavigationProp<AuthNavigatorParamList, 'SignIn'>,
     NativeStackNavigationProp<RootNavigatorParamsList>>;
@@ -34,20 +36,28 @@ export interface SignInProps {
 const SignIn: FC<SignInProps> = ({ navigation }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [error, isError] = useState(false);
 
   const auth = useAuth();
 
   const signIn = async (email: string, password: string) => {
     auth.signIn(email, password)
+      .then(() => {
+        // when successful, set error to false
+        isError(false);
+      })
       .catch(e => {
         //navigation.navigate("Auth", { screen: "SignIn" });
-        console.log(e);
+        console.log(e.response.data.message);
+        setErrorMessage(e.response.data.message);
+        isError(true);
       });
   }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      <KeyboardAvoidingView style={styles.container} behavior="padding">
+      <KeyboardAvoidingView style={styles.authContainer} behavior="padding">
         <Image
           source={require('../../assets/icons/agape-temp.png')}
           resizeMode='contain'
@@ -78,10 +88,11 @@ const SignIn: FC<SignInProps> = ({ navigation }) => {
           style={{ width: '86%', marginTop: 20 }}
           onPress={() => signIn(email, password)}
         >
-          <View style={styles.button}>
+          <View style={styles.authButton}>
             <Text>Sign In</Text>
           </View>
         </TouchableOpacity>
+        {error && <Text>{errorMessage}</Text>}
         <View style={{ marginTop: 10 }}>
           <Text
             style={{ fontWeight: '200', fontSize: 20, textAlign: 'center' }}
@@ -94,36 +105,5 @@ const SignIn: FC<SignInProps> = ({ navigation }) => {
     </SafeAreaView>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  indicator: {
-    justifyContent: 'center',
-    flex: 1,
-  },
-  form: {
-    width: '86%',
-    paddingTop: 35
-  },
-  input: {
-    fontSize: 20,
-    borderColor: '#707070',
-    borderBottomWidth: 1,
-    paddingBottom: 1.5,
-    marginTop: 25.5,
-  },
-  button: {
-    backgroundColor: '#F0ABC1',
-    height: 44,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 22
-  }
-});
 
 export default SignIn;
