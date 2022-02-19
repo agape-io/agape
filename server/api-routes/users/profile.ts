@@ -34,7 +34,8 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 router.post('/create', async (req: Request, res: Response) => {
-    if (req.body.userId && req.body.name && req.body.gender && req.body.yearBorn && req.body.aboutMe && req.body.religion && req.body.location && req.body.hobbies) {
+    if (req.body.userId && req.body.name && req.body.gender && req.body.yearBorn && req.body.aboutMe && 
+        req.body.religion && req.body.location && req.body.hobbies && req.body.sexuality) {
         await connect();
         const userModel = mongoose.model('users', UserModel);
         const profile = {
@@ -50,7 +51,10 @@ router.post('/create', async (req: Request, res: Response) => {
             { userId: req.body.userId },
             {
                 $set: {
-                    profile
+                    profile,
+                    preferences: {
+                        sexuality: req.body.sexuality
+                    }
                 }
             },
             { upsert: true },

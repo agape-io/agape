@@ -10,6 +10,7 @@ import signoutRouter from './api-routes/auth/signout';
 
 import profileRouter from './api-routes/users/profile';
 import discoverRouter from './api-routes/users/discover';
+import preferencesRouter from './api-routes/users/preferences';
 
 const app = express();
 const port = 3000;
@@ -29,6 +30,8 @@ app.use('/signout', signoutRouter);
 app.use('/profile', authenticateToken, profileRouter);
 // discover routers
 app.use('/discover', authenticateToken, discoverRouter);
+// user preferences router
+app.use('/preferences', authenticateToken, preferencesRouter);
 
 app.listen(port, () => {
   console.log(`Agape Server is listening on port ${port}!`);
