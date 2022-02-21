@@ -47,14 +47,21 @@ router.post('/create', async (req: Request, res: Response) => {
             location: req.body.location,
             hobbies: req.body.hobbies
         };
+        const preferences = {
+            sexuality: req.body.sexuality,
+            maxDist: "",
+            ageRange: "",
+            religion: "",
+            hobbiesDisliked: [
+                ""
+            ]
+        }
         userModel.findOneAndUpdate(
             { userId: req.body.userId },
             {
                 $set: {
                     profile,
-                    preferences: {
-                        sexuality: req.body.sexuality
-                    }
+                    preferences
                 }
             },
             { upsert: true },

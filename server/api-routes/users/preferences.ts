@@ -38,10 +38,10 @@ router.post('/update', async (req: Request, res: Response) => {
     const userModel = mongoose.model('users', UserModel);
     const preferences = {
       sexuality: req.body.sexuality,
-      maxDist: req.body.maxDist,
-      ageRange: req.body.ageRange,
-      religion: req.body.religion,
-      hobbiesDisliked: req.body.hobbiesDisliked
+      maxDist: req.body.maxDist || "",
+      ageRange: req.body.ageRange || "",
+      religion: req.body.religion || "",
+      hobbiesDisliked: req.body.hobbiesDisliked || ""
     }
     userModel.findOneAndUpdate(
       { userId: req.body.userId },
