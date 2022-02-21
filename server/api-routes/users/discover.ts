@@ -19,10 +19,10 @@ const getId = (user) => {
 }
 
 router.get('/', async (req: Request, res: Response) => {
-    if (req.query.userId) {
+    if (req.body.userId) {
         await connect();
         const userModel = mongoose.model('users', UserModel);
-        userModel.findOne({ userId: req.query.userId }, async function (err, existingUser) {
+        userModel.findOne({ userId: req.body.userId }, async function (err, existingUser) {
             if (existingUser) {
                 const users = await userModel.find({});
                 const commonUsers = [];
@@ -34,7 +34,7 @@ router.get('/', async (req: Request, res: Response) => {
                     };
                 });
                 // remove current user
-                const index = commonUsers.indexOf(req.query.userId);
+                const index = commonUsers.indexOf(req.body.userId);
                 if (index > -1) {
                     commonUsers.splice(index, 1);
                 }
