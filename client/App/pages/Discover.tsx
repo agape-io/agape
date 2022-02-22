@@ -71,16 +71,6 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                         </Card>
                     ))}
                 </CardStack>
-                <TouchableOpacity style={ {width: '86%'}} onPress={() => navigation.navigate('Test')}>
-                    <View style={styles.logoutButton}>
-                        <Text>Goto Test Page</Text>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={ {width: '86%'}} onPress={() => signOut()}>
-                    <View style={styles.logoutButton}>
-                        <Text>Log Out?</Text>
-                    </View>
-                </TouchableOpacity>
             </View>
         </ImageBackground>
     );
