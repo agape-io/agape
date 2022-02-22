@@ -10,6 +10,7 @@ import signoutRouter from './api-routes/auth/signout';
 
 import profileRouter from './api-routes/users/profile';
 import discoverRouter from './api-routes/users/discover';
+import preferencesRouter from './api-routes/users/preferences';
 import settingsRouter from './api-routes/users/settings';
 
 const app = express();
@@ -33,6 +34,8 @@ app.use('/signout', signoutRouter);
 app.use('/profile', authenticateToken, profileRouter);
 // discover routers
 app.use('/discover', authenticateToken, discoverRouter);
+// user preferences router
+app.use('/preferences', authenticateToken, preferencesRouter);
 // settings routers
 app.use('/settings', authenticateToken, settingsRouter);
 
