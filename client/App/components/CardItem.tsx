@@ -15,7 +15,7 @@ import styles, {
   STAR_ACTIONS,
   WHITE,
   GRAY
-} from "../../assets/styles/index";
+} from "../../assets/styles";
 
 const CardItem = ({
   name,

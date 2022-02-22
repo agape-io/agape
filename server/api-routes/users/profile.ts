@@ -35,7 +35,8 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 router.post('/create', upload.single('photo'), async (req: any, res: Response) => {
-    if (req.body.userId && req.body.name && req.body.gender && req.body.yearBorn && req.body.aboutMe && req.body.religion && req.body.location && req.body.hobbies) {
+    if (req.body.userId && req.body.name && req.body.gender && req.body.yearBorn && req.body.aboutMe && 
+        req.body.religion && req.body.location && req.body.hobbies && req.body.sexuality) {
         await connect();
         const userModel = mongoose.model('users', UserModel);
         const profile = {
@@ -47,12 +48,22 @@ router.post('/create', upload.single('photo'), async (req: any, res: Response) =
             location: req.body.location,
             hobbies: req.body.hobbies,
         };
+        const preferences = {
+            sexuality: req.body.sexuality,
+            maxDist: "",
+            ageRange: "",
+            religion: "",
+            hobbiesDisliked: [
+                ""
+            ]
+        }
         if (req.file) (profile as any).photo = `uploads/${req.file.filename}`;
         userModel.findOneAndUpdate(
             { userId: req.body.userId },
             {
                 $set: {
-                    profile
+                    profile,
+                    preferences
                 }
             },
             { upsert: true },

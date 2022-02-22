@@ -10,6 +10,7 @@ type AuthNavigatorParamList = {
 type HomeNavigatorParamList = {
   Discover: undefined;
   Test: undefined;
+  Profile: undefined;
 }
 
 type RootNavigatorParamsList = {
