@@ -38,6 +38,7 @@ export interface DiscoverProps {
 const Discover: FC<DiscoverProps> = ({ navigation }) => {
     const [swiper, setSwiper] = useState<CardStack | null>(null);
     const [match, fetchMatches] = useState([]);
+    let ids:any = null;
     const matchesArr: any = [];
 
     const auth = useAuth();
@@ -69,29 +70,18 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
       getMatches(userId, token)
         .then((res) => {
           // retrieve id's
-          const ids = res.data.users;
-          ids.map((item: any, key: any) => {
-            getProfile(item, token)
-              .then((res) => {
-                const profile = res.data.profile;
-                profile["id"] = key;
-                matchesArr.push(profile);
-              })
-              .catch((e) => {
-                console.debug("catch here:", e.message);
-              });
-          });
+          ids = res.data.users;
         })
         .catch((e) => {
           console.log("something went wrong: ", e.message);
         });
+
+        return ids;
     };
 
     useEffect(() => {
-        if (matchesArr) {
-            fetchMatches(matchesArr);
-        }
-    }, [match]);
+        
+    });
 
     
 
