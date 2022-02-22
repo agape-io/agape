@@ -14,7 +14,8 @@ export const UserModel = new Schema({
         aboutMe: String,
         religion: String,
         location: String,
-        hobbies: Array<String>()
+        hobbies: Array<String>(),
+        photo: String,
     },
     settings: {
         pushNotifications: Boolean,

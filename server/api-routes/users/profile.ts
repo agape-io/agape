@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 
 import { UserModel } from "../../models/user";
 import connect from "../../config/db";
+import { upload } from '../../middleware/imageUpload';
 
 const router = Router();
 
@@ -33,7 +34,7 @@ router.get('/', async (req: Request, res: Response) => {
     }
 });
 
-router.post('/create', async (req: Request, res: Response) => {
+router.post('/create', upload.single('photo'), async (req: any, res: Response) => {
     if (req.body.userId && req.body.name && req.body.gender && req.body.yearBorn && req.body.aboutMe && req.body.religion && req.body.location && req.body.hobbies) {
         await connect();
         const userModel = mongoose.model('users', UserModel);
@@ -44,8 +45,9 @@ router.post('/create', async (req: Request, res: Response) => {
             aboutMe: req.body.aboutMe,
             religion: req.body.religion,
             location: req.body.location,
-            hobbies: req.body.hobbies
+            hobbies: req.body.hobbies,
         };
+        if (req.file) (profile as any).photo = `uploads/${req.file.filename}`;
         userModel.findOneAndUpdate(
             { userId: req.body.userId },
             {
@@ -78,7 +80,7 @@ router.post('/create', async (req: Request, res: Response) => {
     };
 });
 
-router.post('/update', async (req: Request, res: Response) => {
+router.post('/update', upload.single('photo'), async (req: any, res: Response) => {
     if (req.body.userId && req.body.name && req.body.gender && req.body.yearBorn && req.body.aboutMe && req.body.religion && req.body.location && req.body.hobbies) {
         await connect();
         const userModel = mongoose.model('users', UserModel);
@@ -89,8 +91,9 @@ router.post('/update', async (req: Request, res: Response) => {
             aboutMe: req.body.aboutMe,
             religion: req.body.religion,
             location: req.body.location,
-            hobbies: req.body.hobbies
-        }
+            hobbies: req.body.hobbies,
+        };
+        if (req.file) (profile as any).photo = `uploads/${req.file.filename}`;
         userModel.findOneAndUpdate(
             { userId: req.body.userId },
             {

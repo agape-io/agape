@@ -15,6 +15,9 @@ import settingsRouter from './api-routes/users/settings';
 const app = express();
 const port = 3000;
 
+// Allow profile photos to be accessible to the client
+app.use('/uploads', express.static('./api-routes/users/uploads'));
+
 // CORS Middleware
 app.use(cors());
 
