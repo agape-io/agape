@@ -39,8 +39,9 @@ const Home: FC = () => {
 
   return (
     <Navigator screenOptions={{ headerShown: false }} initialRouteName="Discover">
-      <Screen name="Test" component={Profile} />
+      <Screen name="Test" component={TestPage} />
       <Screen name="Discover" component={Discover} />
+       <Screen name="Profile" component={Profile} />
     </Navigator>
   )
 }
