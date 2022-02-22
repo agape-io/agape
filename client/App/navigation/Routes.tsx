@@ -21,7 +21,8 @@ import {
   SignIn,
   SignUp,
   Landing,
-  Discover
+  Discover,
+  Profile
 } from '../pages';
 
 interface State {
@@ -38,7 +39,7 @@ const Home: FC = () => {
 
   return (
     <Navigator screenOptions={{ headerShown: false }} initialRouteName="Discover">
-      <Screen name="Test" component={TestPage} />
+      <Screen name="Test" component={Profile} />
       <Screen name="Discover" component={Discover} />
     </Navigator>
   )
@@ -69,7 +70,7 @@ const Routes: FC<State> = () => {
     <NavigationContainer>
       <Navigator>
         {authData ? (
-          <Screen name="Home" component={Home} options={{ headerShown: false }}/>
+          <Screen name="Home" component={Home} options={{ headerShown: false }} />
         ) : (
           <Screen name="Auth" component={Auth} options={{ headerShown: false }} />
         )}

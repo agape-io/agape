@@ -47,6 +47,17 @@ type IconT = {
   style?: any;
 };
 
+type ProfileItemT = {
+  age?: string;
+  info1?: string;
+  info2?: string;
+  info3?: string;
+  info4?: string;
+  location?: string;
+  matches: string;
+  name: string;
+};
+
 export {
   HomeNavigatorParamList,
   RootNavigatorParamsList,
@@ -54,5 +65,6 @@ export {
   AuthContextData,
   AuthData,
   CardItemT,
-  IconT
+  IconT,
+  ProfileItemT
 }
