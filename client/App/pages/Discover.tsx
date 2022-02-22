@@ -64,7 +64,7 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
         });
     };  
 
-    const getMatchProfiles = async () => {
+    const getMatchProfiles = async (userId:any) => {
         return getProfile(userId, token)
             .then(res => {
                 console.log(res.data.profile);
@@ -76,6 +76,7 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
     
     // get activity indicator to load data before rendering
     //https://stackoverflow.com/questions/63281536/react-hooks-how-to-wait-for-the-data-to-be-fetched-before-rendering
+    // https://stackoverflow.com/questions/56783262/how-to-store-data-from-json-api-response-into-array-in-reactjs
 
     useEffect(() => {
         // Promise.all([
