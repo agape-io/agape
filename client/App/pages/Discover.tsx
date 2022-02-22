@@ -7,7 +7,6 @@ import {
     ImageBackground,
     TouchableOpacity,
     Text,
-    InteractionManager
 } from "react-native";
 import CardStack, { Card } from "react-native-card-stack-swiper";
 import { CompositeNavigationProp } from "@react-navigation/native";
@@ -27,8 +26,6 @@ import styles from "../../assets/styles";
 import DEMO from "../../assets/data/demo";
 
 import { getMatches, getProfile } from '../utils';
-import { Item } from "react-native-paper/lib/typescript/components/List/List";
-
 
 export interface DiscoverProps {
     navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeNavigatorParamList, 'Discover'>,
@@ -37,9 +34,10 @@ export interface DiscoverProps {
 
 const Discover: FC<DiscoverProps> = ({ navigation }) => {
     const [swiper, setSwiper] = useState<CardStack | null>(null);
-    const [match, fetchMatches] = useState([]);
-    let ids:any = null;
-    const matchesArr: any = [];
+    const [loading, setLoading] = useState<boolean>(true);
+    const [match, fetchMatches] = useState<any>([]);
+
+    let matches: any = [];
 
     const auth = useAuth();
 
@@ -53,37 +51,36 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
             });
     }
 
-    // call getMatches to get the matched user ids
-    // use a map function to call the user ids into the getProfile page
-    // save profile contents into matches state
-    /**
-     * data should look like this:
-     * [
-     *   {
-     *     "id": "some-userId",
-     *     ....
-     *   }
-     * ]
-     */
-    const fetchMatch = async () => {
+    const getMatchIds = async () => {
       // get the id's
-      getMatches(userId, token)
-        .then((res) => {
-          // retrieve id's
-          ids = res.data.users;
+      return getMatches(userId, token)
+        .then(res => {
+            let ids = res.data.users;
+            console.log(ids);
+            return ids;
         })
-        .catch((e) => {
+        .catch(e => {
           console.log("something went wrong: ", e.message);
         });
+    };  
 
-        return ids;
-    };
+    const getMatchProfiles = async () => {
+        return getProfile(userId, token)
+            .then(res => {
+                console.log(res.data.profile);
+            }).catch(e => {
+                Promise.reject(e.message);
+            });
+        
+    }
+    
+    // get activity indicator to load data before rendering
 
     useEffect(() => {
-        
-    });
-
-    
+        // Promise.all([
+        //     getMatches()
+        // ])
+    }, []);
 
     return (
         <ImageBackground
@@ -102,31 +99,29 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                     ref={(newSwiper): void => setSwiper(newSwiper)}
                 >
                     {/** API Call made here */}
-                    {match.map(item => {
-                        console.log(item);
-                        // <Card key={item.id}>
-                        //     <CardItem
-                        //         name={item.name}
-                        //         aboutMe={item.aboutMe}
-                        //         gender={item.gender}
-                        //         hobbies={item.hobbies}
-                        //         location={item.location}
-                        //         religion={item.religion}
-                        //         yearBorn={item.yearBorn}
-                        //         hasActions
-                        //         hasVariant
-                        //         isOnline
-                        //         image={item.image}
-                        //         matches={item.match} 
-                        //     />
-                        // </Card>
+                    {match.map((item: any) => {
+                        //console.log('some match', item);
+                        <Card key={item.key}>
+                            <CardItem
+                                name={item.name}
+                                aboutMe={item.aboutMe}
+                                gender={item.gender}
+                                hobbies={item.hobbies}
+                                location={item.location}
+                                religion={item.religion}
+                                yearBorn={item.yearBorn}
+                                hasActions
+                                hasVariant
+                                isOnline
+                                image={item.image}
+                                matches={item.match} 
+                            />
+                        </Card>
                     })}
                 </CardStack>
-                <TouchableOpacity style={ {width: '86%'}} onPress={() => fetchMatch()}>
-                    <View style={styles.logoutButton}>
-                        <Text>Fetch Match</Text>
-                    </View>
-                </TouchableOpacity>
+                {match.map((item: any) => {
+                    console.log('testing matches', item);
+                })}
                 <TouchableOpacity style={ {width: '86%'}} onPress={() => navigation.navigate('Test')}>
                     <View style={styles.logoutButton}>
                         <Text>Goto Test Page</Text>
