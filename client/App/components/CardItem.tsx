@@ -18,16 +18,24 @@ import styles, {
 } from "../../assets/styles/index";
 
 const CardItem = ({
-  description,
+  name,
+  aboutMe,
+  gender,
+  hobbies,
+  location,
+  religion,
+  yearBorn,
   hasActions,
   hasVariant,
   image,
   isOnline,
-  matches,
-  name,
+  matches
 }: CardItemT) => {
   // Custom styling
   const fullWidth = Dimensions.get("window").width;
+  let today = new Date(),
+    year = today.getFullYear(),
+    age = year - parseInt(yearBorn);
 
   const imageStyle = [
     {
@@ -50,7 +58,7 @@ const CardItem = ({
   return (
     <View style={styles.containerCardItem}>
       {/* IMAGE */}
-      <Image source={image} style={imageStyle} />
+      {image && <Image source={image} style={imageStyle} />}
 
       {/* MATCHES */}
       {matches && (
@@ -63,25 +71,40 @@ const CardItem = ({
 
       {/* NAME */}
       <Text style={nameStyle}>{name}</Text>
+      
+      {/* ABOUT ME */}
+      {aboutMe && <Text style={styles.descriptionCardItem}>{aboutMe}</Text>}
+
+      {/* GENDER */}
+      <Text style={nameStyle}>{gender}</Text>
+
+      {/* LOCATION */}
+      <Text style={nameStyle}>{location}</Text>
+
+       {/* HOBBIES */}
+       {/* {hobbies.map((item) => {
+         {console.log(item)}
+        <Text style={nameStyle}>{item}</Text>;
+      })} */}
+
+      {/* RELIGION */}
+      <Text style={nameStyle}>{religion}</Text>
+
+      {/* YEAR BORN */}
+      <Text style={nameStyle}>{age}</Text>
 
       <View
         style={{
           borderBottomColor: GRAY,
           borderBottomWidth: 1,
-          alignSelf: 'stretch',
+          alignSelf: "stretch",
           // paddingVertical: 5,
-          marginBottom: 5
-
+          marginBottom: 5,
         }}
       />
 
-      {/* DESCRIPTION */}
-      {description && (
-        <Text style={styles.descriptionCardItem}>{description}</Text>
-      )}
-
       {/* STATUS */}
-      {!description && (
+      {!aboutMe && (
         <View style={styles.status}>
           <View style={isOnline ? styles.online : styles.offline} />
           <Text style={styles.statusText}>

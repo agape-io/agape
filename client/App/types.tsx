@@ -31,7 +31,12 @@ type AuthData = {
 }
 
 type CardItemT = {
-  description?: string;
+  aboutMe?: string;
+  gender: string;
+  location: string;
+  yearBorn: string;
+  hobbies: string[];
+  religion: string;
   hasActions?: boolean;
   hasVariant?: boolean;
   image: any;
