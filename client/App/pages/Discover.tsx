@@ -75,6 +75,7 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
     }
     
     // get activity indicator to load data before rendering
+    //https://stackoverflow.com/questions/63281536/react-hooks-how-to-wait-for-the-data-to-be-fetched-before-rendering
 
     useEffect(() => {
         // Promise.all([
@@ -97,6 +98,7 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                     verticalSwipe={false}
                     renderNoMoreCards={() => <Text>No more matches :(</Text>}
                     ref={(newSwiper): void => setSwiper(newSwiper)}
+                    key={match.length}
                 >
                     {/** API Call made here */}
                     {match.map((item: any) => {
