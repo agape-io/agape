@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 
 import { UserModel } from "../../models/user";
 import connect from "../../config/db";
-import { upload } from '../../middleware/imageUpload';
 
 const router = Router();
 
@@ -15,9 +14,8 @@ router.get('/', async (req: Request, res: Response) => {
             if (existingUser) {
                 res.status(200).send({
                     status: 200,
-                    message: 'Profile found!',
-                    profile: existingUser.profile,
-                    isOnline: existingUser.isOnline
+                    message: 'Settings found!',
+                    settings: existingUser.settings,
                 });
             } else {
                 res.status(500).send({
@@ -34,36 +32,19 @@ router.get('/', async (req: Request, res: Response) => {
     }
 });
 
-router.post('/create', upload.single('photo'), async (req: any, res: Response) => {
-    if (req.body.userId && req.body.name && req.body.gender && req.body.yearBorn && req.body.aboutMe && 
-        req.body.religion && req.body.location && req.body.hobbies && req.body.sexuality) {
+router.post('/create', async (req: Request, res: Response) => {
+    if (req.body.userId && req.body.membershipType && req.body.pushNotifications) {
         await connect();
         const userModel = mongoose.model('users', UserModel);
-        const profile = {
-            name: req.body.name,
-            gender: req.body.gender,
-            yearBorn: req.body.yearBorn,
-            aboutMe: req.body.aboutMe,
-            religion: req.body.religion,
-            location: req.body.location,
-            hobbies: req.body.hobbies,
+        const settings = {
+            membershipType: req.body.membershipType,
+            pushNotifications: req.body.pushNotifications,
         };
-        const preferences = {
-            sexuality: req.body.sexuality,
-            maxDist: "",
-            ageRange: "",
-            religion: "",
-            hobbiesDisliked: [
-                ""
-            ]
-        }
-        if (req.file) (profile as any).photo = `uploads/${req.file.filename}`;
         userModel.findOneAndUpdate(
             { userId: req.body.userId },
             {
                 $set: {
-                    profile,
-                    preferences
+                    settings
                 }
             },
             { upsert: true },
@@ -71,14 +52,14 @@ router.post('/create', upload.single('photo'), async (req: any, res: Response) =
                 if (err) {
                     res.status(500).send({
                         status: 500,
-                        message: 'Error creating profile!'
+                        message: 'Error creating settings!'
                     });
                     console.error(err);
                 }
                 else {
                     res.status(201).send({
                         status: 201,
-                        message: "Profile created!"
+                        message: "Settings created!"
                     })
                 };
             }
@@ -91,25 +72,19 @@ router.post('/create', upload.single('photo'), async (req: any, res: Response) =
     };
 });
 
-router.post('/update', upload.single('photo'), async (req: any, res: Response) => {
-    if (req.body.userId && req.body.name && req.body.gender && req.body.yearBorn && req.body.aboutMe && req.body.religion && req.body.location && req.body.hobbies) {
+router.post('/update', async (req: Request, res: Response) => {
+    if (req.body.userId && req.body.membershipType && req.body.pushNotifications) {
         await connect();
         const userModel = mongoose.model('users', UserModel);
-        const profile = {
-            name: req.body.name,
-            gender: req.body.gender,
-            yearBorn: req.body.yearBorn,
-            aboutMe: req.body.aboutMe,
-            religion: req.body.religion,
-            location: req.body.location,
-            hobbies: req.body.hobbies,
-        };
-        if (req.file) (profile as any).photo = `uploads/${req.file.filename}`;
+        const settings = {
+            membershipType: req.body.membershipType,
+            pushNotifications: req.body.pushNotifications,
+        }
         userModel.findOneAndUpdate(
             { userId: req.body.userId },
             {
                 $set: {
-                    profile
+                    settings
                 }
             },
             { upsert: true },
@@ -117,14 +92,14 @@ router.post('/update', upload.single('photo'), async (req: any, res: Response) =
                 if (err) {
                     res.status(500).send({
                         status: 500,
-                        message: 'Error updating profile!'
+                        message: 'Error updating settings!'
                     });
                     console.error(err);
                 }
                 else {
                     res.status(204).send({
                         status: 204,
-                        message: "Profile updated!"
+                        message: "Settings updated!"
                     })
                 };
             }
