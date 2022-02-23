@@ -35,14 +35,16 @@ export interface DiscoverProps {
 const Discover: FC<DiscoverProps> = ({ navigation }) => {
     const [swiper, setSwiper] = useState<CardStack | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
-    const [match, fetchMatches] = useState<any>([]);
-
-    let matches: any = [];
+    const [match, setMatches] = useState<any>([]);
 
     const auth = useAuth();
 
     const token = auth.authData.token,
-          userId = auth.authData.userId;
+        userId = auth.authData.userId;
+    
+    useEffect(() => {
+        loadMatches();
+    }, []);
 
     const signOut = async () => {
         auth.signOut()
@@ -51,38 +53,35 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
             });
     }
 
-    const getMatchIds = async () => {
+    const matches:any = [];
+    const loadMatches = async () => {
       // get the id's
-      return getMatches(userId, token)
-        .then(res => {
-            let ids = res.data.users;
-            console.log(ids);
-            return ids;
-        })
-        .catch(e => {
-          console.log("something went wrong: ", e.message);
-        });
-    };  
-
-    const getMatchProfiles = async (userId:any) => {
-        return getProfile(userId, token)
-            .then(res => {
-                console.log(res.data.profile);
-            }).catch(e => {
-                Promise.reject(e.message);
+        const matchIds = await getMatches(userId, token);
+        matchIds.data.users.map(async (item: any, index: any) => {
+            let matchedProfiles = await getProfile(item, token);
+            const { profile } = matchedProfiles.data;
+            
+            matches.push({
+                id: index,
+                aboutMe: profile.aboutMe,
+                gender: profile.gender,
+                hobbies: profile.hobbies,
+                location: profile.location,
+                name: profile.name,
+                religion: profile.religion,
+                yearBorn: profile.yearBorn
             });
-        
-    }
+            //console.log('pushed', matches[index]);
+            
+        });
+
+        setMatches(matches);
+
+    };  
     
     // get activity indicator to load data before rendering
     //https://stackoverflow.com/questions/63281536/react-hooks-how-to-wait-for-the-data-to-be-fetched-before-rendering
     // https://stackoverflow.com/questions/56783262/how-to-store-data-from-json-api-response-into-array-in-reactjs
-
-    useEffect(() => {
-        // Promise.all([
-        //     getMatches()
-        // ])
-    }, []);
 
     return (
         <ImageBackground
@@ -99,10 +98,10 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                     verticalSwipe={false}
                     renderNoMoreCards={() => <Text>No more matches :(</Text>}
                     ref={(newSwiper): void => setSwiper(newSwiper)}
-                    key={match.length}
+                    // key={match.length}
                 >
                     {/** API Call made here */}
-                    {match.map((item: any) => {
+                    {/* {match.map((item: any) => {
                         //console.log('some match', item);
                         <Card key={item.key}>
                             <CardItem
@@ -120,10 +119,10 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                                 matches={item.match} 
                             />
                         </Card>
-                    })}
+                    })} */}
                 </CardStack>
-                {match.map((item: any) => {
-                    console.log('testing matches', item);
+                {match.map((item: any, index:any) => {
+                    console.log('testing matches', item.aboutMe);
                 })}
             </View>
         </ImageBackground>
