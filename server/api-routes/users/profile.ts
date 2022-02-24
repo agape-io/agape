@@ -51,9 +51,9 @@ router.post('/create', upload.single('photo'), async (req: any, res: Response) =
         const preferences = {
             sexuality: req.body.sexuality,
             maxDist: "",
-            ageRange: "",
-            religion: "",
-            hobbiesDisliked: [
+            minAge: "",
+            maxAge: "",
+            religion: [
                 ""
             ]
         }

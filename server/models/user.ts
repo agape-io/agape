@@ -20,9 +20,9 @@ export const UserModel = new Schema({
     preferences: {
         sexuality: String,
         maxDist: String,
-        ageRange: String,
-        religion: String,
-        hobbiesDisliked: Array<String>()
+        minAge: String,
+        maxAge: String,
+        religion: Array<String>(),
     }, 
     settings: {
         pushNotifications: Boolean,
