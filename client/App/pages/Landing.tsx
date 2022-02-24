@@ -22,7 +22,7 @@ export interface LandingProps {
 const Landing:FC<LandingProps> = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" color="#F0ABC1" />
+      <ActivityIndicator style={styles.indicator} size="large" color="#F0ABC1" />
       <TouchableOpacity style={{ width: '86%', marginTop: 20 }} onPress={() => navigation?.navigate('SignIn')}>
         <Text>
           Go Back?

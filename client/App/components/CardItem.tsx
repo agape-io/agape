@@ -18,24 +18,15 @@ import styles, {
 } from "../../assets/styles";
 
 const CardItem = ({
-  name,
-  aboutMe,
-  gender,
-  hobbies,
-  location,
-  religion,
-  yearBorn,
+  data,
   hasActions,
   hasVariant,
-  image,
-  isOnline,
-  matches
 }: CardItemT) => {
   // Custom styling
   const fullWidth = Dimensions.get("window").width;
   let today = new Date(),
     year = today.getFullYear(),
-    age = year - parseInt(yearBorn);
+    age = year - parseInt(data.yearBorn);
 
   const imageStyle = [
     {
@@ -58,37 +49,37 @@ const CardItem = ({
   return (
     <View style={styles.containerCardItem}>
       {/* IMAGE */}
-      {image && <Image source={image} style={imageStyle} />}
+      {data.image && <Image source={data.image} style={imageStyle} />}
 
       {/* MATCHES */}
-      {matches && (
+      {data.matches && (
         <View style={styles.matchesCardItem}>
           <Text style={styles.matchesTextCardItem}>
-            <Icon name="heart" color={WHITE} size={13} /> {matches}% Match!
+            <Icon name="heart" color={WHITE} size={13} /> {data.matches}% Match!
           </Text>
         </View>
       )}
 
       {/* NAME */}
-      <Text style={nameStyle}>{name}</Text>
+      <Text style={nameStyle}>{data.name}</Text>
       
       {/* ABOUT ME */}
-      {aboutMe && <Text style={styles.descriptionCardItem}>{aboutMe}</Text>}
+      {data.aboutMe && <Text style={styles.descriptionCardItem}>{data.aboutMe}</Text>}
 
       {/* GENDER */}
-      <Text style={nameStyle}>{gender}</Text>
+      <Text style={nameStyle}>{data.gender}</Text>
 
       {/* LOCATION */}
-      <Text style={nameStyle}>{location}</Text>
+      <Text style={nameStyle}>{data.location}</Text>
 
        {/* HOBBIES */}
-       {/* {hobbies.map((item) => {
+       {/* {data.hobbies.map((item) => {
          {console.log(item)}
         <Text style={nameStyle}>{item}</Text>;
       })} */}
 
       {/* RELIGION */}
-      <Text style={nameStyle}>{religion}</Text>
+      <Text style={nameStyle}>{data.religion}</Text>
 
       {/* YEAR BORN */}
       <Text style={nameStyle}>{age}</Text>
@@ -104,11 +95,11 @@ const CardItem = ({
       />
 
       {/* STATUS */}
-      {!aboutMe && (
+      {!data.aboutMe && (
         <View style={styles.status}>
-          <View style={isOnline ? styles.online : styles.offline} />
+          <View style={data.isOnline ? styles.online : styles.offline} />
           <Text style={styles.statusText}>
-            {isOnline ? "Online" : "Offline"}
+            {data.isOnline ? "Online" : "Offline"}
           </Text>
         </View>
       )}

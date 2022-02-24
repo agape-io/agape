@@ -28,22 +28,14 @@ type AuthContextData = {
 type AuthData = {
   token: string,
   email: string,
-  userId: string
+  userId: string,
+  isOnline: boolean,
 }
 
 type CardItemT = {
-  aboutMe?: string;
-  gender: string;
-  location: string;
-  yearBorn: string;
-  hobbies: string[];
-  religion: string;
+  data: any;
   hasActions?: boolean;
   hasVariant?: boolean;
-  image: any;
-  isOnline?: boolean;
-  matches?: string;
-  name: string;
 };
 
 type IconT = {
