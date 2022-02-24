@@ -39,9 +39,9 @@ router.post('/update', async (req: Request, res: Response) => {
     const preferences = {
       sexuality: req.body.sexuality,
       maxDist: req.body.maxDist || "",
-      ageRange: req.body.ageRange || "",
+      minAge: req.body.minAge || "",
+      maxAge: req.body.maxAge || "",
       religion: req.body.religion || "",
-      hobbiesDisliked: req.body.hobbiesDisliked || ""
     }
     userModel.findOneAndUpdate(
       { userId: req.body.userId },
