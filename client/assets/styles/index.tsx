@@ -1,7 +1,7 @@
 import { StyleSheet, Dimensions } from "react-native";
 
-const PRIMARY_COLOR = "#2B4B82";
-const SECONDARY_COLOR = "#5636B8";
+export const PRIMARY_COLOR = "#2B4B82";
+export const SECONDARY_COLOR = "#FBA5C0";
 export const WHITE = "#FFFFFF";
 export const GRAY = "#757E90";
 export const DARK_GRAY = "#363636";
@@ -208,7 +208,7 @@ export default StyleSheet.create({
         paddingTop: 25,
         paddingBottom: 5,
         color: DARK_GRAY,
-        fontSize: 15,
+        fontSize: 30,
         textAlign: "center"
     },
     descriptionProfileItem: {
@@ -279,7 +279,8 @@ export default StyleSheet.create({
     containerProfile: { marginHorizontal: 0 },
     photo: {
         width: DIMENSION_WIDTH,
-        height: 450
+        height: DIMENSION_WIDTH,
+        borderRadius: DIMENSION_WIDTH / 2
     },
     topIconLeft: {
         // fontFamily: ICON_FONT,
@@ -305,7 +306,7 @@ export default StyleSheet.create({
     textButton: {
         // fontFamily: ICON_FONT,
         fontSize: 15,
-        color: WHITE,
+        color: DARK_GRAY,
         paddingLeft: 5
     },
     circledButton: {
@@ -315,13 +316,15 @@ export default StyleSheet.create({
         backgroundColor: PRIMARY_COLOR,
         justifyContent: "center",
         alignItems: "center",
-        marginRight: 10
+        marginRight: 10,
+        marginLeft: 10
     },
     roundedButton: {
         justifyContent: "center",
         flexDirection: "row",
         alignItems: "center",
         marginLeft: 10,
+        marginRight: 10,
         height: 50,
         borderRadius: 25,
         backgroundColor: SECONDARY_COLOR,
