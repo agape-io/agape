@@ -25,23 +25,26 @@ router.get('/', async (req: Request, res: Response) => {
         userModel.findOne({ userId: req.query.userId }, async function (err, existingUser) {
             if (existingUser) {
                 const users = await userModel.find({});
-                const commonUsers = [];
+                const commonUsersId = [];
+                const commonUsersProfile = [];
                 users.forEach(user => {
                     const currentUser = getProfile(existingUser);
                     const tempUser = getProfile(user);
                     if (commonElements(currentUser.hobbies, tempUser.hobbies)) {
-                        commonUsers.push(getId(user));
+                        commonUsersId.push(getId(user));
+                        commonUsersProfile.push(tempUser);
                     };
                 });
                 // remove current user
-                const index = commonUsers.indexOf(req.query.userId);
+                const index = commonUsersId.indexOf(req.query.userId);
                 if (index > -1) {
-                    commonUsers.splice(index, 1);
+                    commonUsersId.splice(index, 1);
+                    commonUsersProfile.splice(index, 1);
                 }
-                if (commonUsers.length > 0) {
+                if (commonUsersId.length > 0) {
                     res.status(200).send({
                         status: 200,
-                        users: commonUsers
+                        users: commonUsersProfile
                     })
                 } else {
                     res.status(500).send({
