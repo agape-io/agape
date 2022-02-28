@@ -25,7 +25,7 @@ import {
 import styles from "../../assets/styles";
 import DEMO from "../../assets/data/demo";
 
-import { getMatches, getProfile } from '../utils';
+import { getMatches } from '../utils';
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 export interface DiscoverProps {
@@ -47,39 +47,20 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
     
     const loadMatches = async () => {
         // get the id's
-        const matchProfiles: any = [];
         getMatches(userId, token)
             .then(res => {
+                console.log("this", res.data.users);
                 const { users } = res.data;
-                // iterate through ids to parse profile results
-                users.map((userId: any, index:any) => {
-                    getProfile(userId, token)
-                        .then(res => {
-                            //console.log(res.data.profile);
-                            const { profile } = res.data;
-                            matchProfiles.push({
-                                id: index,
-                                aboutMe: profile.aboutMe,
-                                gender: profile.gender,
-                                hobbies: profile.hobbies,
-                                location: profile.location,
-                                name: profile.name,
-                                yearBorn: profile.yearBorn
-                            });
-                            console.log(matchProfiles);
-                            return matchProfiles;
-                        });
-                });
-            }).then(() => {
-                setMatches(matchProfiles);
-            }).catch(e => {
-                console.error(e.message);
+
+                setMatches(users);
+            })
+            .catch(e => {
+                console.log(e.message);
             });
     };  
     
     useEffect(() => {
         loadMatches();
-    
     }, []);
 
     // if (matches === undefined) {
@@ -113,21 +94,20 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                     {/* <City /> */}
                     {/* <Filters /> */} 
                 </View>
-                {matches.map((item: any, index: any) => (                    //console.log('some matches:', index);
+                {/* {matches.map((item: any, index: any) => (                    //console.log('some matches:', index);
                     <View key={item.id}>
                         <Text>{item.name}</Text>
                         <Text>{item.aboutMe}</Text>
                         <Text>{item.gender}</Text>
                     </View>
-                ))}
-                {/* <CardStack
+                ))} */}
+                <CardStack
                     verticalSwipe={false}
                     renderNoMoreCards={() => <Text style={{ justifyContent: 'center', alignItems: 'center' }}>No more matches :(</Text>}
                     ref={newSwiper => setSwiper(newSwiper)}
-                    key={matches.length}
-                > */}
+                >
                     {/** API Call made here */}
-                    {/* {matches.map((item: any, index: any) => (
+                    {matches.map((item: any, index: any) => (
                         <Card>
                             <CardItem
                                 data={item}
@@ -136,8 +116,8 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                                 hasVariant
                             />
                         </Card>
-                    ))} */}
-                {/* </CardStack> */}
+                    ))}
+                </CardStack>
             </View>
         </ImageBackground>
     );
