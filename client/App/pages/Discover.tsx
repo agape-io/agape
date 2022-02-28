@@ -26,7 +26,7 @@ import styles from "../../assets/styles";
 import DEMO from "../../assets/data/demo";
 
 import { getMatches } from '../utils';
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { Item } from "react-native-paper/lib/typescript/components/List/List";
 
 export interface DiscoverProps {
     navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeNavigatorParamList, 'Discover'>,
@@ -35,7 +35,7 @@ export interface DiscoverProps {
 
 const Discover: FC<DiscoverProps> = ({ navigation }) => {
     const [swiper, setSwiper] = useState<CardStack | null>(null);
-    const [loading, isLoading] = useState<boolean>(true);
+    //const [loading, setLoading] = useState<boolean>(true);
     const [matches, setMatches] = useState<any>([]);
 
     const auth = useAuth();
@@ -44,25 +44,11 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
         userId = auth.authData.userId,
         isOnline = auth.authData.isOnline;
 
-    
-    const loadMatches = async () => {
-        // get the id's
-        getMatches(userId, token)
-            .then(res => {
-                const { users } = res.data;
-
-                setMatches(users);
-                isLoading(false);
-            })
-            .catch(e => {
-                console.log(e.message);
-            });
-    };
-    
     const NoMoreCards = () => {
         return (
             <Text style={{
-                textAlign: 'center'
+                textAlign: 'center',
+                top: 250
             }}>
                 No more matches :(
             </Text>
@@ -70,26 +56,24 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
     }
     
     useEffect(() => {
-        loadMatches();
-    }, []);
+        const loadMatches = async () => {
+        // get the id's
+            getMatches(userId, token)
+                .then(res => {
+                    const { users } = res.data;
 
-    if (matches === undefined) {
-        isLoading(true);
-        return (
-            <View style={{
-                justifyContent: 'center',
-                flex: 1,
-                alignItems: 'center',
-                position: 'absolute',
-                top: 400,
-                left: 0,
-                right: 0,
-                bottom: 0
-            }}>
-                <ActivityIndicator size="large" color="#F0ABC1" />
-            </View>
-        );
-    }
+                    setMatches(users);
+                }).catch(e => {
+                    console.log(e.message);
+                });
+        };
+
+        loadMatches();
+
+        return () => {
+            setMatches([]);
+        }
+    }, []);
 
     return (
         <ImageBackground
@@ -101,24 +85,29 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                     {/* <City /> */}
                     {/* <Filters /> */} 
                 </View>
+                {matches.map((item: any) => {
+                    console.log(item);
+                })}
                 <CardStack
                     verticalSwipe={false}
                     // keep loop to true for now
-                    loop={true}
+                    loop
                     renderNoMoreCards={() => <NoMoreCards />}
                     ref={newSwiper => setSwiper(newSwiper)}
                 >
                     {/** API Call made here */}
-                    {matches.map((item: any, index: any) => (
-                        <Card>
-                            <CardItem
-                                data={item}
-                                key={item.id}
-                                hasActions
-                                hasVariant
-                            />
-                        </Card>
-                    ))}
+                    {matches && matches.map((item: any, index: any) => {
+                        console.log(matches);
+                        return (
+                            <Card key={index}>
+                                <CardItem
+                                    key={index}
+                                    data={item}
+                                    hasActions
+                                />
+                            </Card>
+                        )
+                    })}
                 </CardStack>
             </View>
         </ImageBackground>

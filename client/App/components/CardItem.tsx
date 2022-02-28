@@ -17,6 +17,8 @@ import styles, {
   GRAY
 } from "../../assets/styles";
 
+import IMAGE_09 from "../../assets/images/kimlip.jpeg";
+
 const CardItem = ({
   data,
   hasActions,
@@ -49,10 +51,10 @@ const CardItem = ({
   return (
     <View style={styles.containerCardItem}>
       {/* IMAGE */}
-      {data.image ? <Image source={data.image} style={imageStyle} /> : <Image source={require('../../assets/images/vivi.jpeg')} style={imageStyle}/>}
+      {data.image ? <Image source={data.image} style={imageStyle} /> : <Image source={IMAGE_09} style={imageStyle}/>}
 
       {/* MATCHES */}
-      {data.matches && (
+      {!data.matches && (
         <View style={styles.matchesCardItem}>
           <Text style={styles.matchesTextCardItem}>
             <Icon name="heart" color={WHITE} size={13} /> {data.matches}% Match!
@@ -66,24 +68,6 @@ const CardItem = ({
       {/* ABOUT ME */}
       {data.aboutMe && <Text style={styles.descriptionCardItem}>{data.aboutMe}</Text>}
 
-      {/* GENDER */}
-      <Text style={nameStyle}>{data.gender}</Text>
-
-      {/* LOCATION */}
-      <Text style={nameStyle}>{data.location}</Text>
-
-       {/* HOBBIES */}
-       {/* {data.hobbies.map((item) => {
-         {console.log(item)}
-        <Text style={nameStyle}>{item}</Text>;
-      })} */}
-
-      {/* RELIGION */}
-      <Text style={nameStyle}>{data.religion}</Text>
-
-      {/* YEAR BORN */}
-      <Text style={nameStyle}>{age}</Text>
-
       <View
         style={{
           borderBottomColor: GRAY,
@@ -93,6 +77,18 @@ const CardItem = ({
           marginBottom: 5,
         }}
       />
+
+      {/* GENDER */}
+      <Text style={styles.descriptionCardItem}>{data.gender}</Text>
+
+      {/* LOCATION */}
+      <Text style={styles.descriptionCardItem}>{data.location}</Text>
+
+      {/* RELIGION */}
+      <Text style={styles.descriptionCardItem}>{data.religion}</Text>
+
+      {/* YEAR BORN */}
+      <Text style={styles.descriptionCardItem}>{age}</Text>
 
       {/* STATUS */}
       {!data.aboutMe && (
