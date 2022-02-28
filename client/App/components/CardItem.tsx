@@ -17,8 +17,6 @@ import styles, {
   GRAY
 } from "../../assets/styles";
 
-import IMAGE_09 from "../../assets/images/kimlip.jpeg";
-
 const CardItem = ({
   data,
   hasActions,
@@ -29,6 +27,14 @@ const CardItem = ({
   let today = new Date(),
     year = today.getFullYear(),
     age = year - parseInt(data.yearBorn);
+  
+  const images = [
+    require('../../assets/images/cy.png'),
+    require('../../assets/images/leo.png'),
+    require('../../assets/images/randy.png'),
+    require('../../assets/images/nat.png'),
+    require('../../assets/images/tim.png')
+  ];
 
   const imageStyle = [
     {
@@ -51,7 +57,7 @@ const CardItem = ({
   return (
     <View style={styles.containerCardItem}>
       {/* IMAGE */}
-      {data.image ? <Image source={data.image} style={imageStyle} /> : <Image source={IMAGE_09} style={imageStyle}/>}
+      {data.image ? <Image source={data.image} style={imageStyle} /> : <Image source={images[Math.floor(Math.random() * images.length)]} style={imageStyle}/>}
 
       {/* MATCHES */}
       {!data.matches && (

@@ -36,7 +36,7 @@ export interface DiscoverProps {
 const Discover: FC<DiscoverProps> = ({ navigation }) => {
     const [swiper, setSwiper] = useState<CardStack | null>(null);
     //const [loading, setLoading] = useState<boolean>(true);
-    const [matches, setMatches] = useState<any>([]);
+    const [matches, setMatches] = useState<any>(null);
 
     const auth = useAuth();
 
@@ -71,7 +71,7 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
         loadMatches();
 
         return () => {
-            setMatches([]);
+            setMatches(null);
         }
     }, []);
 
@@ -85,30 +85,28 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                     {/* <City /> */}
                     {/* <Filters /> */} 
                 </View>
-                {matches.map((item: any) => {
-                    console.log(item);
-                })}
-                <CardStack
-                    verticalSwipe={false}
-                    // keep loop to true for now
-                    loop
-                    renderNoMoreCards={() => <NoMoreCards />}
-                    ref={newSwiper => setSwiper(newSwiper)}
-                >
-                    {/** API Call made here */}
-                    {matches && matches.map((item: any, index: any) => {
-                        console.log(matches);
-                        return (
-                            <Card key={index}>
-                                <CardItem
-                                    key={index}
-                                    data={item}
-                                    hasActions
-                                />
-                            </Card>
-                        )
-                    })}
-                </CardStack>
+                {matches && (
+                    <CardStack
+                        verticalSwipe={false}
+                        // keep loop to true for now
+                        loop
+                        renderNoMoreCards={() => <NoMoreCards />}
+                        ref={newSwiper => setSwiper(newSwiper)}
+                    >
+                        {/** API Call made here */}
+                        {matches.map((item: any, index: any) => {
+                            return (
+                                <Card key={index}>
+                                    <CardItem
+                                        key={index}
+                                        data={item}
+                                        hasActions
+                                    />
+                                </Card>
+                            )
+                        })}
+                    </CardStack>
+                )}
             </View>
         </ImageBackground>
     );
