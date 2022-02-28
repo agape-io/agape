@@ -57,7 +57,17 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
             .catch(e => {
                 console.log(e.message);
             });
-    };  
+    };
+    
+    const NoMoreCards = () => {
+        return (
+            <Text style={{
+                textAlign: 'center'
+            }}>
+                No more matches :(
+            </Text>
+        )
+    }
     
     useEffect(() => {
         loadMatches();
@@ -94,16 +104,11 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                     {/* <City /> */}
                     {/* <Filters /> */} 
                 </View>
-                {/* {matches.map((item: any, index: any) => (                    //console.log('some matches:', index);
-                    <View key={item.id}>
-                        <Text>{item.name}</Text>
-                        <Text>{item.aboutMe}</Text>
-                        <Text>{item.gender}</Text>
-                    </View>
-                ))} */}
                 <CardStack
                     verticalSwipe={false}
-                    renderNoMoreCards={() => <Text style={{ justifyContent: 'center', alignItems: 'center' }}>No more matches :(</Text>}
+                    // keep loop to true for now
+                    loop={true}
+                    renderNoMoreCards={() => <NoMoreCards />}
                     ref={newSwiper => setSwiper(newSwiper)}
                 >
                     {/** API Call made here */}

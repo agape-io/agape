@@ -49,7 +49,7 @@ const CardItem = ({
   return (
     <View style={styles.containerCardItem}>
       {/* IMAGE */}
-      {data.image && <Image source={data.image} style={imageStyle} />}
+      {data.image ? <Image source={data.image} style={imageStyle} /> : <Image source={require('../../assets/images/vivi.jpeg')} style={imageStyle}/>}
 
       {/* MATCHES */}
       {data.matches && (
