@@ -49,10 +49,10 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
         // get the id's
         getMatches(userId, token)
             .then(res => {
-                console.log("this", res.data.users);
                 const { users } = res.data;
 
                 setMatches(users);
+                isLoading(false);
             })
             .catch(e => {
                 console.log(e.message);
@@ -73,26 +73,23 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
         loadMatches();
     }, []);
 
-    // if (matches === undefined) {
-    //     isLoading(true);
-    //     return (
-    //         <View style={{
-    //             justifyContent: 'center',
-    //             flex: 1,
-    //             alignItems: 'center',
-    //             position: 'absolute',
-    //             top: 400,
-    //             left: 0,
-    //             right: 0,
-    //             bottom: 0
-    //         }}>
-    //             <ActivityIndicator size="large" color="#F0ABC1" />
-    //         </View>
-    //     );
-    // }
-    // get activity indicator to load data before rendering
-    //https://stackoverflow.com/questions/63281536/react-hooks-how-to-wait-for-the-data-to-be-fetched-before-rendering
-    // https://stackoverflow.com/questions/56783262/how-to-store-data-from-json-api-response-into-array-in-reactjs
+    if (matches === undefined) {
+        isLoading(true);
+        return (
+            <View style={{
+                justifyContent: 'center',
+                flex: 1,
+                alignItems: 'center',
+                position: 'absolute',
+                top: 400,
+                left: 0,
+                right: 0,
+                bottom: 0
+            }}>
+                <ActivityIndicator size="large" color="#F0ABC1" />
+            </View>
+        );
+    }
 
     return (
         <ImageBackground

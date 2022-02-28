@@ -37,13 +37,13 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
   const token = auth.authData.token;
 
   // Dummy test variables
-  let testName = "Pyra"
-  let testHobbies = ['Mythra', 'Hiking', 'Biking'];
-  let testGender = "Female";
-  let testYearBorn = 2022;
-  let testAboutMe = "I'm in smash.";
+  let testName = "Phillia"
+  let testHobbies = ['Surfing', 'Hiking', 'Biking'];
+  let testGender = "Male";
+  let testYearBorn = 2010;
+  let testAboutMe = "I'm not smash.";
   let testReligion = "Shintoism";
-  let testLocation = "Japan";
+  let testLocation = "Kyoto";
 
   const testMatches = async () => {
     getMatches(userId, token).then(res => {

@@ -5,6 +5,7 @@ export const SECONDARY_COLOR = "#FBA5C0";
 export const WHITE = "#FFFFFF";
 export const GRAY = "#757E90";
 export const DARK_GRAY = "#363636";
+const ERROR_MESSAGE = "#ff0033";
 const BLACK = "#000000";
 
 const ONLINE_STATUS = "#46A575";
@@ -348,7 +349,7 @@ export default StyleSheet.create({
     },
     // test
     logoutButton: {
-        backgroundColor: '#F0ABC1',
+        backgroundColor: LIKE_ACTIONS,
         height: 44,
         flexDirection: 'row',
         justifyContent: 'center',
@@ -357,5 +358,40 @@ export default StyleSheet.create({
         marginTop: 10,
         top: 650,
         left: 25
+    },
+    /**
+     * Sign In/Sign Up styles
+     */
+    authContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+    indicator: {
+        justifyContent: 'center',
+        flex: 1,
+    },
+    form: {
+        width: '86%',
+        paddingTop: 35
+    },
+    input: {
+        fontSize: 20,
+        borderColor: '#707070',
+        borderBottomWidth: 1,
+        paddingBottom: 1.5,
+        marginTop: 25.5,
+    },
+    authButton: {
+        backgroundColor: LIKE_ACTIONS,
+        height: 44,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 22
+    },
+    authError: {
+        color: ERROR_MESSAGE,
+        fontSize: 20,
     }
 });
