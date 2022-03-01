@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 
 import { UserModel } from "../../models/user";
 import connect from '../../config/db';
+import { getId, getProfile, matchAge, matchReligion, matchSexuality } from '../../util/match';
 
 const router = Router();
 
@@ -10,12 +11,13 @@ const commonElements = (array1, array2) => {
     return array1.some(item => array2.includes(item));
 }
 
-const getProfile = (user) => {
-    return JSON.parse(JSON.stringify(user)).profile;
-}
+const generatePercentage = (ageMatch, religionMatch, sexualityMatch) => {
+    let initialPercentage = 40;
+    if (ageMatch) initialPercentage += 20;
+    if (religionMatch) initialPercentage += 10;
+    if (sexualityMatch) initialPercentage += 30;
+    return initialPercentage;
 
-const getId = (user) => {
-    return JSON.parse(JSON.stringify(user)).userId;
 }
 
 router.get('/', async (req: Request, res: Response) => {
@@ -31,8 +33,12 @@ router.get('/', async (req: Request, res: Response) => {
                     const currentUser = getProfile(existingUser);
                     const tempUser = getProfile(user);
                     if (commonElements(currentUser.hobbies, tempUser.hobbies)) {
+                        const percentage = generatePercentage(matchAge(currentUser, tempUser), matchReligion(currentUser, tempUser), matchSexuality(currentUser, tempUser));
                         commonUsersId.push(getId(user));
-                        commonUsersProfile.push(tempUser);
+                        commonUsersProfile.push({
+                            user: tempUser,
+                            percentage: percentage,
+                        });
                     };
                 });
                 // remove current user
