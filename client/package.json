@@ -3,6 +3,7 @@
   "scripts": {
     "start": "expo start",
     "start-cache": "expo r -c",
+    "start-prod": "expo start --no-dev --minify",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
@@ -10,6 +11,7 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.15.17",
+    "@react-navigation/material-bottom-tabs": "^6.1.1",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
@@ -29,6 +31,7 @@
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
     "react-native-splash-screen": "^3.3.0",
+    "react-native-vector-icons": "^9.1.0",
     "react-native-web": "0.17.1"
   },
   "devDependencies": {

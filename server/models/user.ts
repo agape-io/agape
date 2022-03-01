@@ -6,6 +6,7 @@ export const UserModel = new Schema({
     userId: String,
     email: String,
     password: String,
+    isOnline: Boolean,
     profile: {
         name: String,
         gender: String,
@@ -13,6 +14,18 @@ export const UserModel = new Schema({
         aboutMe: String,
         religion: String,
         location: String,
-        hobbies: Array<String>()
+        hobbies: Array<String>(),
+        photo: String,
     },
+    preferences: {
+        sexuality: String,
+        maxDist: String,
+        minAge: String,
+        maxAge: String,
+        religion: Array<String>(),
+    }, 
+    settings: {
+        pushNotifications: Boolean,
+        membershipType: String,
+    }
 });
