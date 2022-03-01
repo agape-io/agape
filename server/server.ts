@@ -39,6 +39,11 @@ app.use('/preferences', authenticateToken, preferencesRouter);
 // settings routers
 app.use('/settings', authenticateToken, settingsRouter);
 
+// profile routers
+app.use('/profile', authenticateToken, profileRouter);
+// discover routers
+app.use('/discover', authenticateToken, discoverRouter);
+
 app.listen(port, () => {
   console.log(`Agape Server is listening on port ${port}!`);
 });
