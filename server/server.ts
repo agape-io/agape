@@ -31,11 +31,11 @@ app.use('/signup', signupRouter);
 app.use('/signout', signoutRouter);
 
 // profile routers
-app.use('/profile', profileRouter);
+app.use('/profile', authenticateToken, profileRouter);
 // discover routers
-app.use('/discover', discoverRouter);
+app.use('/discover', authenticateToken, discoverRouter);
 // user preferences router
-app.use('/preferences', preferencesRouter);
+app.use('/preferences', authenticateToken, preferencesRouter);
 // settings routers
 app.use('/settings', authenticateToken, settingsRouter);
 
