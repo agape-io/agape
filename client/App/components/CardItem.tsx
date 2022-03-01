@@ -18,16 +18,23 @@ import styles, {
 } from "../../assets/styles";
 
 const CardItem = ({
-  description,
+  data,
   hasActions,
   hasVariant,
-  image,
-  isOnline,
-  matches,
-  name,
 }: CardItemT) => {
   // Custom styling
   const fullWidth = Dimensions.get("window").width;
+  let today = new Date(),
+    year = today.getFullYear(),
+    age = year - parseInt(data.yearBorn);
+  
+  const images = [
+    require('../../assets/images/cy.png'),
+    require('../../assets/images/leo.png'),
+    require('../../assets/images/randy.png'),
+    require('../../assets/images/nat.png'),
+    require('../../assets/images/tim.png')
+  ];
 
   const imageStyle = [
     {
@@ -50,42 +57,51 @@ const CardItem = ({
   return (
     <View style={styles.containerCardItem}>
       {/* IMAGE */}
-      <Image source={image} style={imageStyle} />
+      {data.image ? <Image source={data.image} style={imageStyle} /> : <Image source={images[Math.floor(Math.random() * images.length)]} style={imageStyle}/>}
 
       {/* MATCHES */}
-      {matches && (
+      {!data.matches && (
         <View style={styles.matchesCardItem}>
           <Text style={styles.matchesTextCardItem}>
-            <Icon name="heart" color={WHITE} size={13} /> {matches}% Match!
+            <Icon name="heart" color={WHITE} size={13} /> {data.matches}% Match!
           </Text>
         </View>
       )}
 
       {/* NAME */}
-      <Text style={nameStyle}>{name}</Text>
+      <Text style={nameStyle}>{data.name}</Text>
+      
+      {/* ABOUT ME */}
+      {data.aboutMe && <Text style={styles.descriptionCardItem}>{data.aboutMe}</Text>}
 
       <View
         style={{
           borderBottomColor: GRAY,
           borderBottomWidth: 1,
-          alignSelf: 'stretch',
+          alignSelf: "stretch",
           // paddingVertical: 5,
-          marginBottom: 5
-
+          marginBottom: 5,
         }}
       />
 
-      {/* DESCRIPTION */}
-      {description && (
-        <Text style={styles.descriptionCardItem}>{description}</Text>
-      )}
+      {/* GENDER */}
+      <Text style={styles.descriptionCardItem}>{data.gender}</Text>
+
+      {/* LOCATION */}
+      <Text style={styles.descriptionCardItem}>{data.location}</Text>
+
+      {/* RELIGION */}
+      <Text style={styles.descriptionCardItem}>{data.religion}</Text>
+
+      {/* YEAR BORN */}
+      <Text style={styles.descriptionCardItem}>{age}</Text>
 
       {/* STATUS */}
-      {!description && (
+      {!data.aboutMe && (
         <View style={styles.status}>
-          <View style={isOnline ? styles.online : styles.offline} />
+          <View style={data.isOnline ? styles.online : styles.offline} />
           <Text style={styles.statusText}>
-            {isOnline ? "Online" : "Offline"}
+            {data.isOnline ? "Online" : "Offline"}
           </Text>
         </View>
       )}

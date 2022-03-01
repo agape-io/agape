@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import {
   ScrollView,
   View,
@@ -9,8 +9,16 @@ import {
 import { Icon, ProfileItem } from "../components";
 import DEMO from "../../assets/data/demo";
 import styles, { WHITE } from "../../assets/styles";
+import { CompositeNavigationProp } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { HomeNavigatorParamList, RootNavigatorParamsList } from "../types";
 
-const Profile = () => {
+export interface ProfileProps {
+  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeNavigatorParamList, 'Discover'>,
+  NativeStackNavigationProp<RootNavigatorParamsList>>;
+}
+
+const Profile:FC<ProfileProps> = ({ navigation }) => {
   const {
     age,
     image,
