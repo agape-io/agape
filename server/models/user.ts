@@ -29,4 +29,6 @@ export const UserModel = new Schema({
         pushNotifications: Boolean,
         membershipType: String,
     }
+}, {
+    timestamps: true,
 });
