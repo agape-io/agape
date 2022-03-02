@@ -41,6 +41,7 @@ router.post('/create', upload.single('photo'), async (req: any, res: Response) =
         const userModel = mongoose.model('users', UserModel);
         const profile = {
             name: req.body.name,
+            age: req.body.age,
             gender: req.body.gender,
             yearBorn: req.body.yearBorn,
             aboutMe: req.body.aboutMe,
@@ -98,6 +99,7 @@ router.post('/update', upload.single('photo'), async (req: any, res: Response) =
         const userModel = mongoose.model('users', UserModel);
         const profile = {
             name: req.body.name,
+            age: req.body.age,
             gender: req.body.gender,
             yearBorn: req.body.yearBorn,
             aboutMe: req.body.aboutMe,

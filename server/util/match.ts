@@ -1,3 +1,7 @@
+const commonElements = (array1, array2) => {
+    return array1.some(item => array2.includes(item));
+}
+
 export const getProfile = (user) => {
     return JSON.parse(JSON.stringify(user)).profile;
 }
@@ -8,6 +12,12 @@ export const getPreferences = (user) => {
 
 export const getId = (user) => {
     return JSON.parse(JSON.stringify(user)).userId;
+}
+
+export const commonHobbies = (user1, user2) => {
+    const user1Profile = getProfile(user1);
+    const user2Profile = getProfile(user2);
+    return commonElements(user1Profile.hobbies, user2Profile.hobbies);
 }
 
 export const matchSexuality = (user1, user2) => {
@@ -49,8 +59,8 @@ export const matchAge = (user1, user2) => {
     const user1Preferences = getPreferences(user1);
     const user2Profile = getProfile(user2);
     const user2Preferences = getPreferences(user2);
-    if (user2Profile.age > user1Preferences.minAge && user2Profile.age < user1Preferences.minAge) {
-        if (user1Profile.age > user2Preferences.minAge && user1Profile.age < user2Preferences.minAge) {
+    if (user2Profile.age >= user1Preferences.minAge && user2Profile.age <= user1Preferences.maxAge) {
+        if (user1Profile.age >= user2Preferences.minAge && user1Profile.age <= user2Preferences.maxAge) {
             return true;
         }
     }
