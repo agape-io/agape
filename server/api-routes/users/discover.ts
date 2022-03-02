@@ -3,19 +3,18 @@ import mongoose from "mongoose";
 
 import { UserModel } from "../../models/user";
 import connect from '../../config/db';
+import { getId, getProfile, commonHobbies, matchAge, matchReligion, matchSexuality } from '../../util/match';
 
 const router = Router();
 
-const commonElements = (array1, array2) => {
-    return array1.some(item => array2.includes(item));
-}
+const generatePercentage = (commonHobbies, ageMatch, religionMatch, sexualityMatch) => {
+    let initialPercentage = 20;
+    if (commonHobbies) initialPercentage += 20;
+    if (ageMatch) initialPercentage += 20;
+    if (religionMatch) initialPercentage += 10;
+    if (sexualityMatch) initialPercentage += 30;
+    return initialPercentage;
 
-const getProfile = (user) => {
-    return JSON.parse(JSON.stringify(user)).profile;
-}
-
-const getId = (user) => {
-    return JSON.parse(JSON.stringify(user)).userId;
 }
 
 router.get('/', async (req: Request, res: Response) => {
@@ -30,10 +29,13 @@ router.get('/', async (req: Request, res: Response) => {
                 users.forEach(user => {
                     const currentUser = getProfile(existingUser);
                     const tempUser = getProfile(user);
-                    if (commonElements(currentUser.hobbies, tempUser.hobbies)) {
-                        commonUsersId.push(getId(user));
-                        commonUsersProfile.push(tempUser);
-                    };
+                    const percentage = generatePercentage(commonHobbies(existingUser, user), matchAge(existingUser, user), matchReligion(existingUser, user), matchSexuality(existingUser, user));
+                    commonUsersId.push(getId(user));
+                    commonUsersProfile.push({
+                        userId: getId(user),
+                        profile: tempUser,
+                        percentage: percentage,
+                    });
                 });
                 // remove current user
                 const index = commonUsersId.indexOf(req.query.userId);

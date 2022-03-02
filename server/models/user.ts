@@ -9,6 +9,7 @@ export const UserModel = new Schema({
     isOnline: Boolean,
     profile: {
         name: String,
+        age: Number,
         gender: String,
         yearBorn: String,
         aboutMe: String,
@@ -23,7 +24,7 @@ export const UserModel = new Schema({
         minAge: String,
         maxAge: String,
         religion: Array<String>(),
-    }, 
+    },
     settings: {
         pushNotifications: Boolean,
         membershipType: String,
