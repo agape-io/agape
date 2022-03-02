@@ -33,7 +33,7 @@ router.get('/', async (req: Request, res: Response) => {
                     commonUsersId.push(getId(user));
                     commonUsersProfile.push({
                         userId: getId(user),
-                        user: tempUser,
+                        profile: tempUser,
                         percentage: percentage,
                     });
                 });
