@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import passport from "passport";
 import cors from 'cors';
+import { env } from './config/env';
 
 import { authenticateToken } from './middleware/auth';
 import signinRouter from './api-routes/auth/signin';
@@ -14,7 +15,7 @@ import preferencesRouter from './api-routes/users/preferences';
 import settingsRouter from './api-routes/users/settings';
 
 const app = express();
-const port = 3000;
+const { PORT } = env;
 
 // Allow profile photos to be accessible to the client
 app.use('/uploads', express.static('./api-routes/users/uploads'));
@@ -44,6 +45,6 @@ app.use('/profile', authenticateToken, profileRouter);
 // discover routers
 app.use('/discover', authenticateToken, discoverRouter);
 
-app.listen(port, () => {
-  console.log(`Agape Server is listening on port ${port}!`);
+app.listen(PORT, () => {
+  console.log(`Agape Server is listening on port ${PORT}!`);
 });
