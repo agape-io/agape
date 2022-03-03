@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import {
   ScrollView,
   View,
@@ -18,7 +18,10 @@ export interface ProfileProps {
   NativeStackNavigationProp<RootNavigatorParamsList>>;
 }
 
-const Profile:FC<ProfileProps> = ({ navigation }) => {
+const Profile: FC<ProfileProps> = ({ navigation }) => {
+  
+  const [modal, setModal] = useState<boolean>(false);
+  
   const {
     age,
     image,

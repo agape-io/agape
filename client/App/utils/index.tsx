@@ -62,6 +62,7 @@ const getProfile = async (userId: string, token: string) => {
  * @param religion 
  * @param location 
  * @param hobbies 
+ * @param photo 
  * 
  * When calling this function, use a then() and a 
  * catch() to get the response.
@@ -76,6 +77,7 @@ const createProfile = async (
   religion: string,
   location: string,
   hobbies: string[],
+  photo: string,
 ) => {
   // call axios to the API
   return axios.post(`${API_URL}/profile/create`, {
@@ -103,6 +105,7 @@ const createProfile = async (
  * @param religion 
  * @param location 
  * @param hobbies 
+ * @param photo
  * 
  * When calling this function, use a then() and a 
  * catch() to get the response.
@@ -117,6 +120,7 @@ const updateProfile = async (
   religion: string,
   location: string,
   hobbies: string[],
+  photo?: string
 ) => {
   // call axios to the API
   return axios.post(`${API_URL}/profile/update`, {
