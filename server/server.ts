@@ -13,6 +13,7 @@ import profileRouter from './api-routes/users/profile';
 import discoverRouter from './api-routes/users/discover';
 import preferencesRouter from './api-routes/users/preferences';
 import settingsRouter from './api-routes/users/settings';
+import { notFound, errorHandler } from './middleware/error';
 
 const app = express();
 const { PORT } = env;
@@ -44,6 +45,10 @@ app.use('/settings', authenticateToken, settingsRouter);
 app.use('/profile', authenticateToken, profileRouter);
 // discover routers
 app.use('/discover', authenticateToken, discoverRouter);
+
+// error handlers
+app.use(notFound);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Agape Server is listening on port ${PORT}!`);

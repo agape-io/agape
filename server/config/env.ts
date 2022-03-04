@@ -13,4 +13,5 @@ export const env = {
         Key: process.env.JWT_TOKEN_KEY,
     },
     PORT: process.env.PORT,
+    NODE_ENV: process.env.NODE_ENV,
 }
