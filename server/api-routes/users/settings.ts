@@ -74,7 +74,7 @@ router.post('/create', async (req: Request, res: Response) => {
     };
 });
 
-router.post('/update', async (req: Request, res: Response) => {
+router.put('/update', async (req: Request, res: Response) => {
     const { userId, membershipType, pushNotifications } = req.body;
     if (userId && membershipType && pushNotifications) {
         await connect();

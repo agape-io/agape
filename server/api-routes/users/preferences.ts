@@ -33,7 +33,52 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/update', async (req: Request, res: Response) => {
+router.post('/create', async (req: Request, res: Response) => {
+  const { userId, sexuality } = req.body;
+  if (userId && sexuality) {
+    await connect();
+    const userModel = mongoose.model('users', UserModel);
+    const { maxDist, minAge, maxAge, religion, userId } = req.body;
+    const preferences = {
+      sexuality: sexuality,
+      maxDist: maxDist || "",
+      minAge: minAge || "",
+      maxAge: maxAge || "",
+      religion: religion || "",
+    };
+    userModel.findOneAndUpdate(
+      { userId: userId },
+      {
+        $set: {
+          preferences
+        }
+      },
+      { upsert: true },
+      function (err, doc) {
+        if (err) {
+          res.status(500).send({
+            status: 500,
+            message: `Error creating preferences! ${err}`
+          });
+          console.error(err);
+        }
+        else {
+          res.status(201).send({
+            status: 201,
+            message: "Preferences created!"
+          })
+        };
+      }
+    )
+  } else {
+    res.status(500).send({
+      status: 500,
+      message: "Missing User Id!"
+    })
+  }
+});
+
+router.put('/update', async (req: Request, res: Response) => {
   const { userId, sexuality } = req.body;
   if (userId && sexuality) {
     await connect();

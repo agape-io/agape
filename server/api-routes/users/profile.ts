@@ -91,7 +91,7 @@ router.post('/create', upload.single('photo'), async (req: any, res: Response) =
     };
 });
 
-router.post('/update', upload.single('photo'), async (req: any, res: Response) => {
+router.put('/update', upload.single('photo'), async (req: any, res: Response) => {
     const { userId, name, gender, age, yearBorn, aboutMe, religion, location, hobbies, sexuality } = req.body;
     if (userId && name && gender && age && yearBorn && aboutMe && religion && location && hobbies && sexuality) {
         await connect();
