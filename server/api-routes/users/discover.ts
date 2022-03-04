@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 import { UserModel } from "../../models/user";
 import connect from '../../config/db';
-import { getId, getProfile, commonHobbies, matchAge, matchReligion, matchSexuality } from '../../util/match';
+import { getId, getProfile, getPreferences, commonHobbies, matchAge, matchReligion, matchSexuality } from '../../util/match';
 
 const router = Router();
 
@@ -34,6 +34,9 @@ router.get('/', async (req: Request, res: Response) => {
                     commonUsersProfile.push({
                         userId: getId(user),
                         profile: tempUser,
+                        preferences: {
+                            sexuality: getPreferences(user).sexuality
+                        },
                         percentage: percentage,
                     });
                 });

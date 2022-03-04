@@ -56,7 +56,7 @@ const router = Router();
 router.post('/email', async (req: Request, res: Response) => {
     const { email, password, verifyPassword } = req.body;
     if (email && password && verifyPassword) {
-        const errorDetails = schema.validate(req.body.password, { details: true });
+        const errorDetails = schema.validate(password, { details: true });
         if ((errorDetails as []).length === 0) {
             const saltRounds = 10;
             await bcrypt.genSalt(saltRounds, async function (err, salt) {

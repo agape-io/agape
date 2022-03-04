@@ -45,7 +45,7 @@ router.post('/update', async (req: Request, res: Response) => {
       minAge: minAge || "",
       maxAge: maxAge || "",
       religion: religion || "",
-    }
+    };
     userModel.findOneAndUpdate(
       { userId: userId },
       {
@@ -70,6 +70,11 @@ router.post('/update', async (req: Request, res: Response) => {
         };
       }
     )
+  } else {
+    res.status(500).send({
+      status: 500,
+      message: "Missing User Id!"
+    })
   }
 });
 
