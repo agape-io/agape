@@ -7,10 +7,11 @@ import connect from "../../config/db";
 const router = Router();
 
 router.get('/', async (req: Request, res: Response) => {
-    if (req.query.userId) {
+    const { userId } = req.query;
+    if (userId) {
         await connect();
         const userModel = mongoose.model('users', UserModel);
-        userModel.findOne({ userId: req.query.userId }, async function (err, existingUser) {
+        userModel.findOne({ userId: userId }, function (err, existingUser) {
             if (existingUser) {
                 res.status(200).send({
                     status: 200,
@@ -33,15 +34,16 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 router.post('/create', async (req: Request, res: Response) => {
-    if (req.body.userId && req.body.membershipType && req.body.pushNotifications) {
+    const { userId, membershipType, pushNotifications } = req.body;
+    if (userId && membershipType && pushNotifications) {
         await connect();
         const userModel = mongoose.model('users', UserModel);
         const settings = {
-            membershipType: req.body.membershipType,
-            pushNotifications: req.body.pushNotifications,
+            membershipType: membershipType,
+            pushNotifications: pushNotifications,
         };
         userModel.findOneAndUpdate(
-            { userId: req.body.userId },
+            { userId: userId },
             {
                 $set: {
                     settings
@@ -52,7 +54,7 @@ router.post('/create', async (req: Request, res: Response) => {
                 if (err) {
                     res.status(500).send({
                         status: 500,
-                        message: 'Error creating settings!'
+                        message: `Error creating settings! ${err}`
                     });
                     console.error(err);
                 }
@@ -73,15 +75,16 @@ router.post('/create', async (req: Request, res: Response) => {
 });
 
 router.post('/update', async (req: Request, res: Response) => {
-    if (req.body.userId && req.body.membershipType && req.body.pushNotifications) {
+    const { userId, membershipType, pushNotifications } = req.body;
+    if (userId && membershipType && pushNotifications) {
         await connect();
         const userModel = mongoose.model('users', UserModel);
         const settings = {
-            membershipType: req.body.membershipType,
-            pushNotifications: req.body.pushNotifications,
+            membershipType: membershipType,
+            pushNotifications: pushNotifications,
         }
         userModel.findOneAndUpdate(
-            { userId: req.body.userId },
+            { userId: userId },
             {
                 $set: {
                     settings
@@ -92,7 +95,7 @@ router.post('/update', async (req: Request, res: Response) => {
                 if (err) {
                     res.status(500).send({
                         status: 500,
-                        message: 'Error updating settings!'
+                        message: `Error updating settings! ${err}`
                     });
                     console.error(err);
                 }

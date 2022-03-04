@@ -14,14 +14,14 @@ const generatePercentage = (commonHobbies, ageMatch, religionMatch, sexualityMat
     if (religionMatch) initialPercentage += 10;
     if (sexualityMatch) initialPercentage += 30;
     return initialPercentage;
-
 }
 
 router.get('/', async (req: Request, res: Response) => {
-    if (req.query.userId) {
+    const { userId } = req.query;
+    if (userId) {
         await connect();
         const userModel = mongoose.model('users', UserModel);
-        userModel.findOne({ userId: req.query.userId }, async function (err, existingUser) {
+        userModel.findOne({ userId: userId }, async function (err, existingUser) {
             if (existingUser) {
                 const users = await userModel.find({});
                 const commonUsersId = [];
@@ -38,7 +38,7 @@ router.get('/', async (req: Request, res: Response) => {
                     });
                 });
                 // remove current user
-                const index = commonUsersId.indexOf(req.query.userId);
+                const index = commonUsersId.indexOf(userId);
                 if (index > -1) {
                     commonUsersId.splice(index, 1);
                     commonUsersProfile.splice(index, 1);
