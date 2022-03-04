@@ -7,11 +7,12 @@ import connect from '../../config/db';
 const router = Router();
 
 router.post('/email', async (req: Request, res: Response) => {
-    if (req.body.userId) {
+    const { userId } = req.body;
+    if (userId) {
         const userModel = mongoose.model('users', UserModel);
         await connect();
         userModel.findOneAndUpdate(
-            { userId: req.body.userId },
+            { userId: userId },
             {
                 $set: {
                     isOnline: false,

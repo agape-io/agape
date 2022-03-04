@@ -22,16 +22,17 @@ const router = Router();
 // });
 
 router.post('/email', async (req: Request, res: Response) => {
-    if (req.body.email && req.body.password) {
+    const { email, password } = req.body;
+    if (email && password) {
         const userModel = mongoose.model('users', UserModel);
         await connect();
-        userModel.findOne({ email: req.body.email }, async function (err, existingUser) {
+        userModel.findOne({ email: email }, async function (err, existingUser) {
             if (existingUser) {
-                await bcrypt.compare(req.body.password, existingUser.password, function (err, passwordMatch) {
+                await bcrypt.compare(password, existingUser.password, function (err, passwordMatch) {
                     if (passwordMatch) {
                         const user = {
                             userId: existingUser.userId,
-                            email: req.body.email,
+                            email: email,
                             token: null,
                             isOnline: false,
                         }
@@ -52,21 +53,21 @@ router.post('/email', async (req: Request, res: Response) => {
                     } else {
                         res.status(500).send({
                             status: 500,
-                            message: "Incorrect password"
+                            message: "Incorrect password!"
                         });
                     };
                 });
             } else {
                 res.status(500).send({
                     status: 500,
-                    message: "Invalid Email"
+                    message: "Invalid Email!"
                 });
             };
         });
     } else {
         res.status(500).send({
             status: 500,
-            message: "Missing Email or Password"
+            message: "Missing Email or Password!"
         });
     };
 });
