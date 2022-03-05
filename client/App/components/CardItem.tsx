@@ -24,9 +24,6 @@ const CardItem = ({
 }: CardItemT) => {
   // Custom styling
   const fullWidth = Dimensions.get("window").width;
-  let today = new Date(),
-    year = today.getFullYear(),
-    age = year - parseInt(data.yearBorn);
   
   const images = [
     require('../../assets/images/cy.png'),
@@ -63,16 +60,16 @@ const CardItem = ({
       {!data.matches && (
         <View style={styles.matchesCardItem}>
           <Text style={styles.matchesTextCardItem}>
-            <Icon name="heart" color={WHITE} size={13} /> {data.matches}% Match!
+            <Icon name="heart" color={WHITE} size={13} /> {data.percentage}% Match!
           </Text>
         </View>
       )}
 
       {/* NAME */}
-      <Text style={nameStyle}>{data.name}</Text>
+      <Text style={nameStyle}>{data.profile.name}</Text>
       
       {/* ABOUT ME */}
-      {data.aboutMe && <Text style={styles.descriptionCardItem}>{data.aboutMe}</Text>}
+      {data.aboutMe && <Text style={styles.descriptionCardItem}>{data.profile.aboutMe}</Text>}
 
       <View
         style={{
@@ -85,16 +82,16 @@ const CardItem = ({
       />
 
       {/* GENDER */}
-      <Text style={styles.descriptionCardItem}>{data.gender}</Text>
+      <Text style={styles.descriptionCardItem}>{data.profile.gender}</Text>
 
       {/* LOCATION */}
-      <Text style={styles.descriptionCardItem}>{data.location}</Text>
+      <Text style={styles.descriptionCardItem}>{data.profile.location}</Text>
 
       {/* RELIGION */}
-      <Text style={styles.descriptionCardItem}>{data.religion}</Text>
+      <Text style={styles.descriptionCardItem}>{data.profile.religion}</Text>
 
       {/* YEAR BORN */}
-      <Text style={styles.descriptionCardItem}>{age}</Text>
+      <Text style={styles.descriptionCardItem}>{data.profile.age}</Text>
 
       {/* STATUS */}
       {!data.aboutMe && (

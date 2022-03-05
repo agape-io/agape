@@ -11,6 +11,7 @@ type HomeNavigatorParamList = {
   Discover: undefined;
   Test: undefined;
   Profile: undefined;
+  ProfileModal: undefined;
 }
 
 type RootNavigatorParamsList = {

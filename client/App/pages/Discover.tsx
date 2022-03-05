@@ -41,8 +41,20 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
     const auth = useAuth();
 
     const token = auth.authData.token,
-        userId = auth.authData.userId,
-        isOnline = auth.authData.isOnline;
+        userId = auth.authData.userId;
+        //isOnline = auth.authData.isOnline;
+    
+    const loadMatches = async () => {
+        // get the id's
+            getMatches(userId, token)
+                .then(res => {
+                    const { users } = res.data;
+                    console.log(users);
+                    setMatches(users);
+                }).catch(e => {
+                    console.log(e.message);
+                });
+        };
 
     const NoMoreCards = () => {
         return (
@@ -56,18 +68,6 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
     }
     
     useEffect(() => {
-        const loadMatches = async () => {
-        // get the id's
-            getMatches(userId, token)
-                .then(res => {
-                    const { users } = res.data;
-
-                    setMatches(users);
-                }).catch(e => {
-                    console.log(e.message);
-                });
-        };
-
         loadMatches();
 
         return () => {
@@ -95,6 +95,7 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                     >
                         {/** API Call made here */}
                         {matches.map((item: any, index: any) => {
+
                             return (
                                 <Card key={index}>
                                     <CardItem
