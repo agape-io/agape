@@ -15,6 +15,7 @@ import profileRouter from './api-routes/users/profile';
 import discoverRouter from './api-routes/users/discover';
 import preferencesRouter from './api-routes/users/preferences';
 import settingsRouter from './api-routes/users/settings';
+import swipeRouter from './api-routes/users/swipe';
 
 import { notFound, errorHandler } from './middleware/error';
 
@@ -43,6 +44,9 @@ app.use('/discover', authenticateToken, discoverRouter);
 app.use('/preferences', authenticateToken, preferencesRouter);
 // settings routers
 app.use('/settings', authenticateToken, settingsRouter);
+// swipe router
+app.use('/swipe', authenticateToken, swipeRouter);
+
 
 // profile routers
 app.use('/profile', authenticateToken, profileRouter);

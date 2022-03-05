@@ -28,7 +28,9 @@ export const UserModel = new Schema({
     settings: {
         pushNotifications: Boolean,
         membershipType: String,
-    }
+    },
+    swipeLeft: Array<String>(),
+    swipeRight: Array<String>()
 }, {
     timestamps: true,
 });
