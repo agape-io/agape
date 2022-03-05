@@ -14,6 +14,7 @@ import {
 import { TextInput } from 'react-native-gesture-handler';
 import axios from 'axios';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import * as ImagePicker from 'expo-image-picker';
 
 
 // API's
@@ -33,6 +34,7 @@ import {
 } from '../types';
 
 //  https://www.reactnativeschool.com/how-to-upload-images-from-react-native
+// https://www.waldo.com/blog/add-an-image-picker-react-native-app
 
 export interface ProfileModalProps {
   navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Discover'>,
@@ -69,8 +71,15 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
     // return data;
   }
 
-  const addImage = (picture: any) => {
-    
+  const addPhoto = async () => {
+    let _photo = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    // upload photo to database and profile
   }
 
   // Cancel Button for header
@@ -96,7 +105,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
       <View style={styles.modalPhotoContainer}>
         {photo && <Image source={{ uri: photo }} style={{ width: 200, height: 200 }} />}
         <View style={styles.uploadBtnContainer}>
-        <TouchableOpacity onPress={addImage} style={styles.uploadBtn}>
+        <TouchableOpacity onPress={addPhoto} style={styles.uploadBtn}>
           <Text>{photo ? 'Edit' : 'Upload'}</Text>
           <MaterialCommunityIcons name="camera" size={26} color="black" />
         </TouchableOpacity>
