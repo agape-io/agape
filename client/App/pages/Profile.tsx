@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   ScrollView,
   View,
@@ -35,6 +35,11 @@ const Profile: FC<ProfileProps> = ({ navigation }) => {
     match,
     name,
   } = DEMO[7];
+
+  //TODO: fetch profile data
+  useEffect(() => {
+
+  }, []);
 
   return (
     <ImageBackground

@@ -1,7 +1,8 @@
 import React, {
   FC,
   useState,
-  useLayoutEffect
+  useLayoutEffect,
+  useEffect
 } from 'react';
 import {
   Text,
@@ -9,9 +10,9 @@ import {
   View,
   TouchableOpacity,
   Alert,
-  Platform
+  Platform,
+  TextInput
 } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
 import axios from 'axios';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as ImagePicker from 'expo-image-picker';
@@ -47,7 +48,16 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
   const [profile, hasProfile] = useState<boolean>(false);
   const [photo, setPhoto] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  
+  const [name, setName] = useState<string>('');
+  const [gender, setGender] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [location, setLocation] = useState<string>('');
+  const [religion, setReligion] = useState<string>('');
+  const [preference, setPreference] = useState<string>('');
+  const [hobbies, setHobbies] = useState<any>(null);
+  const [age, setAge] = useState<string>('');
+  const [yearBorn, setYearBorn] = useState<string>('');
+
   // const
 
   // create profile
@@ -80,6 +90,17 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
     });
 
     // upload photo to database and profile
+    return _photo;
+  }
+
+  const checkForCameraRollPermissions = async () => {
+    const { status } = await ImagePicker.getMediaLibraryPermissionsAsync();
+
+    if (status !== 'granted') {
+      alert("Pleaase grant camera roll permissions inside your system's settings");
+    } else {
+      console.log('Media permissions are granted'); 
+    }
   }
 
   // Cancel Button for header
@@ -99,6 +120,16 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
       )
     })
   }, [navigation]);
+
+  // Checking permissions
+  useEffect(() => {
+    checkForCameraRollPermissions();
+  }, []);
+
+  // upload data to db
+  useEffect(() => {
+
+  });
   
   return (
     <View style={styles.modalContainer}>
@@ -111,6 +142,77 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         </TouchableOpacity>
         </View>
       </View>
+      <View style={[styles.form, { marginTop: -25}]}>
+          <TextInput
+            style={styles.input}
+            placeholder='Name'
+            placeholderTextColor="#b1b1b1"
+            returnKeyType="next"
+            keyboardType="default"
+            textContentType="name"
+            value={name}
+            onChangeText={name => setName(name)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder='About Me'
+            placeholderTextColor="#b1b1b1"
+            returnKeyType="next"
+            keyboardType="default"
+            textContentType="none"
+            value={description}
+            onChangeText={description => setDescription(description)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder='Age'
+            placeholderTextColor="#b1b1b1"
+            returnKeyType="next"
+            keyboardType="numeric"
+            textContentType="none"
+            value={age}
+            onChangeText={age => setAge(age)}
+        />
+        <TextInput
+            style={styles.input}
+            placeholder='Year Born'
+            placeholderTextColor="#b1b1b1"
+            returnKeyType="next"
+            keyboardType="numeric"
+            textContentType="none"
+            value={yearBorn}
+            onChangeText={yearBorn => setYearBorn(yearBorn)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder='Location'
+            placeholderTextColor="#b1b1b1"
+            returnKeyType="next"
+            keyboardType="default"
+            textContentType="none"
+            value={location}
+            onChangeText={location => setLocation(location)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder='Religion'
+            placeholderTextColor="#b1b1b1"
+            returnKeyType="next"
+            keyboardType="default"
+            value={religion}
+            onChangeText={religion => setReligion(religion)}
+        />
+        <TextInput
+            style={styles.input}
+            placeholder='Sexuality'
+            placeholderTextColor="#b1b1b1"
+            returnKeyType="next"
+            keyboardType="default"
+            textContentType="none"
+            value={preference}
+            onChangeText={preference => setPreference(preference)}
+          />
+        </View>
     </View>
   );
 }
