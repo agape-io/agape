@@ -397,45 +397,30 @@ export default StyleSheet.create({
     /**
      * Profile Modal
      */
-    profileCenteredView: {
-        flex: 1,
-        justifyContent: "center",
+    modalContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalPhotoContainer: {
+        marginTop: 40,
+        elevation: 2,
+        height: 200,
+        width: 200,
+        backgroundColor: '#efefef',
+        borderRadius: 999,
+        overflow: 'hidden',
+    },
+    uploadBtnContainer: {
+        opacity: 0.7,
+        position:'absolute',
+        bottom:0,
+        backgroundColor:'lightgrey',
+        width: '100%',
+        height: '25%',
+    },
+    uploadBtn: {
+        display: 'flex',
         alignItems: "center",
-        marginTop: 22
-    },
-    profileModalView: {
-        margin: 20,
-        backgroundColor: "white",
-        borderRadius: 20,
-        padding: 35,
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5
-    },
-    profileButton: {
-        borderRadius: 20,
-        padding: 10,
-        elevation: 2
-    },
-    profileButtonOpen: {
-        backgroundColor: "#F194FF",
-    },
-    profileButtonClose: {
-        backgroundColor: "#2196F3",
-    },
-    profileTextStyle: {
-        color: "white",
-        fontWeight: "bold",
-        textAlign: "center"
-    },
-    profileModalText: {
-        marginBottom: 15,
-        textAlign: "center"
+        justifyContent: 'center',
     }
 });

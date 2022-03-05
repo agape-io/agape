@@ -7,16 +7,16 @@ type AuthNavigatorParamList = {
   Landing: undefined;
 }
 
-type HomeNavigatorParamList = {
+type HomeTabNavigatorParamList = {
   Discover: undefined;
   Test: undefined;
   Profile: undefined;
-  ProfileModal: undefined;
 }
 
 type RootNavigatorParamsList = {
   Auth: NavigatorScreenParams<AuthNavigatorParamList>
-  Home: NavigatorScreenParams<HomeNavigatorParamList>
+  Home: NavigatorScreenParams<HomeTabNavigatorParamList>
+  ProfileModal: undefined;
 }
 type AuthContextData = {
   authData: AuthData;
@@ -58,7 +58,7 @@ type ProfileItemT = {
 };
 
 export {
-  HomeNavigatorParamList,
+  HomeTabNavigatorParamList,
   RootNavigatorParamsList,
   AuthNavigatorParamList,
   AuthContextData,

@@ -2,6 +2,7 @@
  * Main Handler for Routes
  */
 import React, { FC } from 'react';
+import { Image, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -9,9 +10,9 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 // Types
 import {
-  HomeNavigatorParamList,
   AuthNavigatorParamList,
-  RootNavigatorParamsList
+  RootNavigatorParamsList,
+  HomeTabNavigatorParamList
 } from '../types';
 
 // Stacks
@@ -32,6 +33,7 @@ import {
   SECONDARY_COLOR,
   PRIMARY_COLOR
 } from '../../assets/styles';
+import { ProfileModal } from '../components';
 
 interface State {
   loading?: boolean;
@@ -39,11 +41,11 @@ interface State {
 }
 
 const RootStack = createNativeStackNavigator<RootNavigatorParamsList>();
-const HomeStack = createMaterialBottomTabNavigator<HomeNavigatorParamList>();
+const HomeTabStack = createMaterialBottomTabNavigator<HomeTabNavigatorParamList>();
 const AuthStack = createNativeStackNavigator<AuthNavigatorParamList>();
 
-const Home: FC = () => {
-  const { Navigator, Screen } = HomeStack;
+const HomeTabs: FC = () => {
+  const { Navigator, Screen } = HomeTabStack;
 
   return (
     <Navigator
@@ -99,7 +101,7 @@ const Auth: FC = () => {
 
 const Routes: FC<State> = () => {
   const { authData, loading } = useAuth();
-  const { Screen, Navigator } = RootStack;
+  const { Screen, Navigator, Group } = RootStack;
 
   // if loading, render screen
   if (loading) {
@@ -110,7 +112,16 @@ const Routes: FC<State> = () => {
     <NavigationContainer>
       <Navigator>
         {authData ? (
-          <Screen name="Home" component={Home} options={{ headerShown: false }} />
+          <>
+            <Screen name="Home" component={HomeTabs} options={{ headerShown: false }} /> 
+            <Group screenOptions={{ presentation: 'modal'}}>
+              <Screen
+                name="ProfileModal"
+                component={ProfileModal}
+                options={{ headerTransparent: true, headerTitle: '' }}
+              />
+            </Group>
+          </>
         ) : (
           <Screen name="Auth" component={Auth} options={{ headerShown: false }} />
         )}

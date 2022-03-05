@@ -1,7 +1,11 @@
-import React, { FC, useState } from 'react';
+import React, {
+  FC,
+  useState,
+  useLayoutEffect
+} from 'react';
 import {
-  Modal,
   Text,
+  Image,
   View,
   TouchableOpacity,
   Alert,
@@ -9,9 +13,14 @@ import {
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import axios from 'axios';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 
 // API's
-import { updateProfile, createProfile } from '../utils';
+import {
+  updateProfile,
+  createProfile
+} from '../utils';
 import { CLOUDINARY_URL_UPLOAD, API_URL } from '@env';
 
 // Styles
@@ -19,14 +28,14 @@ import styles from '../../assets/styles';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
-  HomeNavigatorParamList,
+  HomeTabNavigatorParamList,
   RootNavigatorParamsList
 } from '../types';
 
 //  https://www.reactnativeschool.com/how-to-upload-images-from-react-native
 
 export interface ProfileModalProps {
-  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeNavigatorParamList, 'Discover'>,
+  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Discover'>,
   NativeStackNavigationProp<RootNavigatorParamsList>>;
 }
 
@@ -36,11 +45,13 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
   const [profile, hasProfile] = useState<boolean>(false);
   const [photo, setPhoto] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  
   // const
 
   // create profile
 
   // update profile
+
 
   const createFormData = (photo: any, body: {}) => {
     // const data = new FormData();
@@ -58,62 +69,41 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
     // return data;
   }
 
-  const handlePhoto = (picture: any) => {
+  const addImage = (picture: any) => {
     
   }
 
-  // const NewProfileModal = (props: any) => {
+  // Cancel Button for header
+  const CancelButton = ({ onPress }:any) => {
+    return (
+      <TouchableOpacity onPress={onPress}>
+        <MaterialCommunityIcons name="arrow-left" size={26} color="black" />
+      </TouchableOpacity>
+    );
+  }
 
-  //   return (
-  //     <Modal
-  //       transparent={props.transparent}
-  //       visible={props.visible}
-  //       onRequestClose={props.onRequestClose}
-  //     >
-  //        <View style={styles.profileCenteredView}>
-  //         <View style={styles.profileModalView}>
-  //           <Text style={styles.profileModalText}>New Profile</Text>
-  //           <TouchableOpacity
-  //             style={[styles.profileButton, styles.profileButtonClose]}
-  //             onPress={props.onPress}
-  //           >
-  //             <Text style={styles.profileTextStyle}>Hide Modal New</Text>
-  //           </TouchableOpacity>
-  //         </View>
-  //       </View>
-  //     </Modal>
-  //   );
-  // }
-
-  // const UpdateProfileModal = (props: any) => {
-
-  //   return (
-  //     <Modal
-  //       transparent={props.transparent}
-  //       visible={props.visible}
-  //       onRequestClose={props.onRequestClose}
-  //     >
-  //       <View style={styles.profileCenteredView}>
-  //         <View style={styles.profileModalView}>
-  //           <Text style={styles.profileModalText}>Update Profile</Text>
-  //           <TouchableOpacity
-  //             style={[styles.profileButton, styles.profileButtonClose]}
-  //             onPress={props.onPress}
-  //           >
-  //             <Text style={styles.profileTextStyle}>Hide Modal Update</Text>
-  //           </TouchableOpacity>
-  //         </View>
-  //       </View>
-  //     </Modal>
-  //   )
-  // }
+  // Header button initialization
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <CancelButton onPress={navigation.goBack} />
+      )
+    })
+  }, [navigation]);
   
   return (
-    <View style={styles.profileCenteredView}>
-      
+    <View style={styles.modalContainer}>
+      <View style={styles.modalPhotoContainer}>
+        {photo && <Image source={{ uri: photo }} style={{ width: 200, height: 200 }} />}
+        <View style={styles.uploadBtnContainer}>
+        <TouchableOpacity onPress={addImage} style={styles.uploadBtn}>
+          <Text>{photo ? 'Edit' : 'Upload'}</Text>
+          <MaterialCommunityIcons name="camera" size={26} color="black" />
+        </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 }
 
 export default ProfileModal;
-
