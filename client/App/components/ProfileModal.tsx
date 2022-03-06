@@ -33,6 +33,8 @@ import {
   HomeTabNavigatorParamList,
   RootNavigatorParamsList
 } from '../types';
+import { useAuth } from '../navigation';
+import { StringLiteralLike } from 'typescript';
 
 //  https://www.reactnativeschool.com/how-to-upload-images-from-react-native
 // https://www.waldo.com/blog/add-an-image-picker-react-native-app
@@ -43,6 +45,7 @@ export interface ProfileModalProps {
 }
 
 const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
+  const auth = useAuth();
 
   // hide create profile button
   const [profile, hasProfile] = useState<boolean>(false);
@@ -58,6 +61,8 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
   const [age, setAge] = useState<string>('');
   const [yearBorn, setYearBorn] = useState<string>('');
 
+  const token = auth.authData.token,
+    userId = auth.authData.userId;
   // const
 
   // create profile
@@ -89,9 +94,46 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
       quality: 1,
     });
 
+    console.log(_photo);
+
     // upload photo to database and profile
     return _photo;
   }
+
+  const handleCreateProfile = (
+    userId: string,
+    token: string,
+    name: string,
+    gender: string,
+    age: number,
+    yearBorn: number,
+    aboutMe: string,
+    religion: string,
+    location: string,
+    sexuality: string,
+    hobbies: string[],
+    photo: any,
+  ) => {
+
+  }
+
+  const handleUpdateProfile = (
+    userId: string,
+    token: string,
+    name: string,
+    gender: string,
+    age: number,
+    yearBorn: number,
+    aboutMe: string,
+    religion: string,
+    location: string,
+    sexuality: string,
+    hobbies: string[],
+    photo: any,
+  ) => {
+    
+  }
+    
 
   const checkForCameraRollPermissions = async () => {
     const { status } = await ImagePicker.getMediaLibraryPermissionsAsync();
