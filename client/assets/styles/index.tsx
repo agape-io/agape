@@ -402,7 +402,7 @@ export default StyleSheet.create({
         alignItems: 'center',
     },
     modalPhotoContainer: {
-        marginTop: 40,
+        marginTop: 30,
         elevation: 2,
         height: 200,
         width: 200,
@@ -422,5 +422,22 @@ export default StyleSheet.create({
         display: 'flex',
         alignItems: "center",
         justifyContent: 'center',
+    },
+    addProfileButtonContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    addProfileButton: {
+        marginHorizontal: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignContent: 'space-between',
+        height: 40,
+        marginTop: 40,
+        marginBottom: 80,
+        borderRadius: 10,
+        flexBasis: '40%',
     }
 });

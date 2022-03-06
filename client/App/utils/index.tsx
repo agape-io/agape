@@ -89,11 +89,14 @@ const createProfile = async (
     token,
     name,
     gender,
+    age,
     yearBorn,
     aboutMe,
     religion,
     location,
-    hobbies
+    hobbies,
+    sexuality,
+    photo
   });
 }
 
@@ -141,7 +144,8 @@ const updateProfile = async (
     aboutMe,
     religion,
     location,
-    hobbies
+    hobbies,
+    sexuality,
   });
 }
 

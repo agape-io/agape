@@ -11,12 +11,19 @@ import {
   TouchableOpacity,
   Alert,
   Platform,
-  TextInput
+  TextInput,
+  ScrollView
 } from 'react-native';
 import axios from 'axios';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as ImagePicker from 'expo-image-picker';
-
+import { CompositeNavigationProp } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import {
+  HomeTabNavigatorParamList,
+  RootNavigatorParamsList
+} from '../types';
+import { useAuth } from '../navigation';
 
 // API's
 import {
@@ -26,15 +33,10 @@ import {
 import { CLOUDINARY_URL_UPLOAD, API_URL } from '@env';
 
 // Styles
-import styles from '../../assets/styles';
-import { CompositeNavigationProp } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import {
-  HomeTabNavigatorParamList,
-  RootNavigatorParamsList
-} from '../types';
-import { useAuth } from '../navigation';
-import { StringLiteralLike } from 'typescript';
+import styles, {
+  PRIMARY_COLOR,
+  SECONDARY_COLOR
+} from '../../assets/styles';
 
 //  https://www.reactnativeschool.com/how-to-upload-images-from-react-native
 // https://www.waldo.com/blog/add-an-image-picker-react-native-app
@@ -47,7 +49,7 @@ export interface ProfileModalProps {
 const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
   const auth = useAuth();
 
-  // hide create profile button
+  // hide create profile button if profile is already available
   const [profile, hasProfile] = useState<boolean>(false);
   const [photo, setPhoto] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -57,34 +59,15 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
   const [location, setLocation] = useState<string>('');
   const [religion, setReligion] = useState<string>('');
   const [preference, setPreference] = useState<string>('');
-  const [hobbies, setHobbies] = useState<any>(null);
   const [age, setAge] = useState<string>('');
   const [yearBorn, setYearBorn] = useState<string>('');
+  // these hobbies will be pushed to an array for the API to retrieve
+  const [firstHobby, setFirstHobby] = useState<string>('');
+  const [secondHobby, setSecondHobby] = useState<string>('');
+  const [thirdHobby, setThirdHobby] = useState<string>('');
 
   const token = auth.authData.token,
     userId = auth.authData.userId;
-  // const
-
-  // create profile
-
-  // update profile
-
-
-  const createFormData = (photo: any, body: {}) => {
-    // const data = new FormData();
-
-    // data.append('photo', {
-    //   name: photo.fileName,
-    //   type: photo.type,
-    //   uri: Platform.OS === 'ios' ? photo.uri.replace('file://', '') : photo.uri,
-    // });
-
-    // Object.keys(body).forEach((key: any) => {
-    //   data.append(key, body[key]);
-    // });
-
-    // return data;
-  }
 
   const addPhoto = async () => {
     let _photo = await ImagePicker.launchImageLibraryAsync({
@@ -174,88 +157,127 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
   });
   
   return (
-    <View style={styles.modalContainer}>
+    <ScrollView contentContainerStyle={styles.modalContainer}>
       <View style={styles.modalPhotoContainer}>
         {photo && <Image source={{ uri: photo }} style={{ width: 200, height: 200 }} />}
         <View style={styles.uploadBtnContainer}>
-        <TouchableOpacity onPress={addPhoto} style={styles.uploadBtn}>
-          <Text>{photo ? 'Edit' : 'Upload'}</Text>
-          <MaterialCommunityIcons name="camera" size={26} color="black" />
-        </TouchableOpacity>
+          <TouchableOpacity onPress={addPhoto} style={styles.uploadBtn}>
+            <Text>{photo ? 'Edit' : 'Upload'}</Text>
+            <MaterialCommunityIcons name="camera" size={26} color="black" />
+          </TouchableOpacity>
         </View>
       </View>
-      <View style={[styles.form, { marginTop: -25}]}>
-          <TextInput
-            style={styles.input}
-            placeholder='Name'
-            placeholderTextColor="#b1b1b1"
-            returnKeyType="next"
-            keyboardType="default"
-            textContentType="name"
-            value={name}
-            onChangeText={name => setName(name)}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder='About Me'
-            placeholderTextColor="#b1b1b1"
-            returnKeyType="next"
-            keyboardType="default"
-            textContentType="none"
-            value={description}
-            onChangeText={description => setDescription(description)}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder='Age'
-            placeholderTextColor="#b1b1b1"
-            returnKeyType="next"
-            keyboardType="numeric"
-            textContentType="none"
-            value={age}
-            onChangeText={age => setAge(age)}
+      <View style={[styles.form, { marginTop: -30}]}>
+        <TextInput
+          style={styles.input}
+          placeholder='Name'
+          placeholderTextColor="#b1b1b1"
+          returnKeyType="next"
+          keyboardType="default"
+          textContentType="name"
+          value={name}
+          onChangeText={name => setName(name)}
         />
         <TextInput
-            style={styles.input}
-            placeholder='Year Born'
-            placeholderTextColor="#b1b1b1"
-            returnKeyType="next"
-            keyboardType="numeric"
-            textContentType="none"
-            value={yearBorn}
-            onChangeText={yearBorn => setYearBorn(yearBorn)}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder='Location'
-            placeholderTextColor="#b1b1b1"
-            returnKeyType="next"
-            keyboardType="default"
-            textContentType="none"
-            value={location}
-            onChangeText={location => setLocation(location)}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder='Religion'
-            placeholderTextColor="#b1b1b1"
-            returnKeyType="next"
-            keyboardType="default"
-            value={religion}
-            onChangeText={religion => setReligion(religion)}
+          style={styles.input}
+          placeholder='About Me'
+          placeholderTextColor="#b1b1b1"
+          returnKeyType="next"
+          keyboardType="default"
+          textContentType="none"
+          value={description}
+          onChangeText={description => setDescription(description)}
         />
         <TextInput
-            style={styles.input}
-            placeholder='Sexuality'
-            placeholderTextColor="#b1b1b1"
-            returnKeyType="next"
-            keyboardType="default"
-            textContentType="none"
-            value={preference}
-            onChangeText={preference => setPreference(preference)}
-          />
-        </View>
-    </View>
+          style={styles.input}
+          placeholder='Age'
+          placeholderTextColor="#b1b1b1"
+          returnKeyType="next"
+          keyboardType="numeric"
+          textContentType="none"
+          value={age}
+          onChangeText={age => setAge(age)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder='Year'
+          placeholderTextColor="#b1b1b1"
+          returnKeyType="next"
+          keyboardType="numeric"
+          textContentType="none"
+          value={yearBorn}
+          onChangeText={yearBorn => setYearBorn(yearBorn)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder='Location'
+          placeholderTextColor="#b1b1b1"
+          returnKeyType="next"
+          keyboardType="default"
+          textContentType="none"
+          value={location}
+          onChangeText={location => setLocation(location)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder='Religion'
+          placeholderTextColor="#b1b1b1"
+          returnKeyType="next"
+          keyboardType="default"
+          value={religion}
+          onChangeText={religion => setReligion(religion)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder='Hobby 1'
+          placeholderTextColor="#b1b1b1"
+          returnKeyType="next"
+          keyboardType="default"
+          textContentType="none"
+          value={firstHobby}
+          onChangeText={firstHobby => setFirstHobby(firstHobby)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder='Hobby 2'
+          placeholderTextColor="#b1b1b1"
+          returnKeyType="next"
+          keyboardType="default"
+          textContentType="none"
+          value={secondHobby}
+          onChangeText={secondHobby => setSecondHobby(secondHobby)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder='Hobby 3'
+          placeholderTextColor="#b1b1b1"
+          returnKeyType="next"
+          keyboardType="default"
+          textContentType="none"
+          value={thirdHobby}
+          onChangeText={thirdHobby => setThirdHobby(thirdHobby)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder='Sexuality'
+          placeholderTextColor="#b1b1b1"
+          returnKeyType="next"
+          keyboardType="default"
+          textContentType="none"
+          value={preference}
+          onChangeText={preference => setPreference(preference)}
+        />
+      </View>
+      <View style={styles.addProfileButtonContainer}>
+        {/** Hide Create Profile Button if Profile Exists */}
+        <TouchableOpacity style={[styles.addProfileButton, {backgroundColor: SECONDARY_COLOR}]} onPress={() => console.log('Create Profile here!')}>
+          <Text>Create Profile</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.addProfileButton, {backgroundColor: PRIMARY_COLOR}]} onPress={() => console.log('Create Profile here!')}>
+          <Text>Update Profile</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
 }
 
