@@ -1,14 +1,9 @@
 import { Router, Request, Response } from 'express';
-import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import passwordValidator from 'password-validator';
-import { v4 as uuidv4 } from 'uuid';
-// import passport from 'passport';
-// import strategy from 'passport-facebook';
 
-import { UserModel } from "../../models/user";
+import { User } from "../../models/user";
 import connect from '../../config/db';
-// import { env } from '../../config/env';
 
 const schema = new passwordValidator();
 schema
@@ -19,39 +14,7 @@ schema
     .has().digits(2)
     .has().not().spaces();
 
-// const FacebookStrategy = strategy.Strategy;
-
-// const { Facebook } = env;
-
-// passport.use(
-//     new FacebookStrategy(
-//         {
-//             clientID: Facebook.ClientId,
-//             clientSecret: Facebook.ClientSecret,
-//             callbackURL: Facebook.CallbackUrl,
-//             profileFields: ["email", "name"]
-//         },
-//         function (accessToken, refreshToken, profile, done) {
-//             const { email, first_name, last_name } = profile._json;
-//             const userData = {
-//                 email,
-//                 firstName: first_name,
-//                 lastName: last_name
-//             };
-//             done(null, profile);
-//         }
-//     )
-// );
-
 const router = Router();
-
-// TODO: will implement if time permits
-// router.post('/google', (req: Request, res: Response) => {
-//     // login with google
-// });
-
-// TODO: will implement if time permits
-// router.post('/facebook', passport.authenticate("facebook"));
 
 router.post('/email', async (req: Request, res: Response) => {
     const { email, password, verifyPassword } = req.body;
@@ -62,8 +25,7 @@ router.post('/email', async (req: Request, res: Response) => {
             await bcrypt.genSalt(saltRounds, async function (err, salt) {
                 await bcrypt.hash(password, salt, async function (err, hash) {
                     await connect();
-                    const userModel = mongoose.model('users', UserModel);
-                    userModel.findOne({ email: email }, function (err, existingUser) {
+                    User.findOne({ email: email }, function (err, existingUser) {
                         if (existingUser) {
                             res.status(500).send({
                                 status: 500,
@@ -71,8 +33,7 @@ router.post('/email', async (req: Request, res: Response) => {
                             });
                         } else {
                             if (password == verifyPassword) {
-                                const user = new userModel({
-                                    userId: uuidv4(),
+                                const user = new User({
                                     email: email,
                                     password: hash,
                                 });
@@ -82,7 +43,7 @@ router.post('/email', async (req: Request, res: Response) => {
                                         status: 200,
                                         message: 'User created!',
                                         user: {
-                                            userId: result.userId,
+                                            userId: result._id,
                                             email: result.email,
                                         }
                                     });

@@ -1,9 +1,8 @@
 import { Router, Request, Response } from 'express';
-import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-import { UserModel } from "../../models/user";
+import { User } from "../../models/user";
 import connect from '../../config/db';
 import { env } from '../../config/env';
 
@@ -24,14 +23,13 @@ const router = Router();
 router.post('/email', async (req: Request, res: Response) => {
     const { email, password } = req.body;
     if (email && password) {
-        const userModel = mongoose.model('users', UserModel);
         await connect();
-        userModel.findOne({ email: email }, async function (err, existingUser) {
+        User.findOne({ email: email }, async function (err, existingUser) {
             if (existingUser) {
                 await bcrypt.compare(password, existingUser.password, function (err, passwordMatch) {
                     if (passwordMatch) {
                         const user = {
-                            userId: existingUser.userId,
+                            userId: existingUser._id,
                             email: email,
                             token: null,
                             isOnline: false,
