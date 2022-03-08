@@ -1,7 +1,6 @@
 import { Router, Request, Response } from 'express';
-import mongoose from 'mongoose';
 
-import { UserModel } from "../../models/user";
+import { User } from "../../models/user";
 import connect from "../../config/db";
 
 const router = Router();
@@ -10,8 +9,7 @@ router.get('/', async (req: Request, res: Response) => {
   const { userId } = req.query;
   if (userId) {
     await connect();
-    const userModel = mongoose.model('users', UserModel);
-    userModel.findOne({ userId: userId }, function (err, existingUser) {
+    User.findOne({ _id: userId }, function (err, existingUser) {
       if (existingUser) {
         res.status(200).send({
           status: 200,
@@ -37,7 +35,6 @@ router.post('/create', async (req: Request, res: Response) => {
   const { userId, sexuality } = req.body;
   if (userId && sexuality) {
     await connect();
-    const userModel = mongoose.model('users', UserModel);
     const { maxDist, minAge, maxAge, religion, userId } = req.body;
     const preferences = {
       sexuality: sexuality,
@@ -46,8 +43,8 @@ router.post('/create', async (req: Request, res: Response) => {
       maxAge: maxAge || "",
       religion: religion || "",
     };
-    userModel.findOneAndUpdate(
-      { userId: userId },
+    User.findOneAndUpdate(
+      { _id: userId },
       {
         $set: {
           preferences
@@ -82,7 +79,6 @@ router.put('/update', async (req: Request, res: Response) => {
   const { userId, sexuality } = req.body;
   if (userId && sexuality) {
     await connect();
-    const userModel = mongoose.model('users', UserModel);
     const { maxDist, minAge, maxAge, religion, userId } = req.body;
     const preferences = {
       sexuality: sexuality,
@@ -91,8 +87,8 @@ router.put('/update', async (req: Request, res: Response) => {
       maxAge: maxAge || "",
       religion: religion || "",
     };
-    userModel.findOneAndUpdate(
-      { userId: userId },
+    User.findOneAndUpdate(
+      { _id: userId },
       {
         $set: {
           preferences

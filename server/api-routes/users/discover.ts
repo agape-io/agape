@@ -1,7 +1,6 @@
 import { Router, Request, Response } from 'express';
-import mongoose from "mongoose";
 
-import { UserModel } from "../../models/user";
+import { User } from "../../models/user";
 import connect from '../../config/db';
 import { getId, getProfile, getPreferences, commonHobbies, matchAge, matchReligion, matchSexuality } from '../../util/match';
 
@@ -20,20 +19,17 @@ router.get('/', async (req: Request, res: Response) => {
     const { userId } = req.query;
     if (userId) {
         await connect();
-        const userModel = mongoose.model('users', UserModel);
-        userModel.findOne({ userId: userId }, async function (err, existingUser) {
+        User.findOne({ _id: userId }, async function (err, existingUser) {
             if (existingUser) {
-                const users = await userModel.find({});
-                const commonUsersId = [];
-                const commonUsersProfile = [];
+                const users = await User.find({});
+                const similarUsersIds = [];
+                const similarUsersProfiles = [];
                 users.forEach(user => {
-                    const currentUser = getProfile(existingUser);
-                    const tempUser = getProfile(user);
                     const percentage = generatePercentage(commonHobbies(existingUser, user), matchAge(existingUser, user), matchReligion(existingUser, user), matchSexuality(existingUser, user));
-                    commonUsersId.push(getId(user));
-                    commonUsersProfile.push({
+                    similarUsersIds.push(getId(user));
+                    similarUsersProfiles.push({
                         userId: getId(user),
-                        profile: tempUser,
+                        profile: getProfile(user),
                         preferences: {
                             sexuality: getPreferences(user).sexuality
                         },
@@ -41,15 +37,15 @@ router.get('/', async (req: Request, res: Response) => {
                     });
                 });
                 // remove current user
-                const index = commonUsersId.indexOf(userId);
+                const index = similarUsersIds.indexOf(userId);
                 if (index > -1) {
-                    commonUsersId.splice(index, 1);
-                    commonUsersProfile.splice(index, 1);
+                    similarUsersIds.splice(index, 1);
+                    similarUsersProfiles.splice(index, 1);
                 }
-                if (commonUsersId.length > 0) {
+                if (similarUsersIds.length > 0) {
                     res.status(200).send({
                         status: 200,
-                        users: commonUsersProfile
+                        users: similarUsersProfiles
                     })
                 } else {
                     res.status(500).send({

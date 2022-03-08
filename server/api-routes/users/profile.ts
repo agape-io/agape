@@ -1,7 +1,6 @@
 import { Router, Request, Response } from 'express';
-import mongoose from 'mongoose';
 
-import { UserModel } from "../../models/user";
+import { User } from "../../models/user";
 import connect from "../../config/db";
 import { upload } from '../../middleware/imageUpload';
 
@@ -11,8 +10,7 @@ router.get('/', async (req: Request, res: Response) => {
     const { userId } = req.query;
     if (userId) {
         await connect();
-        const userModel = mongoose.model('users', UserModel);
-        userModel.findOne({ userId: userId }, function (err, existingUser) {
+        User.findOne({ _id: userId }, function (err, existingUser) {
             if (existingUser) {
                 res.status(200).send({
                     status: 200,
@@ -39,7 +37,6 @@ router.post('/create', upload.single('photo'), async (req: any, res: Response) =
     const { userId, name, gender, age, yearBorn, aboutMe, religion, location, hobbies, sexuality } = req.body;
     if (userId && name && gender && age && yearBorn && aboutMe && religion && location && hobbies && sexuality) {
         await connect();
-        const userModel = mongoose.model('users', UserModel);
         const profile = {
             name: name,
             age: age,
@@ -58,8 +55,8 @@ router.post('/create', upload.single('photo'), async (req: any, res: Response) =
             religion: [],
         };
         if (req.file) (profile as any).photo = `uploads/${req.file.filename}`;
-        userModel.findOneAndUpdate(
-            { userId: userId },
+        User.findOneAndUpdate(
+            { _id: userId },
             {
                 $set: {
                     profile,
@@ -95,7 +92,6 @@ router.put('/update', upload.single('photo'), async (req: any, res: Response) =>
     const { userId, name, gender, age, yearBorn, aboutMe, religion, location, hobbies, sexuality } = req.body;
     if (userId && name && gender && age && yearBorn && aboutMe && religion && location && hobbies && sexuality) {
         await connect();
-        const userModel = mongoose.model('users', UserModel);
         const profile = {
             name: name,
             age: age,
@@ -107,8 +103,8 @@ router.put('/update', upload.single('photo'), async (req: any, res: Response) =>
             hobbies: hobbies,
         };
         if (req.file) (profile as any).photo = `uploads/${req.file.filename}`;
-        userModel.findOneAndUpdate(
-            { userId: userId },
+        User.findOneAndUpdate(
+            { _id: userId },
             {
                 $set: {
                     profile

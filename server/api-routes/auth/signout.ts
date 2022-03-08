@@ -1,7 +1,6 @@
 import { Router, Request, Response } from 'express';
-import mongoose from "mongoose";
 
-import { UserModel } from "../../models/user";
+import { User } from "../../models/user";
 import connect from '../../config/db';
 
 const router = Router();
@@ -9,9 +8,8 @@ const router = Router();
 router.post('/email', async (req: Request, res: Response) => {
     const { userId } = req.body;
     if (userId) {
-        const userModel = mongoose.model('users', UserModel);
         await connect();
-        userModel.findOneAndUpdate(
+        User.findOneAndUpdate(
             { userId: userId },
             {
                 $set: {

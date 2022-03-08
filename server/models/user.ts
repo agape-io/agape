@@ -2,35 +2,40 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-export const UserModel = new Schema({
-    userId: String,
-    email: String,
-    password: String,
-    isOnline: Boolean,
+const UserModel = new Schema({
+    email: { type: String },
+    password: { type: String },
+    isOnline: { type: Boolean },
     profile: {
-        name: String,
-        age: Number,
-        gender: String,
-        yearBorn: String,
-        aboutMe: String,
-        religion: String,
-        location: String,
-        hobbies: Array<String>(),
-        photo: String,
+        name: { type: String },
+        age: { type: Number },
+        gender: { type: String },
+        yearBorn: { type: String },
+        aboutMe: { type: String },
+        religion: { type: String },
+        location: { type: String },
+        hobbies: [{ type: String }],
+        photo: {
+            type: String,
+            default: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
+        },
     },
     preferences: {
-        sexuality: String,
-        maxDist: String,
-        minAge: String,
-        maxAge: String,
-        religion: Array<String>(),
+        sexuality: { type: String },
+        maxDist: { type: String },
+        minAge: { type: String },
+        maxAge: { type: String },
+        religion: [{ type: String }],
     },
     settings: {
         pushNotifications: Boolean,
         membershipType: String,
     },
-    swipeLeft: Array<String>(),
-    swipeRight: Array<String>()
+    swipeLeft: [{ type: String }],
+    swipeRight: [{ type: String }]
 }, {
     timestamps: true,
 });
+
+
+export const User = mongoose.model("User", UserModel);

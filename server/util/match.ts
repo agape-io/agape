@@ -11,7 +11,7 @@ export const getPreferences = (user) => {
 }
 
 export const getId = (user) => {
-    return JSON.parse(JSON.stringify(user)).userId;
+    return JSON.parse(JSON.stringify(user))._id;
 }
 
 export const commonHobbies = (user1, user2) => {
