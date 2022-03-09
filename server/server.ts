@@ -9,7 +9,7 @@ import signupRouter from './api-routes/auth/signup';
 import signoutRouter from './api-routes/auth/signout';
 
 import chatRouter from './api-routes/chats/chat';
-
+import messageRouter from './api-routes/chats/message';
 import profileRouter from './api-routes/users/profile';
 import discoverRouter from './api-routes/users/discover';
 import preferencesRouter from './api-routes/users/preferences';
@@ -53,6 +53,7 @@ app.use('/discover', authenticateToken, discoverRouter);
 
 // chat routes
 app.use('/chats', authenticateToken, chatRouter);
+app.use('/messages', authenticateToken, messageRouter);
 
 // error handlers
 app.use(notFound);
