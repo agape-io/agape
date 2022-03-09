@@ -2,54 +2,40 @@ import { Router, Request, Response } from 'express';
 
 import { User } from "../../models/user";
 import connect from '../../config/db';
-import { getId, getProfile, getPreferences, commonHobbies, matchAge, matchReligion, matchSexuality } from '../../util/match';
+import { getId, getProfile, getPreferences, generatePercentage } from '../../util/match';
 
 const router = Router();
 
-const generatePercentage = (commonHobbies, ageMatch, religionMatch, sexualityMatch) => {
-    let initialPercentage = 20;
-    if (commonHobbies) initialPercentage += 20;
-    if (ageMatch) initialPercentage += 20;
-    if (religionMatch) initialPercentage += 10;
-    if (sexualityMatch) initialPercentage += 30;
-    return initialPercentage;
-}
-
 router.get('/', async (req: Request, res: Response) => {
-    const { userId } = req.query;
+    const { userId, romantic = 'false', threshold = 0 } = req.query;
     if (userId) {
         await connect();
         User.findOne({ _id: userId }, async function (err, existingUser) {
             if (existingUser) {
                 const users = await User.find({});
-                const similarUsersIds = [];
-                const similarUsersProfiles = [];
+                const similarUsers = [];
                 users.forEach(user => {
-                    const percentage = generatePercentage(commonHobbies(existingUser, user), matchAge(existingUser, user), matchReligion(existingUser, user), matchSexuality(existingUser, user));
-                    similarUsersIds.push(getId(user));
-                    similarUsersProfiles.push({
-                        userId: getId(user),
-                        profile: getProfile(user),
-                        preferences: {
-                            sexuality: getPreferences(user).sexuality
-                        },
-                        percentage: percentage,
-                    });
+                    const percentage = generatePercentage(existingUser, user, romantic);
+                    if (percentage > parseFloat(threshold as string)) {
+                        similarUsers.push({
+                            userId: getId(user),
+                            profile: getProfile(user),
+                            preferences: {
+                                sexuality: getPreferences(user).sexuality
+                            },
+                            percentage: percentage,
+                        });
+                    }
                 });
-                // remove current user
-                const index = similarUsersIds.indexOf(userId);
-                if (index > -1) {
-                    similarUsersIds.splice(index, 1);
-                    similarUsersProfiles.splice(index, 1);
-                }
-                if (similarUsersIds.length > 0) {
+                if (similarUsers.length > 0) {
                     res.status(200).send({
                         status: 200,
-                        users: similarUsersProfiles
+                        users: similarUsers
                     })
                 } else {
                     res.status(500).send({
                         status: 500,
+                        users: [],
                         message: "No matches found!"
                     });
                 };

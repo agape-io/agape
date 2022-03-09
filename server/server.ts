@@ -1,6 +1,5 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import passport from "passport";
 import cors from 'cors';
 import { env } from './config/env';
 
@@ -28,7 +27,6 @@ app.use('/uploads', express.static('./api-routes/users/uploads'));
 // CORS Middleware
 app.use(cors());
 
-app.use(passport.initialize());
 app.use(bodyParser.json());
 
 // auth routers
