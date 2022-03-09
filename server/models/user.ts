@@ -31,8 +31,8 @@ const UserModel = new Schema({
         pushNotifications: Boolean,
         membershipType: String,
     },
-    swipeLeft: [{ type: String }],
-    swipeRight: [{ type: String }]
+    swipedLeft: [{ type: String }],
+    swipedRight: [{ type: String }]
 }, {
     timestamps: true,
 });

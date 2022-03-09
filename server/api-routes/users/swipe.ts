@@ -6,13 +6,13 @@ import connect from "../../config/db";
 const router = Router();
 
 router.put('/left', async (req: Request, res: Response) => {
-    // For the swipe left API, you would have the user who swiped and the user who was swiped on.
-    // You'd add the userId of the user who was swiped on to the array of swipedleft of the user who swiped. 
+    // For the swipe left API, the request body includes the user who swiped and the user who was swiped on.
+    // Add the userId of the user who was swiped on to the array of swipedleft of the user who swiped left. 
     const { userId, matchUserId } = req.body;
     if (userId && matchUserId) {
         await connect();
         User.findByIdAndUpdate(
-            { userId: userId },
+            { _id: userId },
             {
                 $push: {
                     swipedLeft: matchUserId
@@ -43,15 +43,14 @@ router.put('/left', async (req: Request, res: Response) => {
 });
 
 router.put('/right', async (req: Request, res: Response) => {
-    // For the swipe right API, you'd add the userId of the user who was swiped on to the swiped 
-    // right array of the user who swiped. But this time, check the array of the user who was swiped 
-    // on and see if they swiped right on the user who swiped on them. If so, it's a match! 
-    // To indicate this, you can return an object with a match property that indicates true or false.
+    // For the swipe right API, add the userId of the user who was swiped on to the swipedright array of the user who swiped.
+    // But this time, check the array of the user who was swiped on and see if they swiped right on the user who swiped on them. 
+    // If so, it's a match! To indicate this, return an object with a match property that indicates true or false.
     const { userId, matchUserId } = req.body;
     if (userId && matchUserId) {
         await connect();
         User.findByIdAndUpdate(
-            { userId: userId },
+            { _id: userId },
             {
                 $push: {
                     swipedRight: matchUserId
