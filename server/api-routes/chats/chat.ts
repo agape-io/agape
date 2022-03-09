@@ -68,8 +68,4 @@ router.post('/', async (req: Request, res: Response) => {
     }
 });
 
-router.get('/:chatId', (req: Request, res: Response) => {
-    // implement get chat by ID
-});
-
 export default router;
