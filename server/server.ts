@@ -45,7 +45,6 @@ app.use('/settings', authenticateToken, settingsRouter);
 // swipe router
 app.use('/swipe', authenticateToken, swipeRouter);
 
-
 // profile routers
 app.use('/profile', authenticateToken, profileRouter);
 // discover routers
