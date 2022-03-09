@@ -11,50 +11,58 @@ export const getPreferences = (user) => {
 }
 
 export const getId = (user) => {
-    return JSON.parse(JSON.stringify(user)).userId;
+    return JSON.parse(JSON.stringify(user))._id;
 }
 
-export const commonHobbies = (user1, user2) => {
+const isAlreadySwiped = (user1, user2) => {
+    const swipedLeft = JSON.parse(JSON.stringify(user1)).swipedLeft;
+    const swipedRight = JSON.parse(JSON.stringify(user1)).swipedRight;
+    const swiped = swipedLeft.concat(swipedRight);
+    const userId = getId(user2);
+    return swiped.includes(userId);
+}
+
+const commonHobbies = (user1, user2) => {
     const user1Profile = getProfile(user1);
     const user2Profile = getProfile(user2);
     return commonElements(user1Profile.hobbies, user2Profile.hobbies);
 }
 
-export const matchSexuality = (user1, user2) => {
-    const user1Profile = getProfile(user1);
-    const user1Preferences = getPreferences(user1);
-    const user2Profile = getProfile(user2);
-    const user2Preferences = getPreferences(user2);
-    if (user1Profile.gender === 'male' && (user1Preferences.sexuality === 'bisexual' || user1Preferences.sexuality === 'gay')) {
-        if (user2Profile.gender === 'male' && (user2Preferences.sexuality === 'bisexual' || user2Preferences.sexuality === 'gay')) {
+const matchSexuality = (user1, user2) => {
+    const user1Gender = getProfile(user1).gender.toLowerCase();
+    const user1Sexuality = getPreferences(user1).sexuality.toLowerCase();
+    const user2Gender = getProfile(user2).gender.toLowerCase();
+    const user2Sexuality = getPreferences(user2).sexuality.toLowerCase();
+    if (user1Gender === 'male' && (user1Sexuality === 'bisexual' || user1Sexuality === 'gay')) {
+        if (user2Gender === 'male' && (user2Sexuality === 'bisexual' || user2Sexuality === 'gay')) {
             return true;
         }
-        if (user2Profile.gender === 'female' && (user2Preferences.sexuality === 'bisexual' || user2Preferences.sexuality === 'straight')) {
-            return true;
-        }
-    }
-    if (user1Profile.gender === 'male' && user1Preferences.sexuality === 'straight') {
-        if (user2Profile.gender === 'female' && (user2Preferences.sexuality === 'bisexual' || user2Preferences.sexuality === 'straight')) {
+        if (user2Gender === 'female' && (user2Sexuality === 'bisexual' || user2Sexuality === 'straight')) {
             return true;
         }
     }
-    if (user1Profile.gender === 'female' && (user1Preferences.sexuality === 'bisexual' || user1Preferences.sexuality === 'lesbian')) {
-        if (user2Profile.gender === 'female' && (user2Preferences.sexuality === 'bisexual' || user2Preferences.sexuality === 'lesbian')) {
-            return true;
-        }
-        if (user2Profile.gender === 'male' && (user2Preferences.sexuality === 'bisexual' || user2Preferences.sexuality === 'straight')) {
+    if (user1Gender === 'male' && user1Sexuality === 'straight') {
+        if (user2Gender === 'female' && (user2Sexuality === 'bisexual' || user2Sexuality === 'straight')) {
             return true;
         }
     }
-    if (user1Profile.gender === 'female' && user1Preferences.sexuality === 'straight') {
-        if (user2Profile.gender === 'male' && (user2Preferences.sexuality === 'bisexual' || user2Preferences.sexuality === 'straight')) {
+    if (user1Gender === 'female' && (user1Sexuality === 'bisexual' || user1Sexuality === 'lesbian')) {
+        if (user2Gender === 'female' && (user2Sexuality === 'bisexual' || user2Sexuality === 'lesbian')) {
+            return true;
+        }
+        if (user2Gender === 'male' && (user2Sexuality === 'bisexual' || user2Sexuality === 'straight')) {
+            return true;
+        }
+    }
+    if (user1Gender === 'female' && user1Sexuality === 'straight') {
+        if (user2Gender === 'male' && (user2Sexuality === 'bisexual' || user2Sexuality === 'straight')) {
             return true;
         }
     }
     return false;
 }
 
-export const matchAge = (user1, user2) => {
+const matchAge = (user1, user2) => {
     const user1Profile = getProfile(user1);
     const user1Preferences = getPreferences(user1);
     const user2Profile = getProfile(user2);
@@ -67,7 +75,7 @@ export const matchAge = (user1, user2) => {
     return false;
 }
 
-export const matchReligion = (user1, user2) => {
+const matchReligion = (user1, user2) => {
     const user1Profile = getProfile(user1);
     const user1Preferences = getPreferences(user1);
     const user2Profile = getProfile(user2);
@@ -78,4 +86,22 @@ export const matchReligion = (user1, user2) => {
         }
     }
     return false;
+}
+
+const validateUsers = (user1, user2, romantic) => {
+    if (getId(user1) === getId(user2)) return false;
+    if (romantic === "true") {
+        if (!matchSexuality(user1, user2)) return false;
+    }
+    if (isAlreadySwiped(user1, user2)) return false;
+    return true;
+}
+
+export const generatePercentage = (user1, user2, romantic) => {
+    if (!validateUsers(user1, user2, romantic)) return 0;
+    let percentage = 50;
+    if (commonHobbies(user1, user2)) percentage += 20;
+    if (matchAge(user1, user2)) percentage += 20;
+    if (matchReligion(user1, user2)) percentage += 10;
+    return percentage;
 }
