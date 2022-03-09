@@ -1,17 +1,16 @@
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
 
 import { env } from '../config/env';
 
 const { JSONWebToken } = env;
 
 export const authenticateToken = (req, res, next) => {
-  const token =
-    req.body.token || req.query.token || req.headers["x-access-token"];
+  const token = req.body.token || req.query.token || req.headers['x-access-token'];
 
   if (!token) {
     return res.status(403).send({
       status: 403,
-      message: "A token is required for authentication"
+      message: 'A token is required for authentication',
     });
   }
 
@@ -22,7 +21,7 @@ export const authenticateToken = (req, res, next) => {
     console.log(err);
     return res.status(401).send({
       status: 401,
-      message: "Invalid Token",
+      message: 'Invalid Token',
     });
   }
   return next();
