@@ -81,7 +81,7 @@ const createProfile = async (
   location: string,
   hobbies: string[],
   sexuality: string,
-  photo: any,
+  photo: string,
 ) => {
   // call axios to the API
   return axios.post(`${API_URL}/profile/create`, {
@@ -131,21 +131,22 @@ const updateProfile = async (
   location: string,
   hobbies: string[],
   sexuality: string,
-  photo?: string
+  photo: string,
 ) => {
   // call axios to the API
   return axios.post(`${API_URL}/profile/update`, {
     userId,
-    age,
     token,
     name,
     gender,
+    age,
     yearBorn,
     aboutMe,
     religion,
     location,
     hobbies,
     sexuality,
+    photo
   });
 }
 

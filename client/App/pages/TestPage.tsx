@@ -12,7 +12,7 @@ import { CompositeNavigationProp } from '@react-navigation/native';
 
 // Types
 import {
-  HomeNavigatorParamList,
+  HomeTabNavigatorParamList,
   RootNavigatorParamsList
 } from '../types';
 
@@ -26,7 +26,7 @@ import {
 } from '../utils';
 
 export interface TestPageProps {
-  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeNavigatorParamList, 'Test'>,
+  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Test'>,
     NativeStackNavigationProp<RootNavigatorParamsList>>;
 }
 
