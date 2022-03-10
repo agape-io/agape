@@ -24,14 +24,6 @@ const CardItem = ({
 }: CardItemT) => {
   // Custom styling
   const fullWidth = Dimensions.get("window").width;
-  
-  const images = [
-    require('../../assets/images/cy.png'),
-    require('../../assets/images/leo.png'),
-    require('../../assets/images/randy.png'),
-    require('../../assets/images/nat.png'),
-    require('../../assets/images/tim.png')
-  ];
 
   const imageStyle = [
     {
@@ -54,7 +46,7 @@ const CardItem = ({
   return (
     <View style={styles.containerCardItem}>
       {/* IMAGE */}
-      {data.image ? <Image source={data.image} style={imageStyle} /> : <Image source={images[Math.floor(Math.random() * images.length)]} style={imageStyle}/>}
+      {data.image ? <Image source={data.image} style={imageStyle} /> : <Image source={{ uri: data.profile.photo }} style={imageStyle}/>}
 
       {/* MATCHES */}
       {!data.matches && (
@@ -90,8 +82,10 @@ const CardItem = ({
       {/* RELIGION */}
       <Text style={styles.descriptionCardItem}>{data.profile.religion}</Text>
 
-      {/* YEAR BORN */}
+      {/* AGE */}
       <Text style={styles.descriptionCardItem}>{data.profile.age}</Text>
+
+      {/* HOBBIES - use a map to iterate for each hobby */}
 
       {/* STATUS */}
       {!data.aboutMe && (

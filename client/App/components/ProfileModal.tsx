@@ -39,6 +39,8 @@ import styles, {
   SECONDARY_COLOR
 } from '../../assets/styles';
 
+import FormData from 'form-data';
+
 //  https://www.reactnativeschool.com/how-to-upload-images-from-react-native
 // https://www.waldo.com/blog/add-an-image-picker-react-native-app
 
@@ -53,7 +55,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
   // hide create profile button if profile is already available
   const [profile, hasProfile] = useState<boolean>(false);
   const [photo, setPhoto] = useState<any>(null);
-  const [cloudinaryUrl, getCloudinaryUrl] = useState<any>(null);
+  const [cloudinary, getCloudinary] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [name, setName] = useState<string>('');
   const [gender, setGender] = useState<string>('');
@@ -70,8 +72,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
   const [thirdHobby, setThirdHobby] = useState<string>('');
   const isMounted = useRef<any>(null);
 
-  const token = auth.authData.token,
-    userId = auth.authData.userId;
+  const userId = auth.authData.userId;
 
   const uploadPhoto = async () => {
     setLoading(true);
@@ -87,6 +88,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
       allowsEditing: true,
       aspect: [4, 3],
       base64: true,
+      quality: 1
     });
 
     if (pickerResult.cancelled === true) {
@@ -94,11 +96,10 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
     }
 
     let base64img = `data:image/jpg;base64,${pickerResult.base64}`;
-    // set the photo
 
-    console.log('picker', pickerResult.uri);
-
+    // Set photo for modal
     setPhoto(pickerResult.uri);
+
     let data = {
       "file": base64img,
       "upload_preset": "agape-app"
@@ -107,28 +108,23 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
     axios.post(CLOUDINARY_API_URL, data)
       .then(async (res: any) => {
         setLoading(false);
+        const data = new FormData();
         const { secure_url } = res.data;
-        console.log(res.data.secure_url);
-        console.log('cloudinary', secure_url);
+        data.append('photo', {
+          uri: secure_url,
+          name: "profile_photo.png",
+          type: "image/png"
+        })
+        console.log('cloudinary', data);
         // save the cloudinary url
-        getCloudinaryUrl(secure_url);
-        return res.secure_url;
+        getCloudinary(data);
+        return data;
       })
       .catch((e: any) => {
         setLoading(true);
 
         alert(e.message);
       });
-  }
-
-  const checkForCameraRollPermissions = async () => {
-    const { status } = await ImagePicker.getMediaLibraryPermissionsAsync();
-
-    if (status !== 'granted') {
-      alert("Please grant camera roll permissions inside your system's settings");
-    } else {
-      console.log('Media permissions are granted'); 
-    }
   }
 
   // Cancel Button for header
@@ -141,35 +137,37 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
   }
 
   const handleUpdateProfile = async (
-    token: string,
-    userId: string,
     name: string,
-    age: number,
     gender: string,
-    yearBorn: number,
+    age: string,
+    yearBorn: string,
     aboutMe: string,
     religion: string,
     location: string,
     hobbies: string[],
     sexuality: string,
-    photo: string
+    photo: string,
   ) => {
+    // Convert strings to integers
+    let convertAge = parseInt(age),
+      convertYearBorn = parseInt(yearBorn);
+    
     return updateProfile(
-      token,
       userId,
       name,
-      age,
       gender,
-      yearBorn,
+      convertAge,
+      convertYearBorn,
       aboutMe,
       religion,
       location,
       hobbies,
       sexuality,
       photo)
-      .then(() => {
+      .then((res: any) => {
         // Go back to profile screen
         setLoading(false);
+        console.log(res.data);
 
         navigation.navigate('Profile');
       }).catch((e: any) => {
@@ -182,27 +180,27 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
   }
 
   const handleCreateProfile = async (
-    userId: string,
-    token: string,
     name: string,
-    age: number,
     gender: string,
-    yearBorn: number,
+    age: string,
+    yearBorn: string,
     aboutMe: string,
     religion: string,
     location: string,
     hobbies: string[],
     sexuality: string,
-    photo: string
+    photo: string,
   ) => {
-    console.log(userId, token);
+    // Convert strings to integers
+    let convertAge = parseInt(age),
+      convertYearBorn = parseInt(yearBorn);
+    
     return createProfile(
       userId,
-      token,
       name,
-      age,
       gender,
-      yearBorn,
+      convertAge,
+      convertYearBorn,
       aboutMe,
       religion,
       location,
@@ -210,8 +208,9 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
       sexuality,
       photo
     )
-      .then(() => {
+      .then((res: any) => {
         // Go back to profile screen
+        console.log(res.data);
         setLoading(false);
         alert('Success!');
         navigation.navigate('Profile');
@@ -233,11 +232,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
     })
   }, [navigation]);
 
-  // Checking permissions
-  useEffect(() => {
-    checkForCameraRollPermissions();
-  }, []);
-
+  // Persist data(?)
   useEffect(() => {
     isMounted.current = true;
 
@@ -372,12 +367,12 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         {/** Hide Create Profile Button if Profile Exists */}
         <TouchableOpacity
           style={[styles.addProfileButton, { backgroundColor: SECONDARY_COLOR }]}
-          onPress={() => handleUpdateProfile(token, userId, name, userAge, gender, yearBorn, aboutMe, religion, location, [firstHobby, secondHobby, thirdHobby], preference, cloudinaryUrl)}>
+          onPress={() => handleCreateProfile(name, gender, userAge, yearBorn, aboutMe, religion, location, [firstHobby, secondHobby, thirdHobby], preference, cloudinary)}>
           <Text>Create Profile</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.addProfileButton, { backgroundColor: PRIMARY_COLOR }]}
-          onPress={() => handleUpdateProfile(token, userId, name, userAge, gender, yearBorn, aboutMe, religion, location, [firstHobby, secondHobby, thirdHobby], preference, cloudinaryUrl)}>
+          onPress={() => handleUpdateProfile(name, gender, userAge, yearBorn, aboutMe, religion, location, [firstHobby, secondHobby, thirdHobby], preference, cloudinary)}>
           <Text>Update Profile</Text>
         </TouchableOpacity>
       </View>

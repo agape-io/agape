@@ -1,5 +1,5 @@
 /**
- * Landing Screen
+ * Test Screen
  */
 import React, { FC } from 'react';
 import {
@@ -37,13 +37,16 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
   const token = auth.authData.token;
 
   // Dummy test variables
-  let testName = "Phillia"
-  let testHobbies = ['Surfing', 'Hiking', 'Biking'];
+  let testName = "Erwin"
+  let testHobbies = ['Titans', 'Hiking', 'Biking'];
+  let testSexuality = "Straight";
+  let testAge = 32;
+  let testPhoto = "https://static.wikia.nocookie.net/shingekinokyojin/images/d/de/Erwin_Smith_%28Anime%29_character_image.png/"
   let testGender = "Male";
-  let testYearBorn = 2010;
-  let testAboutMe = "I'm not smash.";
-  let testReligion = "Shintoism";
-  let testLocation = "Kyoto";
+  let testYearBorn = 1974;
+  let testAboutMe = "Where's Hange?.";
+  let testReligion = "The Walls";
+  let testLocation = "Paradis";
 
   const testMatches = async () => {
     getMatches(userId, token).then(res => {
@@ -70,13 +73,16 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
   const testUpdateProfile = async (
     name: string,
     gender: string,
+    age: number,
     yearBorn: number,
     aboutMe: string,
     religion: string,
     location: string,
-    hobbies: string[]
+    hobbies: string[],
+    sexuality: string,
+    photo: string,
   ) => {
-    updateProfile(userId, token, name, gender, yearBorn, aboutMe, religion, location, hobbies)
+    updateProfile(userId, name, gender, age, yearBorn, aboutMe, religion, location, hobbies, sexuality, photo)
       .then(res => {
         console.log(res.data);
       })
@@ -91,13 +97,16 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
   const testCreateProfile = async (
     name: string,
     gender: string,
+    age: number,
     yearBorn: number,
     aboutMe: string,
     religion: string,
     location: string,
-    hobbies: string[]
+    hobbies: string[],
+    sexuality: string,
+    photo: string,
   ) => {
-    createProfile(userId, token, name, gender, yearBorn, aboutMe, religion, location, hobbies)
+    createProfile(userId, name, gender, age, yearBorn, aboutMe, religion, location, hobbies, sexuality, photo)
       .then(res => {
         console.log(res.data);
       })
@@ -128,10 +137,10 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
       <TouchableOpacity onPress={() => testProfile()}>
         <Text>Test Get Profile</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => testUpdateProfile(testName,testGender, testYearBorn, testAboutMe, testReligion, testLocation, testHobbies)}>
+      <TouchableOpacity onPress={() => testUpdateProfile(testName, testGender, testAge, testYearBorn, testAboutMe, testReligion, testLocation, testHobbies, testSexuality, testPhoto)}>
         <Text>Test Update Profile</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => testCreateProfile(testName,testGender, testYearBorn, testAboutMe, testReligion, testLocation, testHobbies)}>
+      <TouchableOpacity onPress={() => testCreateProfile(testName, testGender, testAge, testYearBorn, testAboutMe, testReligion, testLocation, testHobbies, testSexuality, testPhoto)}>
         <Text>Test Create Profile</Text>
       </TouchableOpacity>
       <TouchableOpacity

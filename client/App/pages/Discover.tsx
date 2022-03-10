@@ -14,7 +14,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { useAuth } from "../navigation";
 import {
-    HomeNavigatorParamList,
+    HomeTabNavigatorParamList,
     RootNavigatorParamsList
 } from "../types";
 import {
@@ -29,7 +29,7 @@ import { getMatches } from '../utils';
 import { Item } from "react-native-paper/lib/typescript/components/List/List";
 
 export interface DiscoverProps {
-    navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeNavigatorParamList, 'Discover'>,
+    navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Discover'>,
     NativeStackNavigationProp<RootNavigatorParamsList>>;
 }
 
