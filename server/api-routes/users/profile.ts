@@ -2,7 +2,6 @@ import { Router, Request, Response } from 'express';
 
 import { User } from '../../models/user';
 import connect from '../../config/db';
-import { upload } from '../../middleware/imageUpload';
 
 const router = Router();
 
@@ -33,7 +32,7 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/create', upload.single('photo'), async (req: any, res: Response) => {
+router.post('/create', async (req: any, res: Response) => {
   const {
     userId, name, gender, age, yearBorn, aboutMe, religion, location, hobbies, sexuality,
   } = req.body;
@@ -89,7 +88,7 @@ router.post('/create', upload.single('photo'), async (req: any, res: Response) =
   }
 });
 
-router.put('/update', upload.single('photo'), async (req: any, res: Response) => {
+router.put('/update', async (req: any, res: Response) => {
   const {
     userId, name, gender, age, yearBorn, aboutMe, religion, location, hobbies, sexuality,
   } = req.body;
