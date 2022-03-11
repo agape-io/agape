@@ -39,8 +39,6 @@ import styles, {
   SECONDARY_COLOR
 } from '../../assets/styles';
 
-import FormData from 'form-data';
-
 //  https://www.reactnativeschool.com/how-to-upload-images-from-react-native
 // https://www.waldo.com/blog/add-an-image-picker-react-native-app
 
@@ -110,11 +108,11 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         setLoading(false);
         const data = new FormData();
         const { secure_url } = res.data;
-        data.append('photo', {
-          uri: secure_url,
-          name: "profile_photo.png",
-          type: "image/png"
-        })
+        // data.append('photo', {
+        //   uri: secure_url,
+        //   name: "profile_photo.png",
+        //   type: "image/png"
+        // })
         console.log('cloudinary', data);
         // save the cloudinary url
         getCloudinary(data);
