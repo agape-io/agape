@@ -27,19 +27,12 @@ import { useAuth } from '../navigation';
 // API's
 import {
   updateProfile,
-  createProfile,
   getProfile
 } from '../utils';
 import { CLOUDINARY_API_URL, API_URL } from '@env';
 
 // Styles
-import styles, {
-  PRIMARY_COLOR,
-  SECONDARY_COLOR
-} from '../../assets/styles';
-
-//  https://www.reactnativeschool.com/how-to-upload-images-from-react-native
-// https://www.waldo.com/blog/add-an-image-picker-react-native-app
+import styles, { PRIMARY_COLOR } from '../../assets/styles';
 
 export interface ProfileModalProps {
   navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Profile'>,
