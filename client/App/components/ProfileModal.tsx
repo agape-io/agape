@@ -232,6 +232,9 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
       getProfile(userId, token)
         .then((res: any) => {
           const { profile } = res.data;
+          console.log(res.data);
+          
+          setPhoto(profile.photo);
           hasProfile(profile);
         })
         .catch((e: any) => {
@@ -269,7 +272,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
       <View style={[styles.form, { marginTop: -30}]}>
         <TextInput
           style={styles.input}
-          placeholder='Name'
+          placeholder={profile ? profile.name : 'Name'}
           placeholderTextColor="#b1b1b1"
           returnKeyType="next"
           keyboardType="default"
@@ -279,7 +282,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         />
         <TextInput
           style={styles.input}
-          placeholder='Gender'
+          placeholder={profile ? profile.gender : "Gender"}
           placeholderTextColor="#b1b1b1"
           returnKeyType="next"
           keyboardType="default"
@@ -289,7 +292,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         />
         <TextInput
           style={styles.input}
-          placeholder='About Me'
+          placeholder={profile ? profile.aboutMe : "About Me"}
           placeholderTextColor="#b1b1b1"
           returnKeyType="next"
           keyboardType="default"
@@ -299,7 +302,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         />
         <TextInput
           style={styles.input}
-          placeholder='Age'
+          placeholder={profile ? `${profile.age}` : "Age"}
           placeholderTextColor="#b1b1b1"
           returnKeyType="next"
           keyboardType="numeric"
@@ -309,7 +312,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         />
         <TextInput
           style={styles.input}
-          placeholder='Year'
+          placeholder={profile ? `${profile.yearBorn}` : "Year"}
           placeholderTextColor="#b1b1b1"
           returnKeyType="next"
           keyboardType="numeric"
@@ -319,7 +322,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         />
         <TextInput
           style={styles.input}
-          placeholder='Location'
+          placeholder={profile ? profile.location : "Location"}
           placeholderTextColor="#b1b1b1"
           returnKeyType="next"
           keyboardType="default"
@@ -329,7 +332,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         />
         <TextInput
           style={styles.input}
-          placeholder='Religion'
+          placeholder={profile ? profile.religion : "Religion"}
           placeholderTextColor="#b1b1b1"
           returnKeyType="next"
           keyboardType="default"
@@ -338,7 +341,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         />
         <TextInput
           style={styles.input}
-          placeholder='Hobby 1'
+          placeholder={profile ? profile.hobbies[0] : "Hobby 1"}
           placeholderTextColor="#b1b1b1"
           returnKeyType="next"
           keyboardType="default"
@@ -348,7 +351,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         />
         <TextInput
           style={styles.input}
-          placeholder='Hobby 2'
+          placeholder={profile ? profile.hobbies[1] : "Hobby 2"}
           placeholderTextColor="#b1b1b1"
           returnKeyType="next"
           keyboardType="default"
@@ -358,7 +361,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         />
         <TextInput
           style={styles.input}
-          placeholder='Hobby 3'
+          placeholder={profile ? profile.hobbies[2] : "Hobby 3"}
           placeholderTextColor="#b1b1b1"
           returnKeyType="next"
           keyboardType="default"
@@ -368,7 +371,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         />
         <TextInput
           style={styles.input}
-          placeholder='Sexuality'
+          placeholder="Sexuality"
           placeholderTextColor="#b1b1b1"
           returnKeyType="next"
           keyboardType="default"
