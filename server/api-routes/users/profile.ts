@@ -6,6 +6,22 @@ import { upload } from '../../middleware/imageUpload';
 
 const router = Router();
 
+/**
+ * @api {get} /
+ * @apiName User's profile
+ * @apiGroup Users
+ * @apiDescription See user's profile
+ *
+ * @apiSuccess (200)
+ *
+ * @apiSampleRequest GET /
+ *
+ * @query
+ * userId: String
+ * 
+ * @apiVersion 0.1.0
+ */
+
 router.get('/', async (req: Request, res: Response) => {
   const { userId } = req.query;
   if (userId) {
@@ -32,6 +48,31 @@ router.get('/', async (req: Request, res: Response) => {
     });
   }
 });
+
+/**
+ * @api {post} /create
+ * @apiName Create User's profile
+ * @apiGroup Users
+ * @apiDescription Create user's profile
+ *
+ * @apiSuccess (201)
+ *
+ * @apiSampleRequest POST /create
+ *
+ * @body
+ * userId: String
+ * name: String
+ * gender: String
+ * age: String
+ * yearBorn: String
+ * aboutMe: String
+ * religion: String
+ * location: String
+ * hobbies: Array<String>()
+ * sexuality: String
+ * 
+ * @apiVersion 0.1.0
+ */
 
 router.post('/create', upload.single('photo'), async (req: any, res: Response) => {
   const {
@@ -88,6 +129,31 @@ router.post('/create', upload.single('photo'), async (req: any, res: Response) =
     });
   }
 });
+
+/**
+ * @api {put} /update
+ * @apiName Update User's profile
+ * @apiGroup Users
+ * @apiDescription Update user's profile
+ *
+ * @apiSuccess (204)
+ *
+ * @apiSampleRequest PUT /update
+ *
+ * @body
+ * userId: String
+ * name: String
+ * gender: String
+ * age: String
+ * yearBorn: String
+ * aboutMe: String
+ * religion: String
+ * location: String
+ * hobbies: Array<String>()
+ * sexuality: String
+ * 
+ * @apiVersion 0.1.0
+ */
 
 router.put('/update', upload.single('photo'), async (req: any, res: Response) => {
   const {
