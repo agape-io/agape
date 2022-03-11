@@ -10,8 +10,6 @@ import {
   Image,
   View,
   TouchableOpacity,
-  Alert,
-  Platform,
   TextInput,
   ScrollView,
 } from 'react-native';
@@ -127,6 +125,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
     );
   }
 
+  // Update Profile
   const handleUpdateProfile = async (
     name: string,
     gender: string,
@@ -172,51 +171,6 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
       });
   }
 
-  const handleCreateProfile = async (
-    name: string,
-    gender: string,
-    age: string,
-    yearBorn: string,
-    aboutMe: string,
-    religion: string,
-    location: string,
-    hobbies: string[],
-    sexuality: string,
-    photo: string,
-  ) => {
-    // Convert strings to integers
-    let convertAge = parseInt(age),
-      convertYearBorn = parseInt(yearBorn);
-    
-    return createProfile(
-      userId,
-      token,
-      name,
-      gender,
-      convertAge,
-      convertYearBorn,
-      aboutMe,
-      religion,
-      location,
-      hobbies,
-      sexuality,
-      photo
-    )
-      .then((res: any) => {
-        // Go back to profile screen
-        console.log(res.data);
-        setLoading(false);
-        alert('Profile Created!');
-        navigation.navigate('Profile');
-      }).catch((e: any) => {
-        console.log(e);
-        alert(e.message);
-      })
-      .finally(() => {
-        if (isMounted.current) setLoading(false);
-      });
-  }
-
   // Header button initialization
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -232,9 +186,10 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
       getProfile(userId, token)
         .then((res: any) => {
           const { profile } = res.data;
-          console.log(res.data);
           
           setPhoto(profile.photo);
+
+          // check if profile exists
           hasProfile(profile);
         })
         .catch((e: any) => {
@@ -246,7 +201,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
 
     return () => {
       // cleanup
-      hasProfile({});
+      hasProfile(null);
     }
   }, []);
 
@@ -272,7 +227,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
       <View style={[styles.form, { marginTop: -30}]}>
         <TextInput
           style={styles.input}
-          placeholder={profile ? profile.name : 'Name'}
+          placeholder="Name"
           placeholderTextColor="#b1b1b1"
           returnKeyType="next"
           keyboardType="default"
@@ -282,7 +237,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         />
         <TextInput
           style={styles.input}
-          placeholder={profile ? profile.gender : "Gender"}
+          placeholder="Gender"
           placeholderTextColor="#b1b1b1"
           returnKeyType="next"
           keyboardType="default"
@@ -292,7 +247,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         />
         <TextInput
           style={styles.input}
-          placeholder={profile ? profile.aboutMe : "About Me"}
+          placeholder="About Me"
           placeholderTextColor="#b1b1b1"
           returnKeyType="next"
           keyboardType="default"
@@ -302,7 +257,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         />
         <TextInput
           style={styles.input}
-          placeholder={profile ? `${profile.age}` : "Age"}
+          placeholder="Age"
           placeholderTextColor="#b1b1b1"
           returnKeyType="next"
           keyboardType="numeric"
@@ -312,7 +267,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         />
         <TextInput
           style={styles.input}
-          placeholder={profile ? `${profile.yearBorn}` : "Year"}
+          placeholder="Year"
           placeholderTextColor="#b1b1b1"
           returnKeyType="next"
           keyboardType="numeric"
@@ -322,7 +277,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         />
         <TextInput
           style={styles.input}
-          placeholder={profile ? profile.location : "Location"}
+          placeholder="Location"
           placeholderTextColor="#b1b1b1"
           returnKeyType="next"
           keyboardType="default"
@@ -332,7 +287,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         />
         <TextInput
           style={styles.input}
-          placeholder={profile ? profile.religion : "Religion"}
+          placeholder="Religion"
           placeholderTextColor="#b1b1b1"
           returnKeyType="next"
           keyboardType="default"
@@ -341,7 +296,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         />
         <TextInput
           style={styles.input}
-          placeholder={profile ? profile.hobbies[0] : "Hobby 1"}
+          placeholder="Hobby 1"
           placeholderTextColor="#b1b1b1"
           returnKeyType="next"
           keyboardType="default"
@@ -351,7 +306,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         />
         <TextInput
           style={styles.input}
-          placeholder={profile ? profile.hobbies[1] : "Hobby 2"}
+          placeholder="Hobby 2"
           placeholderTextColor="#b1b1b1"
           returnKeyType="next"
           keyboardType="default"
@@ -361,7 +316,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         />
         <TextInput
           style={styles.input}
-          placeholder={profile ? profile.hobbies[2] : "Hobby 3"}
+          placeholder="Hobby 3"
           placeholderTextColor="#b1b1b1"
           returnKeyType="next"
           keyboardType="default"
@@ -381,19 +336,11 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         />
       </View>
       <View style={styles.addProfileButtonContainer}>
-        {profile ? (
-          <TouchableOpacity
-            style={[styles.addProfileButton, { backgroundColor: PRIMARY_COLOR }]}
-            onPress={() => handleUpdateProfile(name, gender, userAge, yearBorn, aboutMe, religion, location, [firstHobby, secondHobby, thirdHobby], preference, cloudinary)}>
-            <Text>Update Profile</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={[styles.addProfileButton, { backgroundColor: SECONDARY_COLOR }]}
-            onPress={() => handleCreateProfile(name, gender, userAge, yearBorn, aboutMe, religion, location, [firstHobby, secondHobby, thirdHobby], preference, cloudinary)}>
-            <Text>Create Profile</Text>
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity
+          style={[styles.addProfileButton, { backgroundColor: PRIMARY_COLOR }]}
+          onPress={() => handleUpdateProfile(name, gender, userAge, yearBorn, aboutMe, religion, location, [firstHobby, secondHobby, thirdHobby], preference, cloudinary)}>
+          <Text>Update Profile</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
