@@ -33,26 +33,25 @@ export interface TestPageProps {
 const TestPage:FC<TestPageProps> = ({ navigation }) => {
   const auth = useAuth();
 
-  const userId = auth.authData.userId;
-  const token = auth.authData.token;
+  const { userId, token } = auth.authData;
 
   // Dummy test variables
   let testName = "Erwin"
-  let testHobbies = ['Titans', 'Hiking', 'Biking'];
+  let testHobbies = ['Titans', 'Hiking', 'Skiing'];
   let testSexuality = "Straight";
   let testAge = 32;
   let testPhoto = "https://static.wikia.nocookie.net/shingekinokyojin/images/d/de/Erwin_Smith_%28Anime%29_character_image.png/"
   let testGender = "Male";
   let testYearBorn = 1974;
-  let testAboutMe = "Where's Hange?.";
-  let testReligion = "The Walls";
+  let testAboutMe = "Where's Hange? Levi?";
+  let testReligion = "Walls";
   let testLocation = "Paradis";
 
   const testMatches = async () => {
     getMatches(userId, token).then(res => {
       console.log(res.data);
     }).catch(e => {
-      console.log('something went wrong: ', e.response.data);
+      console.log('something went wrong: ', e.message);
     })
     .then(() => {
         navigation.navigate('Test');
@@ -63,7 +62,7 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
     getProfile(userId, token).then(res => {
       console.log(res.data);
     }).catch(e => {
-      console.log('something went wrong: ', e.response.data);
+      console.log('something went wrong: ', e.message);
     })
     .then(() => {
         navigation.navigate('Test');
@@ -82,12 +81,12 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
     sexuality: string,
     photo: string,
   ) => {
-    updateProfile(userId, name, gender, age, yearBorn, aboutMe, religion, location, hobbies, sexuality, photo)
+    updateProfile(userId, token, name, gender, age, yearBorn, aboutMe, religion, location, hobbies, sexuality, photo)
       .then(res => {
         console.log(res.data);
       })
       .catch(e => {
-        console.log('something went wrong: ', e);
+        console.log('something went wrong: ', e.message);
       })
       .then(() => {
         navigation.navigate('Test');
@@ -106,7 +105,7 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
     sexuality: string,
     photo: string,
   ) => {
-    createProfile(userId, name, gender, age, yearBorn, aboutMe, religion, location, hobbies, sexuality, photo)
+    createProfile(userId, token, name, gender, age, yearBorn, aboutMe, religion, location, hobbies, sexuality, photo)
       .then(res => {
         console.log(res.data);
       })

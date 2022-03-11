@@ -54,7 +54,7 @@ const getProfile = async (userId: string, token: string) => {
  * Creates user profile
  * 
  * @param userId 
- * @param token
+ * @param token 
  * @param name 
  * @param gender 
  * @param yearBorn 
@@ -71,6 +71,7 @@ const getProfile = async (userId: string, token: string) => {
  */
 const createProfile = async (
   userId: string,
+  token: string,
   name: string,
   gender: string,
   age: number,
@@ -85,6 +86,7 @@ const createProfile = async (
   // call axios to the API
   return axios.post(`${API_URL}/profile/create`, {
     userId,
+    token,
     name,
     gender,
     age,
@@ -102,7 +104,7 @@ const createProfile = async (
  * Updates user profile
  * 
  * @param userId 
- * @param token
+ * @param token 
  * @param name 
  * @param age
  * @param gender 
@@ -119,6 +121,7 @@ const createProfile = async (
  */
 const updateProfile = async (
   userId: string,
+  token: string,
   name: string,
   gender: string,
   age: number,
@@ -131,8 +134,9 @@ const updateProfile = async (
   photo: string,
 ) => {
   // call axios to the API
-  return axios.post(`${API_URL}/profile/update`, {
+  return axios.put(`${API_URL}/profile/update`, {
     userId,
+    token,
     name,
     gender,
     age,

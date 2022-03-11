@@ -29,7 +29,8 @@ import { useAuth } from '../navigation';
 // API's
 import {
   updateProfile,
-  createProfile
+  createProfile,
+  getProfile
 } from '../utils';
 import { CLOUDINARY_API_URL, API_URL } from '@env';
 
@@ -43,7 +44,7 @@ import styles, {
 // https://www.waldo.com/blog/add-an-image-picker-react-native-app
 
 export interface ProfileModalProps {
-  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Discover'>,
+  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Profile'>,
   NativeStackNavigationProp<RootNavigatorParamsList>>;
 }
 
@@ -51,7 +52,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
   const auth = useAuth();
 
   // hide create profile button if profile is already available
-  const [profile, hasProfile] = useState<boolean>(false);
+  const [profile, hasProfile] = useState<any>();
   const [photo, setPhoto] = useState<any>(null);
   const [cloudinary, getCloudinary] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -63,14 +64,12 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
   const [preference, setPreference] = useState<string>('');
   const [userAge, setUserAge] = useState<string>('');
   const [yearBorn, setYearBorn] = useState<string>('');
-
-  // these hobbies will be pushed to an array for the API to retrieve
   const [firstHobby, setFirstHobby] = useState<string>('');
   const [secondHobby, setSecondHobby] = useState<string>('');
   const [thirdHobby, setThirdHobby] = useState<string>('');
   const isMounted = useRef<any>(null);
 
-  const userId = auth.authData.userId;
+  const { userId, token } = auth.authData;
 
   const uploadPhoto = async () => {
     setLoading(true);
@@ -86,7 +85,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
       allowsEditing: true,
       aspect: [4, 3],
       base64: true,
-      quality: 1
+      quality: 0.5
     });
 
     if (pickerResult.cancelled === true) {
@@ -106,17 +105,11 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
     axios.post(CLOUDINARY_API_URL, data)
       .then(async (res: any) => {
         setLoading(false);
-        const data = new FormData();
         const { secure_url } = res.data;
-        // data.append('photo', {
-        //   uri: secure_url,
-        //   name: "profile_photo.png",
-        //   type: "image/png"
-        // })
-        console.log('cloudinary', data);
+      
         // save the cloudinary url
-        getCloudinary(data);
-        return data;
+        getCloudinary(secure_url);
+        return secure_url;
       })
       .catch((e: any) => {
         setLoading(true);
@@ -152,6 +145,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
     
     return updateProfile(
       userId,
+      token,
       name,
       gender,
       convertAge,
@@ -166,6 +160,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         // Go back to profile screen
         setLoading(false);
         console.log(res.data);
+        alert('Profile Updated!');
 
         navigation.navigate('Profile');
       }).catch((e: any) => {
@@ -195,6 +190,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
     
     return createProfile(
       userId,
+      token,
       name,
       gender,
       convertAge,
@@ -210,7 +206,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         // Go back to profile screen
         console.log(res.data);
         setLoading(false);
-        alert('Success!');
+        alert('Profile Created!');
         navigation.navigate('Profile');
       }).catch((e: any) => {
         console.log(e);
@@ -230,7 +226,27 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
     })
   }, [navigation]);
 
-  // Persist data(?)
+  // Persist profile data
+  useEffect(() => {
+    const getUserProfile = () => {
+      getProfile(userId, token)
+        .then((res: any) => {
+          const { profile } = res.data;
+          hasProfile(profile);
+        })
+        .catch((e: any) => {
+          console.log(e.message);
+      })
+    };
+
+    getUserProfile();
+
+    return () => {
+      // cleanup
+      hasProfile({});
+    }
+  }, []);
+
   useEffect(() => {
     isMounted.current = true;
 
@@ -362,17 +378,19 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         />
       </View>
       <View style={styles.addProfileButtonContainer}>
-        {/** Hide Create Profile Button if Profile Exists */}
-        <TouchableOpacity
-          style={[styles.addProfileButton, { backgroundColor: SECONDARY_COLOR }]}
-          onPress={() => handleCreateProfile(name, gender, userAge, yearBorn, aboutMe, religion, location, [firstHobby, secondHobby, thirdHobby], preference, cloudinary)}>
-          <Text>Create Profile</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.addProfileButton, { backgroundColor: PRIMARY_COLOR }]}
-          onPress={() => handleUpdateProfile(name, gender, userAge, yearBorn, aboutMe, religion, location, [firstHobby, secondHobby, thirdHobby], preference, cloudinary)}>
-          <Text>Update Profile</Text>
-        </TouchableOpacity>
+        {profile ? (
+          <TouchableOpacity
+            style={[styles.addProfileButton, { backgroundColor: PRIMARY_COLOR }]}
+            onPress={() => handleUpdateProfile(name, gender, userAge, yearBorn, aboutMe, religion, location, [firstHobby, secondHobby, thirdHobby], preference, cloudinary)}>
+            <Text>Update Profile</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={[styles.addProfileButton, { backgroundColor: SECONDARY_COLOR }]}
+            onPress={() => handleCreateProfile(name, gender, userAge, yearBorn, aboutMe, religion, location, [firstHobby, secondHobby, thirdHobby], preference, cloudinary)}>
+            <Text>Create Profile</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </ScrollView>
   );
