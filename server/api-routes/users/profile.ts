@@ -2,7 +2,6 @@ import { Router, Request, Response } from 'express';
 
 import { User } from '../../models/user';
 import connect from '../../config/db';
-import { upload } from '../../middleware/imageUpload';
 
 const router = Router();
 
@@ -33,9 +32,9 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/create', upload.single('photo'), async (req: any, res: Response) => {
+router.post('/create', async (req: any, res: Response) => {
   const {
-    userId, name, gender, age, yearBorn, aboutMe, religion, location, hobbies, sexuality,
+    userId, name, gender, age, yearBorn, aboutMe, religion, location, hobbies, sexuality, photo,
   } = req.body;
   if (userId && name && gender && age && yearBorn && aboutMe && religion && location && hobbies && sexuality) {
     await connect();
@@ -48,6 +47,7 @@ router.post('/create', upload.single('photo'), async (req: any, res: Response) =
       religion,
       location,
       hobbies,
+      photo,
     };
     const preferences = {
       sexuality,
@@ -56,7 +56,6 @@ router.post('/create', upload.single('photo'), async (req: any, res: Response) =
       maxAge: '',
       religion: [],
     };
-    if (req.file) (profile as any).photo = `uploads/${req.file.filename}`;
     User.findOneAndUpdate(
       { _id: userId },
       {
@@ -89,9 +88,9 @@ router.post('/create', upload.single('photo'), async (req: any, res: Response) =
   }
 });
 
-router.put('/update', upload.single('photo'), async (req: any, res: Response) => {
+router.put('/update', async (req: any, res: Response) => {
   const {
-    userId, name, gender, age, yearBorn, aboutMe, religion, location, hobbies, sexuality,
+    userId, name, gender, age, yearBorn, aboutMe, religion, location, hobbies, sexuality, photo,
   } = req.body;
   if (userId && name && gender && age && yearBorn && aboutMe && religion && location && hobbies && sexuality) {
     await connect();
@@ -104,8 +103,8 @@ router.put('/update', upload.single('photo'), async (req: any, res: Response) =>
       religion,
       location,
       hobbies,
+      photo,
     };
-    if (req.file) (profile as any).photo = `uploads/${req.file.filename}`;
     User.findOneAndUpdate(
       { _id: userId },
       {
