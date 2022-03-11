@@ -29,7 +29,7 @@ import {
   updateProfile,
   getProfile
 } from '../utils';
-import { CLOUDINARY_API_URL, API_URL } from '@env';
+import { CLOUDINARY_API_URL } from '@env';
 
 // Styles
 import styles, { PRIMARY_COLOR } from '../../assets/styles';
