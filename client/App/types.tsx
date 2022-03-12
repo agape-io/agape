@@ -11,6 +11,7 @@ type HomeTabNavigatorParamList = {
   Discover: undefined;
   Test: undefined;
   Profile: undefined;
+  Chat: undefined
 }
 
 type RootNavigatorParamsList = {
@@ -54,6 +55,12 @@ type ProfileItemT = {
   info4?: string;
   location?: string;
   matches: string;
+  name: string;
+};
+
+export type MessageT = {
+  image: any;
+  lastMessage: string;
   name: string;
 };
 

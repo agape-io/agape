@@ -25,7 +25,8 @@ import {
   SignUp,
   Landing,
   Discover,
-  Profile
+  Profile,
+  Chat,
 } from '../pages';
 
 // Styles
@@ -51,7 +52,7 @@ const HomeTabs: FC = () => {
     <Navigator
       initialRouteName="Discover"
       activeColor={SECONDARY_COLOR}
-      barStyle={{ backgroundColor: PRIMARY_COLOR}}
+      barStyle={{ backgroundColor: PRIMARY_COLOR }}
     >
       <Screen
         name="Test"
@@ -78,6 +79,16 @@ const HomeTabs: FC = () => {
         component={Profile}
         options={{
           tabBarLabel: 'Profile',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="account-outline" color={color} size={26} />
+          )
+        }}
+      />
+      <Screen
+        name="Chat"
+        component={Chat}
+        options={{
+          tabBarLabel: 'Chat',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="account-outline" color={color} size={26} />
           )
@@ -113,17 +124,19 @@ const Routes: FC<State> = () => {
       <Navigator>
         {authData ? (
           <>
-            <Screen name="Home" component={HomeTabs} options={{ headerShown: false }} /> 
-            <Group screenOptions={{ presentation: 'modal'}}>
+            <Screen name="Home" component={Chat} />
+            {/* <Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
+            <Group screenOptions={{ presentation: 'modal' }}>
               <Screen
                 name="ProfileModal"
                 component={ProfileModal}
                 options={{ headerTransparent: true, headerTitle: '' }}
               />
-            </Group>
+            </Group> */}
           </>
         ) : (
-          <Screen name="Auth" component={Auth} options={{ headerShown: false }} />
+          <Screen name="Home" component={Chat} />
+          // <Screen name="Auth" component={Auth} options={{ headerShown: false }} />
         )}
       </Navigator>
     </NavigationContainer>
