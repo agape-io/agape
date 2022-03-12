@@ -5,6 +5,21 @@ import connect from '../../config/db';
 
 const router = Router();
 
+/**
+ * @api {post} /email
+ * @apiName Signout
+ * @apiGroup Auth
+ * @apiDescription Signout user
+ *
+ * @apiSuccess (201)
+ *
+ * @apiSampleRequest POST /email
+ *
+ * @body
+ * userId: string
+ * 
+ * @apiVersion 0.1.0
+ */
 router.post('/email', async (req: Request, res: Response) => {
   const { userId } = req.body;
   if (userId) {
