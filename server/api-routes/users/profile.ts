@@ -5,6 +5,21 @@ import connect from '../../config/db';
 
 const router = Router();
 
+/**
+ * @api {get} /
+ * @apiName User's profile
+ * @apiGroup Users
+ * @apiDescription See user's profile
+ *
+ * @apiSuccess (200)
+ *
+ * @apiSampleRequest GET /
+ *
+ * @query
+ * userId: String
+ * 
+ * @apiVersion 0.1.0
+ */
 router.get('/', async (req: Request, res: Response) => {
   const { userId } = req.query;
   if (userId) {
@@ -32,6 +47,30 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
+/**
+ * @api {post} /create
+ * @apiName Create User Profile
+ * @apiGroup Users
+ * @apiDescription Create user's profile
+ *
+ * @apiSuccess (201)
+ *
+ * @apiSampleRequest POST /create
+ *
+ * @body
+ * userId: String
+ * name: String
+ * gender: String
+ * age: String
+ * yearBorn: String
+ * aboutMe: String
+ * religion: String
+ * location: String
+ * hobbies: [String]
+ * sexuality: String
+ * 
+ * @apiVersion 0.1.0
+ */
 router.post('/create', async (req: any, res: Response) => {
   const {
     userId, name, gender, age, yearBorn, aboutMe, religion, location, hobbies, sexuality, photo,
@@ -88,6 +127,30 @@ router.post('/create', async (req: any, res: Response) => {
   }
 });
 
+/**
+ * @api {put} /update
+ * @apiName Update User Profile
+ * @apiGroup Users
+ * @apiDescription Update user's profile
+ *
+ * @apiSuccess (204)
+ *
+ * @apiSampleRequest PUT /update
+ *
+ * @body
+ * userId: String
+ * name: String
+ * gender: String
+ * age: String
+ * yearBorn: String
+ * aboutMe: String
+ * religion: String
+ * location: String
+ * hobbies: [String]
+ * sexuality: String
+ * 
+ * @apiVersion 0.1.0
+ */
 router.put('/update', async (req: any, res: Response) => {
   const {
     userId, name, gender, age, yearBorn, aboutMe, religion, location, hobbies, sexuality, photo,
