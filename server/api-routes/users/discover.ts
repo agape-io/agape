@@ -3,7 +3,7 @@ import { Router, Request, Response } from 'express';
 import { User } from '../../models/user';
 import connect from '../../config/db';
 import {
-  getId, getProfile, getPreferences, generatePercentage,
+  getId, getProfile, getPreferences, generatePercentage, sortByPercentage
 } from '../../util/match';
 
 const router = Router();
@@ -26,13 +26,13 @@ const router = Router();
  * @apiVersion 0.1.0
  */
 router.get('/', async (req: Request, res: Response) => {
-  const { userId, romantic = 'false', threshold = 0 } = req.query;
+  const { userId, romantic = 'false', threshold = 0, sort = 'false', numUsers = 0 } = req.query;
   if (userId) {
     await connect();
     User.findOne({ _id: userId }, async (err, existingUser) => {
       if (existingUser) {
         const users = await User.find({});
-        const similarUsers = [];
+        let similarUsers = [];
         users.forEach((user) => {
           const percentage = generatePercentage(existingUser, user, romantic);
           if (percentage > parseFloat(threshold as string)) {
@@ -47,6 +47,10 @@ router.get('/', async (req: Request, res: Response) => {
           }
         });
         if (similarUsers.length > 0) {
+          if (numUsers > 0 || sort === 'true') {
+            similarUsers = sortByPercentage(similarUsers);
+            if (numUsers > 0) similarUsers = similarUsers.slice(0, parseInt(numUsers as string));
+          }
           res.status(200).send({
             status: 200,
             users: similarUsers,
