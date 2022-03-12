@@ -7,20 +7,19 @@ const router = Router();
 
 /**
  * @api {get} /
- * @apiName User's settings
+ * @apiName Get User Settings
  * @apiGroup Users
- * @apiDescription See user's settings
+ * @apiDescription Fetch user's settings
  *
  * @apiSuccess (200)
  *
  * @apiSampleRequest GET /
  *
  * @query
- * userId: String
+ * userId: string
  * 
  * @apiVersion 0.1.0
  */
-
 router.get('/', async (req: Request, res: Response) => {
   const { userId } = req.query;
   if (userId) {
@@ -49,7 +48,7 @@ router.get('/', async (req: Request, res: Response) => {
 
 /**
  * @api {post} /create
- * @apiName Create User's settings
+ * @apiName Create User Settings
  * @apiGroup Users
  * @apiDescription Create user's settings
  *
@@ -58,13 +57,12 @@ router.get('/', async (req: Request, res: Response) => {
  * @apiSampleRequest POST /create
  *
  * @body
- * userId: String
- * membershipType: String
- * pushNotifications: Boolean
+ * userId: string
+ * membershipType: string
+ * pushNotifications: boolean
  * 
  * @apiVersion 0.1.0
  */
-
 router.post('/create', async (req: Request, res: Response) => {
   const { userId, membershipType, pushNotifications } = req.body;
   if (userId && membershipType && pushNotifications) {
@@ -106,7 +104,7 @@ router.post('/create', async (req: Request, res: Response) => {
 
 /**
  * @api {put} /update
- * @apiName Update User's settings
+ * @apiName Update User Settings
  * @apiGroup Users
  * @apiDescription Update user's settings
  *
@@ -115,13 +113,12 @@ router.post('/create', async (req: Request, res: Response) => {
  * @apiSampleRequest PUT /update
  *
  * @body
- * userId: String
- * membershipType: String
- * pushNotifications: Boolean
+ * userId: string
+ * membershipType: string
+ * pushNotifications: boolean
  * 
  * @apiVersion 0.1.0
  */
-
 router.put('/update', async (req: Request, res: Response) => {
   const { userId, membershipType, pushNotifications } = req.body;
   if (userId && membershipType && pushNotifications) {

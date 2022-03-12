@@ -26,7 +26,6 @@ const router = Router();
  * 
  * @apiVersion 0.1.0
  */
-
 router.post('/email', async (req: Request, res: Response) => {
   const { email, password } = req.body;
   if (email && password) {

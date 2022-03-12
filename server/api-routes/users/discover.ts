@@ -10,7 +10,7 @@ const router = Router();
 
 /**
  * @api {get} /
- * @apiName Algorithm for discovery
+ * @apiName Discover Algorithm
  * @apiGroup Users
  * @apiDescription Algorithm for discovering other users
  *
@@ -25,7 +25,6 @@ const router = Router();
  * 
  * @apiVersion 0.1.0
  */
-
 router.get('/', async (req: Request, res: Response) => {
   const { userId, romantic = 'false', threshold = 0 } = req.query;
   if (userId) {

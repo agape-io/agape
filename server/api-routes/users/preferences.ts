@@ -7,9 +7,9 @@ const router = Router();
 
 /**
  * @api {get} /
- * @apiName User's preferences
+ * @apiName Get User Preferences
  * @apiGroup Users
- * @apiDescription See user's preferences
+ * @apiDescription Fetch user's preferences
  *
  * @apiSuccess (200)
  *
@@ -20,7 +20,6 @@ const router = Router();
  * 
  * @apiVersion 0.1.0
  */
-
 router.get('/', async (req: Request, res: Response) => {
   const { userId } = req.query;
   if (userId) {
@@ -49,7 +48,7 @@ router.get('/', async (req: Request, res: Response) => {
 
 /**
  * @api {post} /create
- * @apiName Create User's preferences
+ * @apiName Create User Preferences
  * @apiGroup Users
  * @apiDescription Create user's preferences
  *
@@ -58,16 +57,15 @@ router.get('/', async (req: Request, res: Response) => {
  * @apiSampleRequest POST /create
  *
  * @body
- * userId: String
- * sexuality: String
- * maxDist: String
- * minAge: String
- * maxAge: String
- * religion: String
+ * userId: string
+ * sexuality: string
+ * maxDist: string
+ * minAge: string
+ * maxAge: string
+ * religion: string
  * 
  * @apiVersion 0.1.0
  */
-
 router.post('/create', async (req: Request, res: Response) => {
   const { userId, sexuality } = req.body;
   if (userId && sexuality) {
@@ -115,7 +113,7 @@ router.post('/create', async (req: Request, res: Response) => {
 
 /**
  * @api {put} /update
- * @apiName Update User's preferences
+ * @apiName Update User Preferences
  * @apiGroup Users
  * @apiDescription Update user's preferences
  *
@@ -124,16 +122,15 @@ router.post('/create', async (req: Request, res: Response) => {
  * @apiSampleRequest PUT /update
  *
  * @body
- * userId: String
- * sexuality: String
- * maxDist: String
- * minAge: String
- * maxAge: String
- * religion: String
+ * userId: string
+ * sexuality: string
+ * maxDist: string
+ * minAge: string
+ * maxAge: string
+ * religion: string
  * 
  * @apiVersion 0.1.0
  */
-
 router.put('/update', async (req: Request, res: Response) => {
   const { userId, sexuality } = req.body;
   if (userId && sexuality) {

@@ -7,7 +7,7 @@ const router = Router();
 
 /**
  * @api {put} /left
- * @apiName Left Swipes API
+ * @apiName Swipe Left API
  * @apiGroup Users
  * @apiDescription Update user's left swipes
  *
@@ -16,12 +16,11 @@ const router = Router();
  * @apiSampleRequest PUT /left
  *
  * @body
- * userId: String
- * matchUserId: String
+ * userId: string
+ * matchUserId: string
  * 
  * @apiVersion 0.1.0
  */
-
 router.put('/left', async (req: Request, res: Response) => {
   const { userId, matchUserId } = req.body;
   if (userId && matchUserId) {
@@ -59,7 +58,7 @@ router.put('/left', async (req: Request, res: Response) => {
 
 /**
  * @api {put} /right
- * @apiName Right Swipes API
+ * @apiName Swipe Right API
  * @apiGroup Users
  * @apiDescription Update user's right swipes
  *
@@ -68,12 +67,11 @@ router.put('/left', async (req: Request, res: Response) => {
  * @apiSampleRequest PUT /right
  *
  * @body
- * userId: String
- * matchUserId: String
+ * userId: string
+ * matchUserId: string
  * 
  * @apiVersion 0.1.0
  */
-
 router.put('/right', async (req: Request, res: Response) => {
   const { userId, matchUserId } = req.body;
   if (userId && matchUserId) {

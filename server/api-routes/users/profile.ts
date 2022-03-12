@@ -7,16 +7,16 @@ const router = Router();
 
 /**
  * @api {get} /
- * @apiName User's profile
+ * @apiName Get User Profile
  * @apiGroup Users
- * @apiDescription See user's profile
+ * @apiDescription Fetch user's profile
  *
  * @apiSuccess (200)
  *
  * @apiSampleRequest GET /
  *
  * @query
- * userId: String
+ * userId: string
  * 
  * @apiVersion 0.1.0
  */
@@ -58,16 +58,16 @@ router.get('/', async (req: Request, res: Response) => {
  * @apiSampleRequest POST /create
  *
  * @body
- * userId: String
- * name: String
- * gender: String
- * age: String
- * yearBorn: String
- * aboutMe: String
- * religion: String
- * location: String
- * hobbies: [String]
- * sexuality: String
+ * userId: string
+ * name: string
+ * gender: string
+ * age: string
+ * yearBorn: string
+ * aboutMe: string
+ * religion: string
+ * location: string
+ * hobbies: [string]
+ * sexuality: string
  * 
  * @apiVersion 0.1.0
  */
@@ -138,16 +138,16 @@ router.post('/create', async (req: any, res: Response) => {
  * @apiSampleRequest PUT /update
  *
  * @body
- * userId: String
- * name: String
- * gender: String
- * age: String
- * yearBorn: String
- * aboutMe: String
- * religion: String
- * location: String
- * hobbies: [String]
- * sexuality: String
+ * userId: string
+ * name: string
+ * gender: string
+ * age: string
+ * yearBorn: string
+ * aboutMe: string
+ * religion: string
+ * location: string
+ * hobbies: [string]
+ * sexuality: string
  * 
  * @apiVersion 0.1.0
  */
