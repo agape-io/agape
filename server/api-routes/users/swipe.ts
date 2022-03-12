@@ -5,6 +5,22 @@ import connect from '../../config/db';
 
 const router = Router();
 
+/**
+ * @api {put} /left
+ * @apiName Swipe Left API
+ * @apiGroup Users
+ * @apiDescription Update user's left swipes
+ *
+ * @apiSuccess (201)
+ *
+ * @apiSampleRequest PUT /left
+ *
+ * @body
+ * userId: string
+ * matchUserId: string
+ * 
+ * @apiVersion 0.1.0
+ */
 router.put('/left', async (req: Request, res: Response) => {
   const { userId, matchUserId } = req.body;
   if (userId && matchUserId) {
@@ -40,6 +56,22 @@ router.put('/left', async (req: Request, res: Response) => {
   }
 });
 
+/**
+ * @api {put} /right
+ * @apiName Swipe Right API
+ * @apiGroup Users
+ * @apiDescription Update user's right swipes
+ *
+ * @apiSuccess (201)
+ *
+ * @apiSampleRequest PUT /right
+ *
+ * @body
+ * userId: string
+ * matchUserId: string
+ * 
+ * @apiVersion 0.1.0
+ */
 router.put('/right', async (req: Request, res: Response) => {
   const { userId, matchUserId } = req.body;
   if (userId && matchUserId) {

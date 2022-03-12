@@ -6,6 +6,21 @@ import { User } from '../../models/user';
 
 const router = Router();
 
+/**
+ * @api {get} /
+ * @apiName Get User Chats
+ * @apiGroup Chats
+ * @apiDescription Fetch user's chats
+ *
+ * @apiSuccess (200)
+ *
+ * @apiSampleRequest GET /
+ *
+ * @query
+ * userId: string
+ * 
+ * @apiVersion 0.1.0
+ */
 router.get('/', async (req: Request, res: Response) => {
   const { userId } = req.query;
   if (userId) {
@@ -31,6 +46,21 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
+/**
+ * @api {post} /
+ * @apiName Create/Access User Chat
+ * @apiGroup Chats
+ * @apiDescription Create or access user's chats
+ *
+ * @apiSuccess (200)
+ *
+ * @apiSampleRequest POST /
+ *
+ * @query
+ * userIds: [string]
+ * 
+ * @apiVersion 0.1.0
+ */
 router.post('/', async (req: Request, res: Response) => {
   const { userIds } = req.body;
   if (userIds) {

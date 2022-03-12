@@ -21,6 +21,23 @@ schema
 
 const router = Router();
 
+/**
+ * @api {post} /email
+ * @apiName Signup via Email
+ * @apiGroup Auth
+ * @apiDescription Signup user using email and password
+ *
+ * @apiSuccess (200)
+ *
+ * @apiSampleRequest POST /email
+ *
+ * @body
+ * email: string
+ * password: string
+ * verifyPassword: string
+ * 
+ * @apiVersion 0.1.0
+ */
 router.post('/email', async (req: Request, res: Response) => {
   const { email, password, verifyPassword } = req.body;
   if (email && password && verifyPassword) {

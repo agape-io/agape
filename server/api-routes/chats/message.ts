@@ -7,6 +7,23 @@ import { User } from '../../models/user';
 
 const router = Router();
 
+/**
+ * @api {post} /
+ * @apiName Send Message to Chat
+ * @apiGroup Chats
+ * @apiDescription Send user's message to chat
+ *
+ * @apiSuccess (201)
+ *
+ * @apiSampleRequest POST /
+ *
+ * @query
+ * userId: string
+ * content: string
+ * chatId: string
+ * 
+ * @apiVersion 0.1.0
+ */
 router.post('/', async (req: Request, res: Response) => {
   const { userId, content, chatId } = req.body;
   if (userId && content && chatId) {
@@ -35,6 +52,21 @@ router.post('/', async (req: Request, res: Response) => {
   }
 });
 
+/**
+ * @api {get} /
+ * @apiName Get Chat Messages
+ * @apiGroup Chats
+ * @apiDescription Fetch all messages in chat
+ *
+ * @apiSuccess (200)
+ *
+ * @apiSampleRequest GET /
+ *
+ * @query
+ * chatId: string
+ * 
+ * @apiVersion 0.1.0
+ */
 router.get('/', async (req: Request, res: Response) => {
   const { chatId } = req.query;
   if (chatId) {
