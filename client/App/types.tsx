@@ -5,19 +5,22 @@ type AuthNavigatorParamList = {
   SignIn: undefined;
   SignUp: undefined;
   Landing: undefined;
+  // Message: undefined;
 }
 
 type HomeTabNavigatorParamList = {
   Discover: undefined;
   Test: undefined;
   Profile: undefined;
-  Chat: undefined
+  Chat: undefined;
+  Message: undefined;
 }
 
 type RootNavigatorParamsList = {
   Auth: NavigatorScreenParams<AuthNavigatorParamList>
   Home: NavigatorScreenParams<HomeTabNavigatorParamList>
   ProfileModal: undefined;
+  Message: undefined;
 }
 type AuthContextData = {
   authData: AuthData;

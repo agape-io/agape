@@ -8,6 +8,7 @@ import TestPage from './TestPage';
 import Discover from './Discover';
 import Profile from './Profile';
 import Chat from './Chat';
+import Message from './Message';
 
 export {
   SignUp,
@@ -16,5 +17,6 @@ export {
   TestPage,
   Discover,
   Profile,
-  Chat
+  Chat,
+  Message,
 };

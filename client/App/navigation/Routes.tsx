@@ -27,6 +27,7 @@ import {
   Discover,
   Profile,
   Chat,
+  Message
 } from '../pages';
 
 // Styles
@@ -94,6 +95,10 @@ const HomeTabs: FC = () => {
           )
         }}
       />
+      {/* <Screen
+        name="Message"
+        component={Message}
+      /> */}
     </Navigator>
   )
 }
@@ -106,6 +111,8 @@ const Auth: FC = () => {
       <Screen name="SignUp" component={SignUp} />
       <Screen name="SignIn" component={SignIn} />
       <Screen name="Landing" component={Landing} />
+      {/* <Screen name="Message" component={Message} /> */}
+
     </Navigator>
   )
 }
@@ -124,7 +131,7 @@ const Routes: FC<State> = () => {
       <Navigator>
         {authData ? (
           <>
-            <Screen name="Home" component={Chat} />
+            <Screen name="Home" component={Message} />
             {/* <Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
             <Group screenOptions={{ presentation: 'modal' }}>
               <Screen
@@ -135,7 +142,7 @@ const Routes: FC<State> = () => {
             </Group> */}
           </>
         ) : (
-          <Screen name="Home" component={Chat} />
+          <Screen name="Home" component={Message} />
           // <Screen name="Auth" component={Auth} options={{ headerShown: false }} />
         )}
       </Navigator>

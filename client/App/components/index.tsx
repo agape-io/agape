@@ -7,7 +7,7 @@ import City from './City';
 import Filters from './Filters';
 import ProfileItem from './ProfileItem';
 import ProfileModal from './ProfileModal';
-import Message from './Messages';
+import Message from './MostRecentMessage';
 
 export {
   Icon,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, FC } from "react";
 import { Text, TextInput, View, ImageBackground, TouchableOpacity, FlatList } from 'react-native';
 // import io from 'socket.io-client';
 // import moment from 'moment';
@@ -6,10 +6,21 @@ import { Text, TextInput, View, ImageBackground, TouchableOpacity, FlatList } fr
 import styles, { DARK_GRAY } from "../../assets/styles";
 import { Icon, Message } from "../components";
 import DEMO from "../../assets/data/demo";
+import { useAuth } from "../navigation";
+import {
+    HomeTabNavigatorParamList,
+    RootNavigatorParamsList
+} from "../types";
+import { CompositeNavigationProp } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 // import ChatMessages from '../components/Chat/ChatMessages';
+export interface ChatProps {
+    navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Chat'>,
+        NativeStackNavigationProp<RootNavigatorParamsList>>;
+}
 
-const Chat = () => {
+const Chat: FC<ChatProps> = ({ navigation }) => {
     //state initialized
     const [chat, setChat] = useState({ message: '', sid: '', time: '', rid: '' });
     const [messages, setMessages] = useState([]);
@@ -41,31 +52,22 @@ const Chat = () => {
         >
 
             <View style={styles.containerMessages}>
-                {/* <View style={styles.top}>
-                    <Text style={styles.title}>Messages</Text>
-                    <TouchableOpacity>
-                        <Icon name="ellipsis-vertical" color={DARK_GRAY} size={20} />
-                    </TouchableOpacity>
-                </View> */}
-                {/* <View style={styles.flatlistView}>
-
-                </View> */}
-                {/* <View style={styles.flatlistView}> */}
                 <FlatList
-                    // style={styles.flatlistView}
                     data={DEMO}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item }) => (
-                        <TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('Message')}
+                        >
                             <Message
                                 image={item.image}
                                 name={item.name}
                                 lastMessage={item.message}
                             />
+
                         </TouchableOpacity>
                     )}
                 />
-                {/* </View> */}
             </View>
         </ImageBackground >
     );
