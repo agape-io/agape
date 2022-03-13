@@ -47,14 +47,15 @@ type IconT = {
 };
 
 type ProfileItemT = {
-  age?: string;
-  info1?: string;
-  info2?: string;
-  info3?: string;
-  info4?: string;
-  location?: string;
-  matches: string;
+  // data: any;
   name: string;
+  gender?: string;
+  aboutMe?: string;
+  age?: string;
+  year?: string;
+  location?: string;
+  religion?: string;
+  hobby?: string;
 };
 
 export {

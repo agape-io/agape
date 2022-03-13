@@ -14,6 +14,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useAuth } from "../navigation";
 import { HomeTabNavigatorParamList, RootNavigatorParamsList } from "../types";
 import { getProfile } from '../utils';
+import data from "../../assets/data/demo";
 
 export interface ProfileProps {
   navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Discover'>,
@@ -25,18 +26,6 @@ const Profile: FC<ProfileProps> = ({ navigation }) => {
   const [modal, setModal] = useState<boolean>(false);
   // use this state to populate data through an object
   const [profile, setProfile] = useState<any>(null);
-  
-  const {
-    age,
-    image,
-    info1,
-    info2,
-    info3,
-    info4,
-    location,
-    match,
-    name,
-  } = DEMO[7];
 
   const auth = useAuth();
 
@@ -44,16 +33,41 @@ const Profile: FC<ProfileProps> = ({ navigation }) => {
   userId = auth.authData.userId;
 
   const loadProfiles = async () => {
-    //get the profiles
+    //get the profile
     getProfile(userId, token)
       .then(res => {
-        const { users } = res.data;
-        console.log(users);
-        setProfile(users);
+        const { userProfile } = res.data;
+        console.log("token: " + token)
+        console.log("userId: " + userId)
+        console.log("name: " + name)
+        console.log(userProfile.name);
+        setProfile(userProfile);
       }).catch(e => {
         console.log(e.message);
       });
   }
+
+  const {
+    // age,
+    // image,
+    // info1,
+    // info2,
+    // info3,
+    // info4,
+    // location,
+    // match,
+    // name,
+
+    name,
+    gender,
+    aboutMe,
+    age,
+    year,
+    location,
+    religion,
+    hobby
+
+  } = DEMO[7]
 
   //TODO: fetch profile data
   useEffect(() => {
@@ -70,7 +84,7 @@ const Profile: FC<ProfileProps> = ({ navigation }) => {
       style={styles.bg}
     >
       <ScrollView style={styles.containerProfile}>
-        <ImageBackground source={image} style={styles.photo}>
+        <ImageBackground source={require("../../assets/images/01.jpg")} style={styles.photo}>
           <View style={styles.top}>
             <TouchableOpacity>
               <Icon
@@ -83,15 +97,38 @@ const Profile: FC<ProfileProps> = ({ navigation }) => {
           </View>
         </ImageBackground>
 
-        <ProfileItem
-          matches={match}
+        {/* {profile.map((item: any, index: any) => {
+
+          return (
+              <View key={index}>
+                  <ProfileItem
+                      key={index}
+                      data={item}
+                      // gender ={item.gender}
+                      // hasActions
+                  />
+              </View>
+          )
+          })} */}
+          
+          <ProfileItem
+          // matches={match}
+          // name={name}
+          // age={age}
+          // location={location}
+          // info1={info1}
+          // info2={info2}
+          // info3={info3}
+          // info4={info4}
+
           name={name}
+          gender={gender}
+          aboutMe={aboutMe}
           age={age}
+          year={year}
           location={location}
-          info1={info1}
-          info2={info2}
-          info3={info3}
-          info4={info4}
+          religion={religion}
+          hobby={hobby}
         />
 
         <View style={styles.actionsProfile}>

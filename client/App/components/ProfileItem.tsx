@@ -11,15 +11,26 @@ import styles, {
 // TODO: have this return one prop called data
 // to access the data, it would be structured as "data.age, data.location", etc
 
+
 const ProfileItem = ({
-    age,
-    info1,
-    info2,
-    info3,
-    info4,
-    location,
-    matches,
+    // data,
     name,
+    gender,
+    aboutMe,
+    age,
+    year,
+    location,
+    religion,
+    hobby
+ 
+    // age,
+    // info1,
+    // info2,
+    // info3,
+    // info4,
+    // location,
+    // matches,
+    // name,
 }: ProfileItemT) => (
     <View style={styles.containerProfileItem}>
         {/* <View style={styles.matchesProfileItem}>
@@ -35,15 +46,15 @@ const ProfileItem = ({
         </Text>
 
         <View style={styles.info}>
-            <Text style={styles.infoContent}>About: {info1}</Text>
+            <Text style={styles.infoContent}>About: {aboutMe}</Text>
         </View>
 
         <View style={styles.info}>
-            <Text style={styles.infoContent}>Religion: {info2}</Text>
+            <Text style={styles.infoContent}>Religion: {religion}</Text>
         </View>
 
         <View style={styles.info}>
-            <Text style={styles.infoContent}>Hobbies: {info3}</Text>
+            <Text style={styles.infoContent}>Hobbies: {hobby}</Text>
         </View>
 
 
@@ -60,7 +71,7 @@ const ProfileItem = ({
 
         {/* This section would be their bio */}
         <View style={styles.info}>
-            <Text style={styles.infoContent}>{info4}</Text>
+            <Text style={styles.infoContent}>{gender}</Text>
         </View>
     </View>
 );
