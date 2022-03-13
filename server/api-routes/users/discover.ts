@@ -22,6 +22,8 @@ const router = Router();
  * userId: string
  * romantic: string
  * threshold: int
+ * sort: string
+ * numUsers: int
  * 
  * @apiVersion 0.1.0
  */
