@@ -11,7 +11,9 @@ import DEMO from "../../assets/data/demo";
 import styles, { WHITE } from "../../assets/styles";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useAuth } from "../navigation";
 import { HomeTabNavigatorParamList, RootNavigatorParamsList } from "../types";
+import { getProfile } from '../utils';
 
 export interface ProfileProps {
   navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Discover'>,
@@ -36,9 +38,30 @@ const Profile: FC<ProfileProps> = ({ navigation }) => {
     name,
   } = DEMO[7];
 
+  const auth = useAuth();
+
+  const token = auth.authData.token,
+  userId = auth.authData.userId;
+
+  const loadProfiles = async () => {
+    //get the profiles
+    getProfile(userId, token)
+      .then(res => {
+        const { users } = res.data;
+        console.log(users);
+        setProfile(users);
+      }).catch(e => {
+        console.log(e.message);
+      });
+  }
+
   //TODO: fetch profile data
   useEffect(() => {
+    loadProfiles();
 
+    return () => {
+        setProfile(null);
+    }
   }, []);
 
   return (
