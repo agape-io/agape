@@ -35,14 +35,25 @@ const ProfileItem = ({ data }: ProfileItemT) => (
                     <Text style={styles.infoContent}>Religion: {data.religion}</Text>
                 </View>
 
-                {/* TODO: iterate hobbies , if empty return "No Hobbies!" */}
-                {/* <View style={styles.info}>
-                    <Text style={styles.infoContent}>Hobbies: {hobby}</Text>
-                </View> */}
+                {data.hobbies.includes("") ?(
+                    <View style={styles.info}>
+                        <Text style={styles.infoContent}>Hobbies: None!</Text>
+                    </View>
+
+                ) : (
+                    <View style={styles.info}>
+                        <Text style={styles.infoContent}>Hobbies: {"\n"}
+                            {data.hobbies.map((item: any, index: any) => {
+                                return (
+                                    <Text style={styles.infoContentHobbies} key={index}>{"\t"}{item}{"\n"}</Text>
+                                )
+                            })}
+                        </Text>
+                    </View>
+                )}
             </>
         )}
-        
-       
+    
         <View
             style={{
                 borderBottomColor: GRAY,

@@ -230,7 +230,13 @@ export default StyleSheet.create({
     },
     infoContent: {
         color: GRAY,
-        fontSize: 13
+        fontSize: 13,
+        // paddingHorizontal: 10
+    },
+    infoContentHobbies: {
+        flex: 1,
+        flexWrap: 'wrap',
+        flexDirection: 'column'
     },
 
     // CONTAINER - GENERAL
