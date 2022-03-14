@@ -25,6 +25,7 @@ type RootNavigatorParamsList = {
   ProfileModal: undefined;
   Chat: NavigatorScreenParams<MessageStackParamList>;
 }
+
 type AuthContextData = {
   authData: AuthData;
   loading: boolean;
