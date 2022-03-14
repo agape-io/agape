@@ -54,14 +54,17 @@ const getProfile = async (userId: string, token: string) => {
  * Creates user profile
  * 
  * @param userId 
- * @param token
+ * @param token 
  * @param name 
  * @param gender 
  * @param yearBorn 
+ * @param age
+ * @param sexuality
  * @param aboutMe
  * @param religion 
  * @param location 
  * @param hobbies 
+ * @param photo 
  * 
  * When calling this function, use a then() and a 
  * catch() to get the response.
@@ -71,11 +74,14 @@ const createProfile = async (
   token: string,
   name: string,
   gender: string,
+  age: number,
   yearBorn: number,
   aboutMe: string,
   religion: string,
   location: string,
   hobbies: string[],
+  sexuality: string,
+  photo: string,
 ) => {
   // call axios to the API
   return axios.post(`${API_URL}/profile/create`, {
@@ -83,11 +89,14 @@ const createProfile = async (
     token,
     name,
     gender,
+    age,
     yearBorn,
     aboutMe,
     religion,
     location,
-    hobbies
+    hobbies,
+    sexuality,
+    photo
   });
 }
 
@@ -95,14 +104,17 @@ const createProfile = async (
  * Updates user profile
  * 
  * @param userId 
- * @param token
+ * @param token 
  * @param name 
+ * @param age
  * @param gender 
  * @param yearBorn 
  * @param aboutMe
  * @param religion 
  * @param location 
  * @param hobbies 
+ * @param photo
+ * @param sexuality
  * 
  * When calling this function, use a then() and a 
  * catch() to get the response.
@@ -112,23 +124,29 @@ const updateProfile = async (
   token: string,
   name: string,
   gender: string,
+  age: number,
   yearBorn: number,
   aboutMe: string,
   religion: string,
   location: string,
   hobbies: string[],
+  sexuality: string,
+  photo: string,
 ) => {
   // call axios to the API
-  return axios.post(`${API_URL}/profile/update`, {
+  return axios.put(`${API_URL}/profile/update`, {
     userId,
     token,
     name,
     gender,
+    age,
     yearBorn,
     aboutMe,
     religion,
     location,
-    hobbies
+    hobbies,
+    sexuality,
+    photo
   });
 }
 

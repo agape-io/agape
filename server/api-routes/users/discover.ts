@@ -1,70 +1,82 @@
 import { Router, Request, Response } from 'express';
-import mongoose from "mongoose";
 
-import { UserModel } from "../../models/user";
+import { User } from '../../models/user';
 import connect from '../../config/db';
+import {
+  getId, getProfile, getPreferences, generatePercentage, sortByPercentage
+} from '../../util/match';
 
 const router = Router();
 
-const commonElements = (array1, array2) => {
-    return array1.some(item => array2.includes(item));
-}
-
-const getProfile = (user) => {
-    return JSON.parse(JSON.stringify(user)).profile;
-}
-
-const getId = (user) => {
-    return JSON.parse(JSON.stringify(user)).userId;
-}
-
+/**
+ * @api {get} /
+ * @apiName Discover Algorithm
+ * @apiGroup Users
+ * @apiDescription Algorithm for discovering other users
+ *
+ * @apiSuccess (200)
+ *
+ * @apiSampleRequest GET /
+ *
+ * @query
+ * userId: string
+ * romantic: string
+ * threshold: int
+ * sort: string
+ * numUsers: int
+ * 
+ * @apiVersion 0.1.0
+ */
 router.get('/', async (req: Request, res: Response) => {
-    if (req.query.userId) {
-        await connect();
-        const userModel = mongoose.model('users', UserModel);
-        userModel.findOne({ userId: req.query.userId }, async function (err, existingUser) {
-            if (existingUser) {
-                const users = await userModel.find({});
-                const commonUsersId = [];
-                const commonUsersProfile = [];
-                users.forEach(user => {
-                    const currentUser = getProfile(existingUser);
-                    const tempUser = getProfile(user);
-                    if (commonElements(currentUser.hobbies, tempUser.hobbies)) {
-                        commonUsersId.push(getId(user));
-                        commonUsersProfile.push(tempUser);
-                    };
-                });
-                // remove current user
-                const index = commonUsersId.indexOf(req.query.userId);
-                if (index > -1) {
-                    commonUsersId.splice(index, 1);
-                    commonUsersProfile.splice(index, 1);
-                }
-                if (commonUsersId.length > 0) {
-                    res.status(200).send({
-                        status: 200,
-                        users: commonUsersProfile
-                    })
-                } else {
-                    res.status(500).send({
-                        status: 500,
-                        message: "No matches found!"
-                    });
-                };
-            } else {
-                res.status(500).send({
-                    status: 500,
-                    message: "Cannot find current user!"
-                });
-            };
+  const { userId, romantic = 'false', threshold = 0, sort = 'false', numUsers = 0 } = req.query;
+  if (userId) {
+    await connect();
+    User.findOne({ _id: userId }, async (err, existingUser) => {
+      if (existingUser) {
+        const users = await User.find({});
+        let similarUsers = [];
+        users.forEach((user) => {
+          const percentage = generatePercentage(existingUser, user, romantic);
+          if (percentage > parseFloat(threshold as string)) {
+            similarUsers.push({
+              userId: getId(user),
+              profile: getProfile(user),
+              preferences: {
+                sexuality: getPreferences(user).sexuality,
+              },
+              percentage,
+            });
+          }
         });
-    } else {
-        res.status(500).send({
+        if (similarUsers.length > 0) {
+          if (numUsers > 0 || sort === 'true') {
+            similarUsers = sortByPercentage(similarUsers);
+            if (numUsers > 0) similarUsers = similarUsers.slice(0, parseInt(numUsers as string));
+          }
+          res.status(200).send({
+            status: 200,
+            users: similarUsers,
+          });
+        } else {
+          res.status(500).send({
             status: 500,
-            message: "Missing User Id!"
-        })
-    };
+            users: [],
+            message: 'No matches found!',
+          });
+        }
+      } else {
+        res.status(500).send({
+          status: 500,
+          message: 'Cannot find current user!',
+        });
+      }
+    });
+  } else {
+    res.status(500).send({
+      status: 500,
+      message: 'Missing User Id!',
+    });
+  }
 });
 
 export default router;

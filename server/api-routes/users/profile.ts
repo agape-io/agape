@@ -1,140 +1,202 @@
 import { Router, Request, Response } from 'express';
-import mongoose from 'mongoose';
 
-import { UserModel } from "../../models/user";
-import connect from "../../config/db";
-import { upload } from '../../middleware/imageUpload';
+import { User } from '../../models/user';
+import connect from '../../config/db';
 
 const router = Router();
 
+/**
+ * @api {get} /
+ * @apiName Get User Profile
+ * @apiGroup Users
+ * @apiDescription Fetch user's profile
+ *
+ * @apiSuccess (200)
+ *
+ * @apiSampleRequest GET /
+ *
+ * @query
+ * userId: string
+ * 
+ * @apiVersion 0.1.0
+ */
 router.get('/', async (req: Request, res: Response) => {
-    if (req.query.userId) {
-        await connect();
-        const userModel = mongoose.model('users', UserModel);
-        userModel.findOne({ userId: req.query.userId }, async function (err, existingUser) {
-            if (existingUser) {
-                res.status(200).send({
-                    status: 200,
-                    message: 'Profile found!',
-                    profile: existingUser.profile,
-                    isOnline: existingUser.isOnline
-                });
-            } else {
-                res.status(500).send({
-                    status: 500,
-                    message: "User does not exist!"
-                });
-            };
+  const { userId } = req.query;
+  if (userId) {
+    await connect();
+    User.findOne({ _id: userId }, (err, existingUser) => {
+      if (existingUser) {
+        res.status(200).send({
+          status: 200,
+          message: 'Profile found!',
+          profile: existingUser.profile,
+          isOnline: existingUser.isOnline,
         });
-    } else {
+      } else {
         res.status(500).send({
-            status: 500,
-            message: "Missing User Id!"
-        })
-    }
+          status: 500,
+          message: 'User does not exist!',
+        });
+      }
+    });
+  } else {
+    res.status(500).send({
+      status: 500,
+      message: 'Missing User Id!',
+    });
+  }
 });
 
-router.post('/create', upload.single('photo'), async (req: any, res: Response) => {
-    if (req.body.userId && req.body.name && req.body.gender && req.body.yearBorn && req.body.aboutMe && 
-        req.body.religion && req.body.location && req.body.hobbies && req.body.sexuality) {
-        await connect();
-        const userModel = mongoose.model('users', UserModel);
-        const profile = {
-            name: req.body.name,
-            gender: req.body.gender,
-            yearBorn: req.body.yearBorn,
-            aboutMe: req.body.aboutMe,
-            religion: req.body.religion,
-            location: req.body.location,
-            hobbies: req.body.hobbies,
-        };
-        const preferences = {
-            sexuality: req.body.sexuality,
-            maxDist: "",
-            minAge: "",
-            maxAge: "",
-            religion: [
-                ""
-            ]
+/**
+ * @api {post} /create
+ * @apiName Create User Profile
+ * @apiGroup Users
+ * @apiDescription Create user's profile
+ *
+ * @apiSuccess (201)
+ *
+ * @apiSampleRequest POST /create
+ *
+ * @body
+ * userId: string
+ * name: string
+ * gender: string
+ * age: string
+ * yearBorn: string
+ * aboutMe: string
+ * religion: string
+ * location: string
+ * hobbies: [string]
+ * sexuality: string
+ * 
+ * @apiVersion 0.1.0
+ */
+router.post('/create', async (req: any, res: Response) => {
+  const {
+    userId, name, gender, age, yearBorn, aboutMe, religion, location, hobbies, sexuality, photo,
+  } = req.body;
+  if (userId && name && gender && age && yearBorn && aboutMe && religion && location && hobbies && sexuality) {
+    await connect();
+    const profile = {
+      name,
+      age,
+      gender,
+      yearBorn,
+      aboutMe,
+      religion,
+      location,
+      hobbies,
+      photo,
+    };
+    const preferences = {
+      sexuality,
+      maxDist: '',
+      minAge: '',
+      maxAge: '',
+      religion: [],
+    };
+    User.findOneAndUpdate(
+      { _id: userId },
+      {
+        $set: {
+          profile,
+          preferences,
+        },
+      },
+      { upsert: true },
+      (err, doc) => {
+        if (err) {
+          res.status(500).send({
+            status: 500,
+            message: `Error creating profile! ${err}`,
+          });
+          console.error(err);
+        } else {
+          res.status(201).send({
+            status: 201,
+            message: 'Profile created!',
+          });
         }
-        if (req.file) (profile as any).photo = `uploads/${req.file.filename}`;
-        userModel.findOneAndUpdate(
-            { userId: req.body.userId },
-            {
-                $set: {
-                    profile,
-                    preferences
-                }
-            },
-            { upsert: true },
-            function (err, doc) {
-                if (err) {
-                    res.status(500).send({
-                        status: 500,
-                        message: 'Error creating profile!'
-                    });
-                    console.error(err);
-                }
-                else {
-                    res.status(201).send({
-                        status: 201,
-                        message: "Profile created!"
-                    })
-                };
-            }
-        );
-    } else {
-        res.status(500).send({
-            status: 500,
-            message: "Missing one of the required inputs!"
-        })
-    };
+      },
+    );
+  } else {
+    res.status(500).send({
+      status: 500,
+      message: 'Missing one of the required inputs!',
+    });
+  }
 });
 
-router.post('/update', upload.single('photo'), async (req: any, res: Response) => {
-    if (req.body.userId && req.body.name && req.body.gender && req.body.yearBorn && req.body.aboutMe && req.body.religion && req.body.location && req.body.hobbies) {
-        await connect();
-        const userModel = mongoose.model('users', UserModel);
-        const profile = {
-            name: req.body.name,
-            gender: req.body.gender,
-            yearBorn: req.body.yearBorn,
-            aboutMe: req.body.aboutMe,
-            religion: req.body.religion,
-            location: req.body.location,
-            hobbies: req.body.hobbies,
-        };
-        if (req.file) (profile as any).photo = `uploads/${req.file.filename}`;
-        userModel.findOneAndUpdate(
-            { userId: req.body.userId },
-            {
-                $set: {
-                    profile
-                }
-            },
-            { upsert: true },
-            function (err, doc) {
-                if (err) {
-                    res.status(500).send({
-                        status: 500,
-                        message: 'Error updating profile!'
-                    });
-                    console.error(err);
-                }
-                else {
-                    res.status(204).send({
-                        status: 204,
-                        message: "Profile updated!"
-                    })
-                };
-            }
-        );
-    } else {
-        res.status(500).send({
-            status: 500,
-            message: "Missing one of the required inputs!"
-        })
+/**
+ * @api {put} /update
+ * @apiName Update User Profile
+ * @apiGroup Users
+ * @apiDescription Update user's profile
+ *
+ * @apiSuccess (204)
+ *
+ * @apiSampleRequest PUT /update
+ *
+ * @body
+ * userId: string
+ * name: string
+ * gender: string
+ * age: string
+ * yearBorn: string
+ * aboutMe: string
+ * religion: string
+ * location: string
+ * hobbies: [string]
+ * sexuality: string
+ * 
+ * @apiVersion 0.1.0
+ */
+router.put('/update', async (req: any, res: Response) => {
+  const {
+    userId, name, gender, age, yearBorn, aboutMe, religion, location, hobbies, sexuality, photo,
+  } = req.body;
+  if (userId && name && gender && age && yearBorn && aboutMe && religion && location && hobbies && sexuality) {
+    await connect();
+    const profile = {
+      name,
+      age,
+      gender,
+      yearBorn,
+      aboutMe,
+      religion,
+      location,
+      hobbies,
+      photo,
     };
+    User.findOneAndUpdate(
+      { _id: userId },
+      {
+        $set: {
+          profile,
+        },
+      },
+      { upsert: true },
+      (err, doc) => {
+        if (err) {
+          res.status(500).send({
+            status: 500,
+            message: `Error updating profile! ${err}`,
+          });
+          console.error(err);
+        } else {
+          res.status(204).send({
+            status: 204,
+            message: 'Profile updated!',
+          });
+        }
+      },
+    );
+  } else {
+    res.status(500).send({
+      status: 500,
+      message: 'Missing one of the required inputs!',
+    });
+  }
 });
 
 export default router;
