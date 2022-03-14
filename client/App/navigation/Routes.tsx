@@ -12,7 +12,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {
   AuthNavigatorParamList,
   RootNavigatorParamsList,
-  HomeTabNavigatorParamList
+  HomeTabNavigatorParamList,
+  MessageNavigatorParamList
 } from '../types';
 
 // Stacks
@@ -25,7 +26,9 @@ import {
   SignUp,
   Landing,
   Discover,
-  Profile
+  Profile,
+  Chat,
+  Message
 } from '../pages';
 
 // Styles
@@ -43,6 +46,27 @@ interface State {
 const RootStack = createNativeStackNavigator<RootNavigatorParamsList>();
 const HomeTabStack = createMaterialBottomTabNavigator<HomeTabNavigatorParamList>();
 const AuthStack = createNativeStackNavigator<AuthNavigatorParamList>();
+const MessageStack = createNativeStackNavigator<MessageNavigatorParamList>();
+
+const Messaging: FC = () => {
+  const { Navigator, Screen } = MessageStack;
+
+  return (
+    <Navigator
+      initialRouteName="Messages"
+    >
+      <Screen
+        name="Messages"
+        component={Chat}
+      />
+      <Screen
+        name="Message"
+        component={Message}
+        //options={({ route }) => ({ title: route.params.user })}
+      />
+    </Navigator>
+  )
+}
 
 const HomeTabs: FC = () => {
   const { Navigator, Screen } = HomeTabStack;
@@ -51,7 +75,7 @@ const HomeTabs: FC = () => {
     <Navigator
       initialRouteName="Discover"
       activeColor={SECONDARY_COLOR}
-      barStyle={{ backgroundColor: PRIMARY_COLOR}}
+      barStyle={{ backgroundColor: PRIMARY_COLOR }}
     >
       <Screen
         name="Test"
@@ -60,6 +84,16 @@ const HomeTabs: FC = () => {
           tabBarLabel: 'Test',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="test-tube-empty" color={color} size={26} />
+          )
+        }}
+      />
+       <Screen
+        name="Chat"
+        component={Messaging}
+        options={{
+          tabBarLabel: 'Chat',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="message-outline" color={color} size={26} />
           )
         }}
       />
@@ -83,9 +117,15 @@ const HomeTabs: FC = () => {
           )
         }}
       />
+     
+      {/* <Screen
+        name="Message"
+        component={Message}
+      /> */}
     </Navigator>
   )
 }
+
 
 const Auth: FC = () => {
   const { Navigator, Screen } = AuthStack;
@@ -95,6 +135,8 @@ const Auth: FC = () => {
       <Screen name="SignUp" component={SignUp} />
       <Screen name="SignIn" component={SignIn} />
       <Screen name="Landing" component={Landing} />
+      {/* <Screen name="Message" component={Message} /> */}
+
     </Navigator>
   )
 }
@@ -113,8 +155,8 @@ const Routes: FC<State> = () => {
       <Navigator>
         {authData ? (
           <>
-            <Screen name="Home" component={HomeTabs} options={{ headerShown: false }} /> 
-            <Group screenOptions={{ presentation: 'modal'}}>
+            <Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
+            <Group screenOptions={{ presentation: 'modal' }}>
               <Screen
                 name="ProfileModal"
                 component={ProfileModal}
