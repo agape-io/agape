@@ -25,6 +25,7 @@ type RootNavigatorParamsList = {
   ProfileModal: undefined;
   Chat: NavigatorScreenParams<MessageStackParamList>;
 }
+
 type AuthContextData = {
   authData: AuthData;
   loading: boolean;
@@ -54,14 +55,7 @@ type IconT = {
 };
 
 type ProfileItemT = {
-  age?: string;
-  info1?: string;
-  info2?: string;
-  info3?: string;
-  info4?: string;
-  location?: string;
-  matches: string;
-  name: string;
+  data: any;
 };
 
 export type MessageT = {
