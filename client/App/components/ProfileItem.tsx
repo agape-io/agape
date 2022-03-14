@@ -2,7 +2,14 @@ import React from "react";
 import { Text, View } from "react-native";
 import Icon from "./Icon";
 import { ProfileItemT } from "../types";
-import styles, { DARK_GRAY, WHITE, GRAY } from "../../assets/styles";
+import styles, {
+    DARK_GRAY,
+    WHITE,
+    GRAY
+} from "../../assets/styles";
+
+// TODO: have this return one prop called data
+// to access the data, it would be structured as "data.age, data.location", etc
 
 const ProfileItem = ({
     age,

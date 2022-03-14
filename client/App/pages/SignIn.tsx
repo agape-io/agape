@@ -1,7 +1,7 @@
 /**
  * Sign In Screen
  */
-import React, { useState, FC } from 'react';
+import React, { useState, FC, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -36,22 +36,36 @@ export interface SignInProps {
 const SignIn: FC<SignInProps> = ({ navigation }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [error, isError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [error, isError] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const isMounted = useRef<any>(null);
 
   const auth = useAuth();
+
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    }
+  }, []);
 
   const signIn = async (email: string, password: string) => {
     auth.signIn(email, password)
       .then(() => {
         // when successful, set error to false
         isError(false);
+        setLoading(false);
       })
       .catch(e => {
         //navigation.navigate("Auth", { screen: "SignIn" });
         console.log(e.response.data.message);
         setErrorMessage(e.response.data.message);
         isError(true);
+      })
+      .finally(() => {
+        if (isMounted.current) setLoading(false);
       });
   }
 

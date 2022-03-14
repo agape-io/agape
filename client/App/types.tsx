@@ -7,15 +7,23 @@ type AuthNavigatorParamList = {
   Landing: undefined;
 }
 
-type HomeNavigatorParamList = {
+type MessageStackParamList = {
+  Message: undefined;
+  Messages: undefined;
+}
+
+type HomeTabNavigatorParamList = {
   Discover: undefined;
   Test: undefined;
   Profile: undefined;
+  Chat: undefined;
 }
 
 type RootNavigatorParamsList = {
   Auth: NavigatorScreenParams<AuthNavigatorParamList>
-  Home: NavigatorScreenParams<HomeNavigatorParamList>
+  Home: NavigatorScreenParams<HomeTabNavigatorParamList>
+  ProfileModal: undefined;
+  Chat: NavigatorScreenParams<MessageStackParamList>;
 }
 type AuthContextData = {
   authData: AuthData;
@@ -56,9 +64,16 @@ type ProfileItemT = {
   name: string;
 };
 
+export type MessageT = {
+  image: any;
+  lastMessage: string;
+  name: string;
+};
+
 export {
-  HomeNavigatorParamList,
+  HomeTabNavigatorParamList,
   RootNavigatorParamsList,
+  MessageStackParamList,
   AuthNavigatorParamList,
   AuthContextData,
   AuthData,

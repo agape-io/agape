@@ -241,12 +241,18 @@ export default StyleSheet.create({
         height: DIMENSION_HEIGHT
     },
     top: {
-        paddingTop: 50,
+        paddingTop: 30,
         marginHorizontal: 10,
         flex: 1,
         flexDirection: "row",
         justifyContent: "space-between",
-        alignItems: "center"
+        alignItems: "center",
+        // zIndex: 100
+    },
+    flatlistView: {
+        paddingTop: 50
+        // marginTop: 40
+
     },
     title: { paddingBottom: 10, fontSize: 22, color: DARK_GRAY },
     icon: {
@@ -272,7 +278,7 @@ export default StyleSheet.create({
     containerMessages: {
         justifyContent: "space-between",
         flex: 1,
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
     },
 
     // CONTAINER - PROFILE
@@ -393,5 +399,51 @@ export default StyleSheet.create({
     authError: {
         color: ERROR_MESSAGE,
         fontSize: 20,
+    },
+    /**
+     * Profile Modal
+     */
+    modalContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalPhotoContainer: {
+        marginTop: 30,
+        elevation: 2,
+        height: 200,
+        width: 200,
+        backgroundColor: '#efefef',
+        borderRadius: 999,
+        overflow: 'hidden',
+    },
+    uploadBtnContainer: {
+        opacity: 0.7,
+        position: 'absolute',
+        bottom: 0,
+        backgroundColor: 'lightgrey',
+        width: '100%',
+        height: '25%',
+    },
+    uploadBtn: {
+        display: 'flex',
+        alignItems: "center",
+        justifyContent: 'center',
+    },
+    addProfileButtonContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    addProfileButton: {
+        marginHorizontal: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignContent: 'space-between',
+        height: 40,
+        marginTop: 40,
+        marginBottom: 80,
+        borderRadius: 10,
+        flexBasis: '40%',
     }
 });

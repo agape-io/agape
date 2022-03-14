@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   ScrollView,
   View,
@@ -11,14 +11,19 @@ import DEMO from "../../assets/data/demo";
 import styles, { WHITE } from "../../assets/styles";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { HomeNavigatorParamList, RootNavigatorParamsList } from "../types";
+import { HomeTabNavigatorParamList, RootNavigatorParamsList } from "../types";
 
 export interface ProfileProps {
-  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeNavigatorParamList, 'Discover'>,
+  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Discover'>,
   NativeStackNavigationProp<RootNavigatorParamsList>>;
 }
 
-const Profile:FC<ProfileProps> = ({ navigation }) => {
+const Profile: FC<ProfileProps> = ({ navigation }) => {
+  
+  const [modal, setModal] = useState<boolean>(false);
+  // use this state to populate data through an object
+  const [profile, setProfile] = useState<any>(null);
+  
   const {
     age,
     image,
@@ -30,6 +35,11 @@ const Profile:FC<ProfileProps> = ({ navigation }) => {
     match,
     name,
   } = DEMO[7];
+
+  //TODO: fetch profile data
+  useEffect(() => {
+
+  }, []);
 
   return (
     <ImageBackground
@@ -62,7 +72,7 @@ const Profile:FC<ProfileProps> = ({ navigation }) => {
         />
 
         <View style={styles.actionsProfile}>
-          <TouchableOpacity style={styles.circledButton}>
+          <TouchableOpacity style={styles.circledButton} onPress={() => navigation.navigate('ProfileModal')}>
             <Icon name="pencil-outline" size={30} color={WHITE} />
           </TouchableOpacity>
 
