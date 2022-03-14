@@ -53,9 +53,7 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
     }).catch(e => {
       console.log('something went wrong: ', e.message);
     })
-    .then(() => {
-        navigation.navigate('Test');
-    });
+    .then(() => navigation.navigate('Test'));
   }
 
   const testProfile = async () => {
@@ -64,9 +62,7 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
     }).catch(e => {
       console.log('something went wrong: ', e.message);
     })
-    .then(() => {
-        navigation.navigate('Test');
-    });
+    .then(() => navigation.navigate('Test'));
   }
 
   const testUpdateProfile = async (
@@ -88,9 +84,7 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
       .catch(e => {
         console.log('something went wrong: ', e.message);
       })
-      .then(() => {
-        navigation.navigate('Test');
-      });
+      .then(() => navigation.navigate('Test'));
   }
 
   const testCreateProfile = async (
@@ -126,10 +120,7 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
   
   return (
     <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-      <Text>This is a TEST page</Text>
-      <TouchableOpacity onPress={() => navigation.navigate('Discover')}>
-          <Text>Go to Discover Page</Text>
-      </TouchableOpacity>
+      <Text>Test API calls here!</Text>
       <TouchableOpacity onPress={() => testMatches()}>
         <Text>Test Get Matches</Text>
       </TouchableOpacity>

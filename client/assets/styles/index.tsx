@@ -247,12 +247,18 @@ export default StyleSheet.create({
         height: DIMENSION_HEIGHT
     },
     top: {
-        paddingTop: 50,
+        paddingTop: 30,
         marginHorizontal: 10,
         flex: 1,
         flexDirection: "row",
         justifyContent: "space-between",
-        alignItems: "center"
+        alignItems: "center",
+        // zIndex: 100
+    },
+    flatlistView: {
+        paddingTop: 50
+        // marginTop: 40
+
     },
     title: { paddingBottom: 10, fontSize: 22, color: DARK_GRAY },
     icon: {
@@ -278,7 +284,7 @@ export default StyleSheet.create({
     containerMessages: {
         justifyContent: "space-between",
         flex: 1,
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
     },
 
     // CONTAINER - PROFILE
@@ -418,9 +424,9 @@ export default StyleSheet.create({
     },
     uploadBtnContainer: {
         opacity: 0.7,
-        position:'absolute',
-        bottom:0,
-        backgroundColor:'lightgrey',
+        position: 'absolute',
+        bottom: 0,
+        backgroundColor: 'lightgrey',
         width: '100%',
         height: '25%',
     },

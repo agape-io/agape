@@ -40,9 +40,7 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
 
     const auth = useAuth();
 
-    const token = auth.authData.token,
-        userId = auth.authData.userId;
-        //isOnline = auth.authData.isOnline;
+    const { token, userId } = auth.authData;
     
     const loadMatches = async () => {
         // get the id's

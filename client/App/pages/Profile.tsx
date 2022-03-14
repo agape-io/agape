@@ -20,16 +20,12 @@ import { useAuth } from "../navigation";
 import { HomeTabNavigatorParamList, RootNavigatorParamsList } from "../types";
 import { getProfile } from '../utils';
 
-import { Landing } from '../pages';
-
 export interface ProfileProps {
   navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Discover'>,
   NativeStackNavigationProp<RootNavigatorParamsList>>;
 }
 
 const Profile: FC<ProfileProps> = ({ navigation }) => {
-  
-  // use this state to populate data through an object
   const [profile, setProfile] = useState<any>();
   const isMounted = useRef<any>(null);
 
