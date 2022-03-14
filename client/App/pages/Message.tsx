@@ -13,7 +13,6 @@ import { CompositeNavigationProp } from '@react-navigation/native';
 
 // Types
 import {
-    AuthNavigatorParamList,
     RootNavigatorParamsList,
     HomeTabNavigatorParamList
 } from '../types';

@@ -9,24 +9,26 @@ import DEMO from "../../assets/data/demo";
 import { useAuth } from "../navigation";
 import {
     HomeTabNavigatorParamList,
-    RootNavigatorParamsList
+    RootNavigatorParamsList,
+    MessageStackParamList
 } from "../types";
-import { CompositeNavigationProp } from "@react-navigation/native";
+import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 // import ChatMessages from '../components/Chat/ChatMessages';
 export interface ChatProps {
     navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Chat'>,
         NativeStackNavigationProp<RootNavigatorParamsList>>;
+    route: RouteProp<MessageStackParamList>;
 }
 
-const Chat: FC<ChatProps> = ({ navigation }) => {
+const Chat: FC<ChatProps> = ({ navigation, route }) => {
     //state initialized
     const [chat, setChat] = useState({ message: '', sid: '', time: '', rid: '' });
     const [messages, setMessages] = useState([]);
     //reference set for socketRef using useRef hook
     const socketRef = useRef();
-
+    
     useEffect(() => {
         // loadMatches();
 
