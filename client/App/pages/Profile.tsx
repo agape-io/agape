@@ -7,14 +7,14 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Icon, ProfileItem } from "../components";
-import DEMO from "../../assets/data/demo";
 import styles, { WHITE } from "../../assets/styles";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useAuth } from "../navigation";
 import { HomeTabNavigatorParamList, RootNavigatorParamsList } from "../types";
 import { getProfile } from '../utils';
-import data from "../../assets/data/demo";
+
+import { Landing } from '../pages';
 
 export interface ProfileProps {
   navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Discover'>,
@@ -23,60 +23,35 @@ export interface ProfileProps {
 
 const Profile: FC<ProfileProps> = ({ navigation }) => {
   
-  const [modal, setModal] = useState<boolean>(false);
   // use this state to populate data through an object
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<any>();
 
   const auth = useAuth();
 
-  const token = auth.authData.token,
-  userId = auth.authData.userId;
+  const { token, userId } = auth.authData;
 
-  const loadProfiles = async () => {
+  const loadProfile = async () => {
     //get the profile
     getProfile(userId, token)
       .then(res => {
-        const { userProfile } = res.data;
-        console.log("token: " + token)
-        console.log("userId: " + userId)
-        console.log("name: " + name)
-        console.log(userProfile.name);
-        setProfile(userProfile);
+        const { profile } = res.data;
+        console.log(profile);
+        setProfile(profile);
       }).catch(e => {
         console.log(e.message);
       });
   }
 
-  const {
-    // age,
-    // image,
-    // info1,
-    // info2,
-    // info3,
-    // info4,
-    // location,
-    // match,
-    // name,
-
-    name,
-    gender,
-    aboutMe,
-    age,
-    year,
-    location,
-    religion,
-    hobby
-
-  } = DEMO[7]
-
-  //TODO: fetch profile data
   useEffect(() => {
-    loadProfiles();
+    loadProfile();
 
     return () => {
-        setProfile(null);
+      // return default
+      setProfile({});
     }
   }, []);
+
+  if (profile === undefined) return null;
 
   return (
     <ImageBackground
@@ -84,7 +59,9 @@ const Profile: FC<ProfileProps> = ({ navigation }) => {
       style={styles.bg}
     >
       <ScrollView style={styles.containerProfile}>
-        <ImageBackground source={require("../../assets/images/01.jpg")} style={styles.photo}>
+        {profile ? (
+          <>
+          <ImageBackground source={{ uri: profile.photo }} style={styles.photo}>
           <View style={styles.top}>
             <TouchableOpacity>
               <Icon
@@ -94,43 +71,22 @@ const Profile: FC<ProfileProps> = ({ navigation }) => {
                 style={styles.topIconLeft}
               />
             </TouchableOpacity>
-          </View>
-        </ImageBackground>
-
-        {/* {profile.map((item: any, index: any) => {
-
-          return (
-              <View key={index}>
-                  <ProfileItem
-                      key={index}
-                      data={item}
-                      // gender ={item.gender}
-                      // hasActions
-                  />
-              </View>
-          )
-          })} */}
-          
-          <ProfileItem
-          // matches={match}
-          // name={name}
-          // age={age}
-          // location={location}
-          // info1={info1}
-          // info2={info2}
-          // info3={info3}
-          // info4={info4}
-
-          name={name}
-          gender={gender}
-          aboutMe={aboutMe}
-          age={age}
-          year={year}
-          location={location}
-          religion={religion}
-          hobby={hobby}
-        />
-
+            </View>
+            </ImageBackground>  
+            <ProfileItem
+              data={profile}
+            /> 
+          </>
+        ) : (
+            <>
+              <ImageBackground source={{ uri: profile.photo }} style={styles.photo} />
+              <View style={styles.top} />
+              <ProfileItem
+                data={profile}
+              /> 
+            </>   
+        )} 
+        
         <View style={styles.actionsProfile}>
           <TouchableOpacity style={styles.circledButton} onPress={() => navigation.navigate('ProfileModal')}>
             <Icon name="pencil-outline" size={30} color={WHITE} />

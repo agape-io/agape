@@ -47,15 +47,7 @@ type IconT = {
 };
 
 type ProfileItemT = {
-  // data: any;
-  name: string;
-  gender?: string;
-  aboutMe?: string;
-  age?: string;
-  year?: string;
-  location?: string;
-  religion?: string;
-  hobby?: string;
+  data: any;
 };
 
 export {
