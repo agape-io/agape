@@ -21,7 +21,7 @@ import {
 import { useAuth } from '../navigation';
 
 export interface MessageProps {
-    navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Message'>,
+    navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Chat'>,
         NativeStackNavigationProp<RootNavigatorParamsList>>;
 };
 
