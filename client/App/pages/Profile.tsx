@@ -1,4 +1,9 @@
-import React, { FC, useEffect, useState } from "react";
+import React, {
+  FC,
+  useCallback,
+  useState,
+  useRef
+} from "react";
 import {
   ScrollView,
   View,
@@ -6,10 +11,11 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from "react-native";
+import { CompositeNavigationProp, useFocusEffect } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+
 import { Icon, ProfileItem } from "../components";
 import styles, { WHITE } from "../../assets/styles";
-import { CompositeNavigationProp } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useAuth } from "../navigation";
 import { HomeTabNavigatorParamList, RootNavigatorParamsList } from "../types";
 import { getProfile } from '../utils';
@@ -25,6 +31,7 @@ const Profile: FC<ProfileProps> = ({ navigation }) => {
   
   // use this state to populate data through an object
   const [profile, setProfile] = useState<any>();
+  const isMounted = useRef<any>(null);
 
   const auth = useAuth();
 
@@ -42,14 +49,19 @@ const Profile: FC<ProfileProps> = ({ navigation }) => {
       });
   }
 
-  useEffect(() => {
-    loadProfile();
+  // checks refresh
+  useFocusEffect(
+    useCallback(() => {
+      loadProfile();
+      isMounted.current = true;
 
-    return () => {
-      // return default
-      setProfile({});
-    }
-  }, []);
+      return () => {
+        // return default
+        setProfile({});
+        isMounted.current = false;
+      }
+    }, [])
+  );
 
   if (profile === undefined) return null;
 
