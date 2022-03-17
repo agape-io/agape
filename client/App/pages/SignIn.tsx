@@ -98,6 +98,7 @@ const SignIn: FC<SignInProps> = ({ navigation }) => {
             onChangeText={password => setPassword(password)}
           />
         </View>
+        {error && <Text style={styles.authError}>{errorMessage}</Text>}
         <TouchableOpacity
           style={{ width: '86%', marginTop: 20 }}
           onPress={() => signIn(email, password)}
@@ -106,7 +107,6 @@ const SignIn: FC<SignInProps> = ({ navigation }) => {
             <Text>Sign In</Text>
           </View>
         </TouchableOpacity>
-        {error && <Text style={styles.authError}>{errorMessage}</Text>}
         <View style={{ marginTop: 10 }}>
           <Text
             style={{ fontWeight: '200', fontSize: 20, textAlign: 'center' }}
