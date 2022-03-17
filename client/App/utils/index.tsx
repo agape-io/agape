@@ -11,11 +11,8 @@ import { API_URL } from '@env';
 /**
  * Get matches
  * 
- * @param userId 
- * @param token
- * 
- * When calling this function, use a then() and a 
- * catch() to get the response.
+ * @param userId User ID
+ * @param token User token
  */
 const getMatches = async (userId: string, token: string) => {
   return axios.get(`${API_URL}/discover/`, {
@@ -32,11 +29,8 @@ const getMatches = async (userId: string, token: string) => {
 /**
  * Get user profile
  * 
- * @param userId 
- * @param token Needed to access routes
- * 
- * When calling this function, use a then() and a 
- * catch() to get the response.
+ * @param userId User ID
+ * @param token User token
  */
 const getProfile = async (userId: string, token: string) => {
   return axios.get(`${API_URL}/profile/`, {
@@ -115,9 +109,6 @@ const createProfile = async (
  * @param hobbies 
  * @param photo
  * @param sexuality
- * 
- * When calling this function, use a then() and a 
- * catch() to get the response.
  */
 const updateProfile = async (
   userId: string,
@@ -150,9 +141,81 @@ const updateProfile = async (
   });
 }
 
+/**
+ * Get user chats
+ * 
+ * @param userId User's ID
+ * @param token Auth token
+ */
+const getUserChats = async (userId: string, token: string) => {
+  return axios.get(`${API_URL}/chats`, {
+    headers: {
+      "x-access-token": token,
+      "content-type": "application/json"
+    },
+    params: {
+      userId,
+    }
+  });
+}
+
+/**
+ * Create/Access user chats
+ * 
+ * @param arrUserId Array of userId's
+ * @param token User's token
+ */
+const createChat = async (arrUserId: string[], token: string) => {
+  return axios.post(`${API_URL}/chats`, { arrUserId, token });
+}
+
+/**
+ * Send Message to Chat
+ * 
+ * @param userId User's ID
+ * @param token User's token
+ * @param content Content of sent message
+ * @param chatId Chat ID to the message being sent
+ */
+const postMessage = async (
+  userId: string,
+  token: string,
+  content: string,
+  chatId: string
+) => {
+  return axios.post(`${API_URL}/messages`, {
+    userId,
+    token,
+    content,
+    chatId
+  });
+}
+
+/**
+ * Get Messages in Chat
+ * 
+ * @param chatId Chat ID
+ * @param token User's token
+ */
+const getMessages = async (chatId: string, token: string) => {
+  return axios.get(`${API_URL}/messages`, {
+    headers: {
+      "x-access-token": token,
+      "content-type": "application/json"
+    },
+    params: {
+      chatId,
+    }
+  });
+}
+
 export {
   getProfile,
   updateProfile,
   createProfile,
-  getMatches
+  getMatches,
+  getUserChats,
+  createChat,
+  getMessages,
+  postMessage
 }
