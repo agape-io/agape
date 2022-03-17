@@ -405,6 +405,7 @@ export default StyleSheet.create({
     authError: {
         color: ERROR_MESSAGE,
         fontSize: 20,
+        paddingTop:10
     },
     /**
      * Profile Modal
