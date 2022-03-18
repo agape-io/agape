@@ -17,7 +17,7 @@ const router = Router();
  *
  * @body
  * userId: string
- * 
+ *
  * @apiVersion 0.1.0
  */
 router.post('/email', async (req: Request, res: Response) => {

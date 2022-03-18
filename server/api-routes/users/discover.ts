@@ -3,7 +3,7 @@ import { Router, Request, Response } from 'express';
 import { User } from '../../models/user';
 import connect from '../../config/db';
 import {
-  getId, getProfile, getPreferences, generatePercentage, sortByPercentage
+  getId, getProfile, getPreferences, generatePercentage, sortByPercentage,
 } from '../../util/match';
 
 const router = Router();
@@ -24,11 +24,13 @@ const router = Router();
  * threshold: int
  * sort: string
  * numUsers: int
- * 
+ *
  * @apiVersion 0.1.0
  */
 router.get('/', async (req: Request, res: Response) => {
-  const { userId, romantic = 'false', threshold = 0, sort = 'false', numUsers = 0 } = req.query;
+  const {
+    userId, romantic = 'false', threshold = 0, sort = 'false', numUsers = 0,
+  } = req.query;
   if (userId) {
     await connect();
     User.findOne({ _id: userId }, async (err, existingUser) => {
