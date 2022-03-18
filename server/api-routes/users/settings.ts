@@ -58,17 +58,15 @@ router.get('/', async (req: Request, res: Response) => {
  *
  * @body
  * userId: string
- * membershipType: string
  * pushNotifications: boolean
  *
  * @apiVersion 0.1.0
  */
 router.post('/create', async (req: Request, res: Response) => {
-  const { userId, membershipType, pushNotifications } = req.body;
-  if (userId && membershipType && pushNotifications) {
+  const { userId, pushNotifications } = req.body;
+  if (userId && pushNotifications) {
     await connect();
     const settings = {
-      membershipType,
       pushNotifications,
     };
     User.findOneAndUpdate(
@@ -114,17 +112,15 @@ router.post('/create', async (req: Request, res: Response) => {
  *
  * @body
  * userId: string
- * membershipType: string
  * pushNotifications: boolean
  *
  * @apiVersion 0.1.0
  */
 router.put('/update', async (req: Request, res: Response) => {
-  const { userId, membershipType, pushNotifications } = req.body;
-  if (userId && membershipType && pushNotifications) {
+  const { userId, pushNotifications } = req.body;
+  if (userId && pushNotifications) {
     await connect();
     const settings = {
-      membershipType,
       pushNotifications,
     };
     User.findOneAndUpdate(
