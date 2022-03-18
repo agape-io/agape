@@ -14,7 +14,9 @@ import settingsRouter from './api-routes/users/settings';
 import swipeRouter from './api-routes/users/swipe';
 import chatRouter from './api-routes/chats/chat';
 import messageRouter from './api-routes/chats/message';
-import subscriptionRouter from './api-routes/subscription/subscription';
+import subscriptionRouter from './api-routes/users/subscription';
+
+import adminSubscriptionRouter from './api-routes/admin/subscription';
 
 import { authenticateToken, authenticateAdmin } from './middleware/auth';
 import { notFound, errorHandler } from './middleware/error';
@@ -43,9 +45,10 @@ app.use('/preferences', authenticateToken, preferencesRouter);
 app.use('/profile', authenticateToken, profileRouter);
 app.use('/settings', authenticateToken, settingsRouter);
 app.use('/swipe', authenticateToken, swipeRouter);
+app.use('/subscription', authenticateToken, subscriptionRouter);
 
 // admin subscription routes
-app.use('/admin/subscription', authenticateAdmin, subscriptionRouter);
+app.use('/admin/subscription', authenticateAdmin, adminSubscriptionRouter);
 
 // error handlers
 app.use(notFound);
