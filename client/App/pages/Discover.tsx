@@ -5,14 +5,12 @@ import React, { useState, FC, useEffect } from "react";
 import {
     View,
     ImageBackground,
-    ActivityIndicator,
     Text,
 } from "react-native";
 import CardStack, { Card } from "react-native-card-stack-swiper";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-
-import { useAuth } from "../navigation";
+import { useAuth } from "../context";
 import {
     HomeTabNavigatorParamList,
     RootNavigatorParamsList
@@ -23,7 +21,6 @@ import {
     CardItem
 } from "../components";
 import styles from "../../assets/styles";
-import DEMO from "../../assets/data/demo";
 
 import { getMatches } from '../utils';
 
@@ -46,7 +43,6 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
             getMatches(userId, token)
                 .then(res => {
                     const { users } = res.data;
-                    console.log(users);
                     setMatches(users);
                 }).catch(e => {
                     console.log(e.message);
@@ -64,6 +60,7 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
         )
     }
     
+    // Load matches
     useEffect(() => {
         loadMatches();
 

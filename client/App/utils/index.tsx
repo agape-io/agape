@@ -165,7 +165,10 @@ const getUserChats = async (userId: string, token: string) => {
  * @param userIds Array of userId's
  * @param token User's token
  */
-const createChat = async (userIds: string[], token: string) => {
+const createChat = async (userId: string, matchedUserId: string, token: string) => {
+  let userIds = [];
+  userIds.push(userId, matchedUserId);
+  
   return axios.post(`${API_URL}/chats`, { userIds, token });
 }
 

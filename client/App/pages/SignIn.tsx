@@ -21,7 +21,7 @@ import {
 } from '../types';
 
 // API
-import { useAuth } from '../navigation';
+import { useAuth } from '../context';
 
 // Styles
 import styles from "../../assets/styles";

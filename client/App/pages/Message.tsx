@@ -18,38 +18,39 @@ import {
 } from '../types';
 
 // API
-import { useAuth } from '../navigation';
+import { useAuth, useChatState } from '../context';
 
 export interface MessageProps {
     navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Chat'>,
         NativeStackNavigationProp<RootNavigatorParamsList>>;
 };
 
-const Message: FC<MessageProps> = ({ navigation }) => {
+const Message: FC<MessageProps> = ({ navigation, route }) => {
     const auth = useAuth();
+    const { user } = useChatState();
 
     const [messages, setMessages] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const {
         image,
         message,
-        match,
         name,
     } = DEMO[0];
 
     useEffect(() => {
-        setMessages([
-            {
-                _id: 1,
-                text: message,
-                createdAt: new Date(),
-                user: {
-                    _id: 2,
-                    name: 'React Native',
-                    avatar: image,
-                },
-            },
-        ])
+        // setMessages([
+        //     {
+        //         _id: 1,
+        //         text: message,
+        //         createdAt: new Date(),
+        //         user: {
+        //             _id: 2,
+        //             name: 'React Native',
+        //             avatar: image,
+        //         },
+        //     },
+        // ])
     }, [])
 
     const onSend = useCallback((messages = []) => {
