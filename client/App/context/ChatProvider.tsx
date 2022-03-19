@@ -6,7 +6,6 @@ import React, {
   useEffect
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
 
 import { ChatContextData } from '../types';
 
@@ -21,11 +20,10 @@ const ChatProvider:FC = ({ children }) => {
     // set user info from auth provider storage
     AsyncStorage.getItem('@auth').then((res: any) => {
       const userData = JSON.parse(res);
-      console.log('chat provider', userData);
 
       setUser(userData);
 
-      //if (!userData) navigation.navigate('Discover');
+      if (!userData) console.log("There's no user data for chats");
     }).catch(e => {
       Promise.reject(e.message);
     });

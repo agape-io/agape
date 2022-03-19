@@ -3,7 +3,7 @@ import { Text, View, Image } from "react-native";
 import { MessageT } from "../types";
 import styles from "../../assets/styles";
 
-const Message = ({ image, lastMessage, name }: MessageT) => (
+const RecentMessage = ({ image, lastMessage, name }: MessageT) => (
     <View style={styles.containerMessage}>
         <Image source={image} style={styles.avatar} />
         <View>
@@ -13,4 +13,4 @@ const Message = ({ image, lastMessage, name }: MessageT) => (
     </View>
 );
 
-export default Message;
+export default RecentMessage;
