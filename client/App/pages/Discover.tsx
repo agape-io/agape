@@ -26,7 +26,6 @@ import styles from "../../assets/styles";
 import DEMO from "../../assets/data/demo";
 
 import { getMatches } from '../utils';
-import { Item } from "react-native-paper/lib/typescript/components/List/List";
 
 export interface DiscoverProps {
     navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Discover'>,
@@ -86,8 +85,7 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                 {matches && (
                     <CardStack
                         verticalSwipe={false}
-                        // keep loop to true for now
-                        loop
+                        loop // keep loop to true for now
                         renderNoMoreCards={() => <NoMoreCards />}
                         ref={newSwiper => setSwiper(newSwiper)}
                     >

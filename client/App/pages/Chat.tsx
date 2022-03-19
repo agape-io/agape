@@ -52,7 +52,6 @@ const Chat: FC<ChatProps> = ({ navigation, route }) => {
             source={require("../../assets/images/bg.png")}
             style={styles.bg}
         >
-
             <View style={styles.containerMessages}>
                 <FlatList
                     data={DEMO}
