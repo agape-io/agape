@@ -61,7 +61,7 @@ const Messaging: FC = () => {
       <Screen
         name="Message"
         component={Message}
-        //options={({ route }) => ({ title: route.params.user })}
+        options={({ route }) => ({ title: route.params?.name || "Message"})}
       />
     </Navigator>
   )

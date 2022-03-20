@@ -9,8 +9,8 @@ type AuthNavigatorParamList = {
 
 type MessageStackParamList = {
   Message: {
-    thread: string;
-    id?: any;
+    name?: any;
+    chatId: any
   };
   Messages: {
     thread?: string;

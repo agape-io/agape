@@ -1,8 +1,10 @@
 import React, { FC } from 'react';
 import { TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-const ThreadRow = ({ onPress, children, unread }: any) => {
-  
+
+const ThreadRow = ({ children, onPress, unread }: any) => {
+  const navigation = useNavigation();
   return (
     <TouchableOpacity onPress={onPress}>
       {children}

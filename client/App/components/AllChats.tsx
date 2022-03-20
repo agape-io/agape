@@ -7,57 +7,37 @@ import {
   FlatList,
   Text
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
-import { useChatState } from '../context';
+import { useAuth } from '../context';
 import { getUserChats } from '../utils';
 import {
   RecentMessage,
   ThreadRow
 } from '../components';
-import DEMO from '../../assets/data/demo';
 import styles from '../../assets/styles';
 
-
-const AllChats:FC<any> = ({  fetchAgain }) => {
-  const [loggedUser, setLoggedUser] = useState<any>();
-  const {
-    selectedChat,
-    setSelectedChat,
-    user,
-    chats,
-    setChats
-  } = useChatState();
+const AllChats:FC<any> = ({  fetchAgain, setFetchAgain }) => {
+  const [chats, setChats] = useState<any>();
 
   const navigation = useNavigation();
 
-  const { userId, token } = user;
+  const { authData } = useAuth();
+  const { userId, token } = authData;
 
   const fetchChats = async () => {
     getUserChats(userId, token)
       .then(res => {
-          // gets all user messages
+        // gets all user messages
         setChats(res.data);
       })
       .catch(e => {
-          // throw error
-          console.error(e.message);
-      });
-  }
-
-  const handleLoggedUser = () => {
-    AsyncStorage.getItem('@auth')
-      .then((res: any) => {
-        setLoggedUser(JSON.parse(res));
-      })
-      .catch((e: any) => {
-        console.error('Failed to get key', e.message);
+        // throw error
+        console.error(e.message);
       });
   }
   
   useEffect(() => {
-    handleLoggedUser();
     fetchChats();
   }, [fetchAgain]);
 
@@ -69,7 +49,10 @@ const AllChats:FC<any> = ({  fetchAgain }) => {
           keyExtractor={(item) => item._id.toString()}
           renderItem={({ item }) => (
             <ThreadRow
-              onPress={() => { setSelectedChat(item)}}
+              onPress={() => navigation.navigate('Message', {
+                  chatId: item._id,
+                  name: item.users[0].profile.name
+              })}
             >
             {console.log('flatlist', item)}
               <RecentMessage
