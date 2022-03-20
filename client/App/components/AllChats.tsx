@@ -1,5 +1,4 @@
 import React, {
-  FC,
   useEffect,
   useState
 } from 'react';
@@ -15,9 +14,8 @@ import {
   RecentMessage,
   ThreadRow
 } from '../components';
-import styles from '../../assets/styles';
 
-const AllChats:FC<any> = ({  fetchAgain, setFetchAgain }) => {
+const AllChats = ({  fetchAgain, setFetchAgain }: any) => {
   const [chats, setChats] = useState<any>();
 
   const navigation = useNavigation();
@@ -50,8 +48,8 @@ const AllChats:FC<any> = ({  fetchAgain, setFetchAgain }) => {
           renderItem={({ item }) => (
             <ThreadRow
               onPress={() => navigation.navigate('Message', {
-                  chatId: item._id,
-                  name: item.users[1].profile.name
+                chatId: item._id,
+                name: item.users[1].profile.name
               })}
             >
             {console.log('flatlist', item)}

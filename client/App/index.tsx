@@ -5,14 +5,12 @@
  */
 import * as React from 'react';
 import { Routes } from './navigation';
-import { AuthProvider, ChatProvider } from './context';
+import { AuthProvider } from './context';
 
 export default function App() {
   return (
     <AuthProvider>
-      <ChatProvider>
-        <Routes />
-      </ChatProvider>
+      <Routes />
     </AuthProvider>
   );
 }
