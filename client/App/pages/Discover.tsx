@@ -43,6 +43,7 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
             getMatches(userId, token)
                 .then(res => {
                     const { users } = res.data;
+                    console.log(token, userId);
                     setMatches(users);
                 }).catch(e => {
                     console.log(e.message);

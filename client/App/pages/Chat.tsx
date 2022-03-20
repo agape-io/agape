@@ -17,10 +17,19 @@ import {
 } from "../components";
 import { useAuth, useChatState} from "../context";
 import { ActivityIndicator } from "react-native-paper";
+import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { HomeTabNavigatorParamList, RootNavigatorParamsList, MessageStackParamList } from "../types";
 
-const Chat: FC<any> = ({ navigation, route }) => {
+export interface ChatProps {
+    navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Chat'>,
+        NativeStackNavigationProp<RootNavigatorParamsList>>;
+    route: RouteProp<MessageStackParamList>;
+}
+
+const Chat:FC<ChatProps> = ({ navigation, route }) => {
     //state initialized
-    const [fetchAgain, setFetchAgain] = useState<any>();
+    const [fetchAgain, setFetchAgain] = useState<any>(false);
     //reference set for socketRef using useRef hook
     const socketRef = useRef();
 
@@ -34,7 +43,7 @@ const Chat: FC<any> = ({ navigation, route }) => {
         >
             <View style={styles.containerMessages}>
                 {
-                    user ? <AllChats /> : <ActivityIndicator style={styles.indicator} size="large" color="#F0ABC1" />
+                    user ? <AllChats fetchAgain={fetchAgain} /> : <ActivityIndicator style={styles.indicator} size="large" color="#F0ABC1" />
                 }
             </View>
         </ImageBackground >

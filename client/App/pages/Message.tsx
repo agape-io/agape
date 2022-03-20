@@ -18,14 +18,16 @@ import {
 } from '../types';
 
 // API
-import { useAuth, useChatState } from '../context';
+import {  useChatState } from '../context';
+export interface MessageProps {
+    navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Chat'>,
+        NativeStackNavigationProp<RootNavigatorParamsList>>;
+};
 
-const Message: FC<any> = ({ navigation, route }) => {
-    const auth = useAuth();
+const Message: FC<MessageProps> = ({ navigation }) => {
     const { user } = useChatState();
 
     const [messages, setMessages] = useState([]);
-    const [loading, setLoading] = useState(false);
 
     const {
         image,

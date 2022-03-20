@@ -5,18 +5,22 @@ import React, {
 } from 'react';
 import {
   FlatList,
-  TouchableOpacity,
   Text
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 import { useChatState } from '../context';
 import { getUserChats } from '../utils';
-import { RecentMessage } from '../components';
-import { ActivityIndicator } from 'react-native-paper';
+import {
+  RecentMessage,
+  ThreadRow
+} from '../components';
+import DEMO from '../../assets/data/demo';
 import styles from '../../assets/styles';
 
-const AllChats:FC<any> = ({ navigation, fetchAgain }) => {
+
+const AllChats:FC<any> = ({  fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState<any>();
   const {
     selectedChat,
@@ -25,6 +29,8 @@ const AllChats:FC<any> = ({ navigation, fetchAgain }) => {
     chats,
     setChats
   } = useChatState();
+
+  const navigation = useNavigation();
 
   const { userId, token } = user;
 
@@ -57,26 +63,23 @@ const AllChats:FC<any> = ({ navigation, fetchAgain }) => {
 
   return (
     <>
-      {!chats ? (
-        // <FlatList
-        //   data={chats}
-        //   keyExtractor={(item) =>  item._id.toString() }
-        //   renderItem={({ item }) => (
-        //     <TouchableOpacity
-        //       onPress={() => navigation.navigate('Message', { thread: item })}
-        //     >
-        //     {console.log('flatlist', item, 'ayooo')}
-        //       <RecentMessage
-        //         image={item.image}
-        //         name={item.name}
-        //         lastMessage={item.message}
-        //       />
-        //     </TouchableOpacity>
-        //   )}
-        // />
-        <>
-          <Text>Hullo</Text>
-        </>
+      {chats ? (
+        <FlatList
+          data={chats}
+          keyExtractor={(item) => item._id.toString()}
+          renderItem={({ item }) => (
+            <ThreadRow
+              onPress={() => { setSelectedChat(item)}}
+            >
+            {console.log('flatlist', item)}
+              <RecentMessage
+                image={item.latestMessage.sender.profile.photo}
+                name={item.latestMessage.sender.profile.name}
+                latestMessage={item.latestMessage.content}
+              />
+            </ThreadRow>
+          )}
+        />
       ) : (
         <Text style={{textAlign: "center", marginTop: 200}}>No messages available :(</Text>
       )}

@@ -9,6 +9,7 @@ import ProfileItem from './ProfileItem';
 import ProfileModal from './ProfileModal';
 import RecentMessage from './RecentMessage';
 import AllChats from './AllChats';
+import ThreadRow from './ThreadRow';
 
 export {
   Icon,
@@ -18,5 +19,6 @@ export {
   ProfileItem,
   ProfileModal,
   RecentMessage,
-  AllChats
+  AllChats,
+  ThreadRow
 };
