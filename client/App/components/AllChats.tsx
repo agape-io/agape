@@ -51,7 +51,7 @@ const AllChats:FC<any> = ({  fetchAgain, setFetchAgain }) => {
             <ThreadRow
               onPress={() => navigation.navigate('Message', {
                   chatId: item._id,
-                  name: item.users[0].profile.name
+                  name: item.users[1].profile.name
               })}
             >
             {console.log('flatlist', item)}
