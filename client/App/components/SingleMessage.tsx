@@ -4,20 +4,21 @@ import React, {
   useCallback
 } from 'react';
 import { GiftedChat } from 'react-native-gifted-chat';
+import { KeyboardAvoidingView, Platform } from 'react-native';
 import io from 'socket.io-client';
 
 import {
   getMessages,
   postMessage
 } from '../utils';
-import { API_URL } from '@env';
 
 const SingleMessage = ({ fetchAgain, route, navigation, userData }: any) => {
   const [messages, setMessages] = useState<any>([]);
+  const [user, setUser] = useState<any>({});
   const [loading, setLoading] = useState<any>(false);
   const [socketConnected, isSocketConnected] = useState<any>(false);
-  const [typing, setTyping] = useState<any>(false);
-  const [isTyping, setIsTyping] = useState<any>(false);
+  // const [typing, setTyping] = useState<any>(false);
+  // const [isTyping, setIsTyping] = useState<any>(false);
 
   const { token, userId } = userData;
   const { chatId, name } = route.params;
@@ -27,7 +28,28 @@ const SingleMessage = ({ fetchAgain, route, navigation, userData }: any) => {
     setLoading(true);
     getMessages(chatId, token)
       .then((res: any) => {
-        setMessages(res.data);
+        //console.log(res.data);
+        let senderObj = {};
+        //const { sender, _id, createdAt, content } = res.data[0];
+        let messageArr = res.data.map((item: any) => ({
+          _id: item._id,
+          createdAt: item.createdAt,
+          text: item.content,
+          user: {
+            _id: item.sender._id,
+            name: item.sender.profile.name,
+            avatar: item.sender.profile.photo
+          }
+        }));
+        
+        //console.log('message', messageArr);
+
+        // set sender
+        setUser(senderObj);
+        let reverse = [...messageArr].reverse();
+        //console.log(messageArr);
+        
+        setMessages(messageArr);
         setLoading(false);
       })
       .catch((e: any) => {
@@ -35,19 +57,44 @@ const SingleMessage = ({ fetchAgain, route, navigation, userData }: any) => {
       })
   };
 
-  // post messages to chatId
-  const sendMessages = async (content: string) => {
+  // calls set mesasges
+  const onSend = useCallback((messages = []) => {
+    setMessages((previousMessages: any) => GiftedChat.append(previousMessages, messages));
+    
+    let content = messages[0];
     setLoading(true);
     postMessage(userId, token, content, chatId)
       .then((res: any) => {
-        console.log(res.data);
-        setMessages([...messages, res.data]);
+        let arr = [];
+        //console.log(res.data);
+        /**
+         * we only want:
+         * 
+         * message_id,
+         * content,
+         * createdAt,
+         * sender profile (user_id, name, photo)
+         * 
+         * what GiftedChat wants:
+         * [{
+         *  _id: message_id,
+         *  text: content,
+         *  createdAt: createdAt,
+         *  user: {
+         *    _id: user_id,
+         *     name: user.name
+         *     avatar: user.photo
+         *   }
+         * }]
+         */
+        // send to giftedChat
+        //setMessages([...messages, res.data]);
         setLoading(false);
       })
       .catch((e: any) => {
         console.error(e.message);
       });
-  };
+  }, []);
 
   // refresh messages
   useEffect(() => {
@@ -56,12 +103,18 @@ const SingleMessage = ({ fetchAgain, route, navigation, userData }: any) => {
 
   return (
     <>
-      {console.log(messages[0]?.sender._id)}
       <GiftedChat 
         messages={messages}
-        onSend={() => console.log('on send')}
-        //user={{ _id: messages[0]?.sender._id}}
+        onSend={messages => onSend(messages)}
+        user={{
+          _id: user._id,
+          name: user.name,
+          avatar: user.avatar
+        }}
       />
+      {
+        Platform.OS === 'android' && <KeyboardAvoidingView behavior="padding" />
+      }
     </>
    
   )
