@@ -1,33 +1,40 @@
 import React, {
   useEffect,
   useState,
-  useCallback
+  useCallback,
+  useRef
 } from 'react';
 import { GiftedChat } from 'react-native-gifted-chat';
-import { KeyboardAvoidingView, Platform } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform
+} from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import io from 'socket.io-client';
+
 
 import {
   getMessages,
   postMessage
 } from '../utils';
 
-const SingleMessage = ({ fetchAgain, route, navigation, userData }: any) => {
+const SingleMessage = ({ route, navigation, userData }: any) => {
   const [messages, setMessages] = useState<any>([]);
-  const [user, setUser] = useState<any>({});
   const [loading, setLoading] = useState<any>(false);
   const [socketConnected, isSocketConnected] = useState<any>(false);
+  const isMounted = useRef<any>(null);
   // const [typing, setTyping] = useState<any>(false);
   // const [isTyping, setIsTyping] = useState<any>(false);
 
   const { token, userId } = userData;
-  const { chatId, name } = route.params;
+  const { chatId } = route.params;
 
   // fetch messages from chatId
   const fetchMessages = async () => {
     setLoading(true);
     getMessages(chatId, token)
       .then((res: any) => {
+        // Create a new message object for GiftedChat
         let messageArr = res.data.map((message: any) => ({
           _id: message._id,
           createdAt: message.createdAt,
@@ -39,9 +46,7 @@ const SingleMessage = ({ fetchAgain, route, navigation, userData }: any) => {
           }
         }));
 
-        // set sender
-        console.log(messageArr);
-        //setUser(senderObj);  
+        // have messages array go in reverse
         let reverse = [...messageArr].reverse();
         setMessages(reverse);
         setLoading(false);
@@ -53,36 +58,13 @@ const SingleMessage = ({ fetchAgain, route, navigation, userData }: any) => {
 
   // calls set mesasges
   const onSend = useCallback((messages = []) => {
+    let content = messages[0].text;
     setMessages((previousMessages: any) => GiftedChat.append(previousMessages, messages));
-    
-    let content = messages[0];
     setLoading(true);
+    
+    // send the message to the db
     postMessage(userId, token, content, chatId)
       .then((res: any) => {
-        let arr = [];
-        //console.log(res.data);
-        /**
-         * we only want:
-         * 
-         * message_id,
-         * content,
-         * createdAt,
-         * sender profile (user_id, name, photo)
-         * 
-         * what GiftedChat wants:
-         * [{
-         *  _id: message_id,
-         *  text: content,
-         *  createdAt: createdAt,
-         *  user: {
-         *    _id: user_id,
-         *     name: user.name
-         *     avatar: user.photo
-         *   }
-         * }]
-         */
-        // send to giftedChat
-        //setMessages([...messages, res.data]);
         setLoading(false);
       })
       .catch((e: any) => {
@@ -90,10 +72,18 @@ const SingleMessage = ({ fetchAgain, route, navigation, userData }: any) => {
       });
   }, []);
 
-  // refresh messages
-  useEffect(() => {
-    fetchMessages();
-  }, []);
+  // refresh messages, use useFocusEffect()
+  useFocusEffect(
+    useCallback(() => {
+      fetchMessages();
+      isMounted.current = true;
+
+      return () => {
+        setMessages([]);
+        isMounted.current = false;
+      }
+    }, [])
+  );
 
   return (
     <>

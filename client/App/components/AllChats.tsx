@@ -1,12 +1,16 @@
 import React, {
-  useEffect,
-  useState
+  useState,
+  useRef,
+  useCallback
 } from 'react';
 import {
   FlatList,
   Text
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {
+  useNavigation,
+  useFocusEffect
+} from '@react-navigation/native';
 
 import { useAuth } from '../context';
 import { getUserChats } from '../utils';
@@ -15,8 +19,9 @@ import {
   ThreadRow
 } from '../components';
 
-const AllChats = ({  fetchAgain, setFetchAgain }: any) => {
+const AllChats = () => {
   const [chats, setChats] = useState<any>();
+  const isMounted = useRef<any>(null);
 
   const navigation = useNavigation();
 
@@ -27,7 +32,8 @@ const AllChats = ({  fetchAgain, setFetchAgain }: any) => {
     getUserChats(userId, token)
       .then(res => {
         // gets all user messages
-        setChats(res.data);
+        const { data } = res;
+        setChats(data);
       })
       .catch(e => {
         // throw error
@@ -35,9 +41,17 @@ const AllChats = ({  fetchAgain, setFetchAgain }: any) => {
       });
   }
   
-  useEffect(() => {
-    fetchChats();
-  }, [fetchAgain]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchChats();
+      isMounted.current = true;
+
+      return () => {
+        setChats([]);
+        isMounted.current = false;
+      }
+    }, [])
+  );
 
   return (
     <>
@@ -52,8 +66,9 @@ const AllChats = ({  fetchAgain, setFetchAgain }: any) => {
                 name: item.users[1].profile.name
               })}
             >
-            {console.log('flatlist', item)}
               <RecentMessage
+                // this is hardcoded, make sure the 1st element is NOT
+                // the logged user
                 image={item.latestMessage.sender.profile.photo}
                 name={item.latestMessage.sender.profile.name}
                 latestMessage={item.latestMessage.content}
