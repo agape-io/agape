@@ -23,6 +23,8 @@ export interface MessageProps {
 const Message:FC<MessageProps> = ({ navigation, route }) => {
     const { authData } = useAuth();
 
+    console.log(authData);
+
     return (
         <SingleMessage
             userData={authData}

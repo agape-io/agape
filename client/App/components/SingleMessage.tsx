@@ -28,21 +28,22 @@ const SingleMessage = ({ fetchAgain, route, navigation, userData }: any) => {
     setLoading(true);
     getMessages(chatId, token)
       .then((res: any) => {
-        let messageArr = res.data.map((item: any) => ({
-          _id: item._id,
-          createdAt: item.createdAt,
-          text: item.content,
+        let messageArr = res.data.map((message: any) => ({
+          _id: message._id,
+          createdAt: message.createdAt,
+          text: message.content,
           user: {
-            _id: item.sender._id,
-            name: item.sender.profile.name,
-            avatar: item.sender.profile.photo
+            _id: message.sender._id,
+            name: message.sender.profile.name,
+            avatar: message.sender.profile.photo
           }
         }));
 
         // set sender
         console.log(messageArr);
-        //setUser(senderObj);        
-        setMessages(messageArr);
+        //setUser(senderObj);  
+        let reverse = [...messageArr].reverse();
+        setMessages(reverse);
         setLoading(false);
       })
       .catch((e: any) => {
@@ -99,11 +100,7 @@ const SingleMessage = ({ fetchAgain, route, navigation, userData }: any) => {
       <GiftedChat 
         messages={messages}
         onSend={messages => onSend(messages)}
-        user={{
-          _id: user._id,
-          name: user.name,
-          avatar: user.avatar
-        }}
+        user={{ _id: userId}} 
       />
       {
         Platform.OS === 'android' && <KeyboardAvoidingView behavior="padding" />
