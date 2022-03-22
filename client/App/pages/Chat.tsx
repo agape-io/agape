@@ -14,7 +14,7 @@ import styles, { DARK_GRAY } from "../../assets/styles";
 import { AllChats } from "../components";
 import { useAuth } from "../context";
 
-import { HomeTabNavigatorParamList, RootNavigatorParamsList, MessageStackParamList } from "../types";
+import { HomeTabNavigatorParamList, RootNavigatorParamsList } from "../types";
 
 export interface ChatProps {
     navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Chat'>,
@@ -22,9 +22,6 @@ export interface ChatProps {
 }
 
 const Chat:FC<ChatProps> = ({ navigation }) => {
-    //state initialized
-    const [fetchAgain, setFetchAgain] = useState<any>(false);
-
     const { authData } = useAuth();
 
     //return jsx to render UI
@@ -35,7 +32,7 @@ const Chat:FC<ChatProps> = ({ navigation }) => {
         >
             <View style={styles.containerMessages}>
                 {
-                    authData ? <AllChats fetchAgain={fetchAgain} /> : <ActivityIndicator style={styles.indicator} size="large" color="#F0ABC1" />
+                    authData ? <AllChats /> : <ActivityIndicator style={styles.indicator} size="large" color="#F0ABC1" />
                 }
             </View>
         </ImageBackground >

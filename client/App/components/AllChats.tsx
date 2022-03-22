@@ -67,8 +67,8 @@ const AllChats = () => {
               })}
             >
               <RecentMessage
-                // this is hardcoded, make sure the 1st element is NOT
-                // the logged user
+                // TODO: find a way to display ONLY the
+                // user the logged user is chatting to
                 image={item.latestMessage.sender.profile.photo}
                 name={item.latestMessage.sender.profile.name}
                 latestMessage={item.latestMessage.content}

@@ -1,7 +1,12 @@
 /**
  * Discover Screen
  */
-import React, { useState, FC, useEffect } from "react";
+import React, {
+    useState,
+    FC,
+    useEffect,
+    useRef
+} from "react";
 import {
     View,
     ImageBackground,
@@ -33,6 +38,7 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
     const [swiper, setSwiper] = useState<CardStack | null>(null);
     //const [loading, setLoading] = useState<boolean>(true);
     const [matches, setMatches] = useState<any>(null);
+    const isMounted = useRef<any>(null);
 
     const auth = useAuth();
 
@@ -43,7 +49,7 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
             getMatches(userId, token)
                 .then(res => {
                     const { users } = res.data;
-                    console.log(token, userId);
+                    //console.log(token, userId);
                     setMatches(users);
                 }).catch(e => {
                     console.log(e.message);
@@ -64,9 +70,11 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
     // Load matches
     useEffect(() => {
         loadMatches();
+        isMounted.current = true;
 
         return () => {
             setMatches(null);
+            isMounted.current = false;
         }
     }, []);
 

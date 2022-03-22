@@ -72,7 +72,7 @@ const SingleMessage = ({ route, navigation, userData }: any) => {
       });
   }, []);
 
-  // refresh messages, use useFocusEffect()
+  // refresh messages, use useFocusEffect() or socket.io
   useFocusEffect(
     useCallback(() => {
       fetchMessages();
