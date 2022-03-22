@@ -28,9 +28,6 @@ const SingleMessage = ({ fetchAgain, route, navigation, userData }: any) => {
     setLoading(true);
     getMessages(chatId, token)
       .then((res: any) => {
-        //console.log(res.data);
-        let senderObj = {};
-        //const { sender, _id, createdAt, content } = res.data[0];
         let messageArr = res.data.map((item: any) => ({
           _id: item._id,
           createdAt: item.createdAt,
@@ -41,14 +38,10 @@ const SingleMessage = ({ fetchAgain, route, navigation, userData }: any) => {
             avatar: item.sender.profile.photo
           }
         }));
-        
-        //console.log('message', messageArr);
 
         // set sender
-        setUser(senderObj);
-        let reverse = [...messageArr].reverse();
-        //console.log(messageArr);
-        
+        console.log(messageArr);
+        //setUser(senderObj);        
         setMessages(messageArr);
         setLoading(false);
       })
