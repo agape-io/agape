@@ -22,7 +22,7 @@ import {
   HomeTabNavigatorParamList,
   RootNavigatorParamsList
 } from '../types';
-import { useAuth } from '../navigation';
+import { useAuth } from '../context';
 
 // API's
 import {

@@ -1,18 +1,21 @@
 /**
  * Discover Screen
  */
-import React, { useState, FC, useEffect } from "react";
+import React, {
+    useState,
+    FC,
+    useEffect,
+    useRef
+} from "react";
 import {
     View,
     ImageBackground,
-    ActivityIndicator,
     Text,
 } from "react-native";
 import CardStack, { Card } from "react-native-card-stack-swiper";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-
-import { useAuth } from "../navigation";
+import { useAuth } from "../context";
 import {
     HomeTabNavigatorParamList,
     RootNavigatorParamsList
@@ -23,10 +26,8 @@ import {
     CardItem
 } from "../components";
 import styles from "../../assets/styles";
-import DEMO from "../../assets/data/demo";
 
 import { getMatches } from '../utils';
-import { Item } from "react-native-paper/lib/typescript/components/List/List";
 
 export interface DiscoverProps {
     navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Discover'>,
@@ -37,6 +38,7 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
     const [swiper, setSwiper] = useState<CardStack | null>(null);
     //const [loading, setLoading] = useState<boolean>(true);
     const [matches, setMatches] = useState<any>(null);
+    const isMounted = useRef<any>(null);
 
     const auth = useAuth();
 
@@ -47,7 +49,7 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
             getMatches(userId, token)
                 .then(res => {
                     const { users } = res.data;
-                    console.log(users);
+                    //console.log(token, userId);
                     setMatches(users);
                 }).catch(e => {
                     console.log(e.message);
@@ -65,11 +67,14 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
         )
     }
     
+    // Load matches
     useEffect(() => {
         loadMatches();
+        isMounted.current = true;
 
         return () => {
             setMatches(null);
+            isMounted.current = false;
         }
     }, []);
 
@@ -86,8 +91,7 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                 {matches && (
                     <CardStack
                         verticalSwipe={false}
-                        // keep loop to true for now
-                        loop
+                        loop // keep loop to true for now
                         renderNoMoreCards={() => <NoMoreCards />}
                         ref={newSwiper => setSwiper(newSwiper)}
                     >
