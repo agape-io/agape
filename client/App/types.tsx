@@ -40,18 +40,6 @@ type AuthContextData = {
   children?: React.ReactNode;
   notification: any;
   setNotification: any;
-  chats: any;
-  setChats: any;
-}
-
-type ChatContextData = {
-  children?: React.ReactNode;
-  user: any,
-  setUser: any,
-  selectedChat: any,
-  setSelectedChat: any,
-  chats: any,
-  setChats: any
 }
 
 type CardItemT = {
@@ -86,6 +74,5 @@ export {
   CardItemT,
   IconT,
   ProfileItemT,
-  MessageT,
-  ChatContextData
+  MessageT
 }

@@ -12,7 +12,6 @@ import {
   Platform
 } from 'react-native';
 import io from 'socket.io-client';
-import { useFocusEffect } from '@react-navigation/native';
 
 // APIs
 import { API_URL } from '@env';
@@ -31,7 +30,7 @@ const SingleMessage = ({ route, navigation, userData }: any) => {
   // const [typing, setTyping] = useState<any>(false);
   // const [isTyping, setIsTyping] = useState<any>(false);
 
-  const { selectedChat, setSelectedChat, notification, setNotification } = useAuth().authData;
+  const { notification, setNotification } = useAuth().authData;
   const { token, userId } = userData;
   const { chatId } = route.params;
 
@@ -56,6 +55,8 @@ const SingleMessage = ({ route, navigation, userData }: any) => {
         let reverse = [...messageArr].reverse();
         setMessages(reverse);
         setLoading(false);
+
+        // socket joins chat
         socket.emit('join chat', chatId);
       })
       .catch((e: any) => {
@@ -67,13 +68,24 @@ const SingleMessage = ({ route, navigation, userData }: any) => {
   const onSend = useCallback((messages = []) => {
     let content = messages[0].text;
     setLoading(true);
-    
+
     // send the message to the db
     postMessage(userId, token, content, chatId)
       .then((res: any) => {
-        const { data } = res;
-        socket.emit('new message', data);
-        setMessages((previousMessages: any) => GiftedChat.append(previousMessages, messages));
+        const { _id, createdAt, content, sender } = res.data;
+        let newMessage: any = {
+          _id,
+          createdAt,
+          text: content,
+          user: {
+            _id: sender._id,
+            name: sender.profile.name,
+            avatar: sender.profile.photo
+          }
+        }
+        socket.emit('new message', res.data);
+        // GiftedChat Data
+        setMessages((previousMessages: any) => GiftedChat.append(previousMessages, newMessage));
         setLoading(false);
       })
       .catch((e: any) => {
@@ -109,7 +121,7 @@ const SingleMessage = ({ route, navigation, userData }: any) => {
       <GiftedChat 
         messages={messages}
         onSend={messages => onSend(messages)}
-        user={{ _id: userId}} 
+        user={{ _id: userId }} 
       />
       {
         Platform.OS === 'android' && <KeyboardAvoidingView behavior="padding" />
