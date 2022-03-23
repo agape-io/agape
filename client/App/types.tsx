@@ -10,7 +10,7 @@ type AuthNavigatorParamList = {
 type MessageStackParamList = {
   Message: {
     name?: any;
-    chatId: any
+    chatId: any;
   };
   Messages: {
     thread?: string;
@@ -38,6 +38,10 @@ type AuthContextData = {
   signIn(email: string, password: string): Promise<void>;
   signOut(): Promise<void>;
   children?: React.ReactNode;
+  notification: any;
+  setNotification: any;
+  chats: any;
+  setChats: any;
 }
 
 type ChatContextData = {

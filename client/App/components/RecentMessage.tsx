@@ -1,3 +1,6 @@
+/**
+ * Recent Messages Component
+ */
 import React from "react";
 import { Text, View, Image } from "react-native";
 import styles from "../../assets/styles";

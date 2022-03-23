@@ -1,7 +1,11 @@
+/**
+ * All Chats Component
+ */
 import React, {
   useState,
   useRef,
-  useCallback
+  useCallback,
+  FC
 } from 'react';
 import {
   FlatList,
@@ -63,7 +67,7 @@ const AllChats = () => {
             <ThreadRow
               onPress={() => navigation.navigate('Message', {
                 chatId: item._id,
-                name: item.users[1].profile.name
+                name: item.users[1].profile.name,
               })}
             >
               <RecentMessage

@@ -69,8 +69,8 @@ const SignUp: FC<SignUpProps> = ({ navigation }) => {
       .catch(e => {
         // display errors to the UI
         isError(true);
-        console.log(e.response.data.message);
-        setErrorMessage(e.response.data.message);
+        console.log(e.message);
+        setErrorMessage(e.message);
       })
       .finally(() => {
         if (isMounted.current) setLoading(false);

@@ -1,5 +1,5 @@
 /**
- * Main Handler for Routes
+ * Routes Handler
  */
 import React, { FC } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
