@@ -17,7 +17,7 @@ import {
 } from '../types';
 
 // API
-import { useAuth } from '../navigation';
+import { useAuth } from '../context';
 import {
   getMatches,
   getProfile,

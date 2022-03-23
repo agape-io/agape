@@ -15,7 +15,7 @@ import { API_URL } from '@env';
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider:FC = ({ children }) => {
-  const [authData, setAuthData] = useState<AuthData>();
+  const [authData, setAuthData] = useState<any>();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,8 +24,8 @@ const AuthProvider:FC = ({ children }) => {
 
   const loadStorageData = async () => {
     AsyncStorage.getItem('@auth')
-      .then(authDataSerialized => {
-        const _authData: AuthData = JSON.parse(authDataSerialized);
+      .then((authDataSerialized:any) => {
+        const _authData = JSON.parse(authDataSerialized);
         
         console.log(_authData);
         setAuthData(_authData);

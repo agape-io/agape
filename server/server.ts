@@ -1,6 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import { Server } from 'socket.io';
+import { createServer } from 'http';
 
 import { env } from './config/env';
 
@@ -50,3 +52,17 @@ app.use(errorHandler);
 app.listen(PORT, () => {
   console.log(`Agape Server is listening on port ${PORT}!`);
 });
+
+// Socket.io config
+const httpServer = createServer(app)
+const io = new Server(httpServer, {
+  pingTimeout: 60000,
+  cors: {
+    origin: `http://localhost:${3000}`
+  }
+});
+
+io.on("connection", (socket:any) => {
+  console.log("Connected to socket.io!");
+})
+

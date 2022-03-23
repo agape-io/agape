@@ -1,70 +1,34 @@
-import React, { FC, useState, useCallback, useEffect } from 'react';
-import {
-    View,
-    Text,
-    TouchableOpacity
-} from 'react-native';
-import { GiftedChat } from 'react-native-gifted-chat';
-import DEMO from "../../assets/data/demo";
-
-import { TextInput } from 'react-native-gesture-handler';
+import React, { FC } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { CompositeNavigationProp } from '@react-navigation/native';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
+
+// Components
+import { SingleMessage } from '../components';
 
 // Types
 import {
     RootNavigatorParamsList,
-    HomeTabNavigatorParamList
+    HomeTabNavigatorParamList,
+    MessageStackParamList
 } from '../types';
 
 // API
-import { useAuth } from '../navigation';
-
+import {  useAuth } from '../context';
 export interface MessageProps {
     navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Chat'>,
         NativeStackNavigationProp<RootNavigatorParamsList>>;
+    route: RouteProp<MessageStackParamList>;
 };
 
-const Message: FC<MessageProps> = ({ navigation }) => {
-    const auth = useAuth();
-
-    const [messages, setMessages] = useState([]);
-
-    const {
-        image,
-        message,
-        match,
-        name,
-    } = DEMO[0];
-
-    useEffect(() => {
-        setMessages([
-            {
-                _id: 1,
-                text: message,
-                createdAt: new Date(),
-                user: {
-                    _id: 2,
-                    name: 'React Native',
-                    avatar: image,
-                },
-            },
-        ])
-    }, [])
-
-    const onSend = useCallback((messages = []) => {
-        setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
-    }, [])
-
+const Message:FC<MessageProps> = ({ navigation, route }) => {
+    const { authData } = useAuth();
     return (
-        <GiftedChat
-            messages={messages}
-            onSend={messages => onSend(messages)}
-            user={{
-                _id: 1,
-            }}
+        <SingleMessage
+            userData={authData}
+            navigation={navigation}
+            route={route}
         />
-    )
+    );
 }
 
 export default Message;
