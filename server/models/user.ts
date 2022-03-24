@@ -34,7 +34,14 @@ const UserModel = new Schema({
       ref: 'Plan',
       default: '6233c60d59af3002b221b0ce',
     },
-    billingDate: { type: Date },
+    endingDate: {
+      type: Date,
+      default: null,
+    },
+    billingDate: {
+      type: Date,
+      default: null,
+    },
   },
   swipedLeft: [{ type: String }],
   swipedRight: [{ type: String }],
