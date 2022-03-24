@@ -20,11 +20,10 @@ import {
   getMessages,
   postMessage
 } from '../utils';
-import { couldStartTrivia } from 'typescript';
 
 let socket: any;
 
-const SingleMessage = ({ route, navigation, userData }: any) => {
+const SingleMessage = ({ route, userData }: any) => {
   const [messages, setMessages] = useState<any>([]);
   const [loading, setLoading] = useState<any>(false);
   const [socketConnected, isSocketConnected] = useState<boolean>(false);
@@ -65,7 +64,7 @@ const SingleMessage = ({ route, navigation, userData }: any) => {
       })
       .catch((e: any) => {
         console.error(e.message);
-      })
+      });
   };
 
   // calls set mesasges
@@ -113,7 +112,6 @@ const SingleMessage = ({ route, navigation, userData }: any) => {
   useEffect(() => {
     fetchMessages();
 
-
     // cleanup
     return () => {
       setMessages([]);
@@ -143,7 +141,6 @@ const SingleMessage = ({ route, navigation, userData }: any) => {
         Platform.OS === 'android' && <KeyboardAvoidingView behavior="padding" />
       }
     </>
-   
   );
 }
 
