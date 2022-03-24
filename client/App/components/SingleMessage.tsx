@@ -40,19 +40,22 @@ const SingleMessage = ({ route, navigation, userData }: any) => {
     getMessages(chatId, token)
       .then((res: any) => {
         // Create a new message object for GiftedChat
-        let messageArr = res.data.map((message: any) => ({
-          _id: message._id,
-          createdAt: message.createdAt,
-          text: message.content,
-          user: {
-            _id: message.sender._id,
-            name: message.sender.profile.name,
-            avatar: message.sender.profile.photo
+        let giftedChatFormat = res.data.map((message: any) => {
+          let gcf = {
+            _id: message._id,
+            createdAt: message.createdAt,
+            text: message.content,
+            user: {
+              _id: message.sender._id,
+              name: message.sender.profile.name,
+              avatar: message.sender.profile.photo
+            }
           }
-        }));
+          return gcf;
+        });
 
         // have messages array go in reverse
-        let reverse = [...messageArr].reverse();
+        let reverse = [...giftedChatFormat].reverse();
         setMessages(reverse);
         setLoading(false);
 
@@ -93,7 +96,7 @@ const SingleMessage = ({ route, navigation, userData }: any) => {
       });
   }, []);
 
-   // socket-io initialization
+  // socket-io initialization
   useEffect(() => {
     socket = io(API_URL);
     socket.emit('setup', userId);
@@ -118,17 +121,17 @@ const SingleMessage = ({ route, navigation, userData }: any) => {
 
   return (
     <>
-      <GiftedChat 
+      <GiftedChat
         messages={messages}
         onSend={messages => onSend(messages)}
-        user={{ _id: userId }} 
+        user={{ _id: userId }}
       />
       {
         Platform.OS === 'android' && <KeyboardAvoidingView behavior="padding" />
       }
     </>
    
-  )
+  );
 }
 
 export default SingleMessage;

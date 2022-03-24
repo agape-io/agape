@@ -4,8 +4,7 @@
 import React, {
   useState,
   useRef,
-  useCallback,
-  FC
+  useCallback
 } from 'react';
 import {
   FlatList,
@@ -36,8 +35,28 @@ const AllChats = () => {
     getUserChats(userId, token)
       .then(res => {
         // gets all user messages
-        const { data } = res;
-        setChats(data);
+        let chatArr = res.data.map((chat: any, index: any) => {
+          // find the users that don't match with curr user
+          let foundUser = chat.users.find((item: any) => item._id !== userId);
+
+          let c = {
+            _id: chat._id,
+            latestMessage: {
+              _id: chat.latestMessage._id,
+              chat: chat.latestMessage.chat,
+              content: chat.latestMessage.content,
+              createdAt: chat.latestMessage.createdAt,
+              chattedUser: foundUser,
+              sender: chat.latestMessage.sender,
+              updatedAt: chat.latestMessage.updatedAt
+            },
+            updatedAt: chat.updatedAt
+          }
+
+          return c;
+        });
+        // set chats
+        setChats(chatArr);
       })
       .catch(e => {
         // throw error
@@ -67,14 +86,12 @@ const AllChats = () => {
             <ThreadRow
               onPress={() => navigation.navigate('Message', {
                 chatId: item._id,
-                name: item.users[1].profile.name,
+                name: item.latestMessage.chattedUser.profile.name,
               })}
             >
               <RecentMessage
-                // TODO: find a way to display ONLY the
-                // user the logged user is chatting to
-                image={item.latestMessage.sender.profile.photo}
-                name={item.latestMessage.sender.profile.name}
+                image={item.latestMessage.chattedUser.profile.photo}
+                name={item.latestMessage.chattedUser.profile.name}
                 latestMessage={item.latestMessage.content}
               />
             </ThreadRow>

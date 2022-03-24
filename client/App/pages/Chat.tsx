@@ -1,10 +1,7 @@
 /**
  * Chat Screen
  */
-import React, {
-    FC,
-    useState
-} from "react";
+import React, { FC } from "react";
 import {
     View,
     ImageBackground
@@ -43,4 +40,3 @@ const Chat: FC<ChatProps> = ({ navigation }) => {
 };
 
 export default Chat;
-
