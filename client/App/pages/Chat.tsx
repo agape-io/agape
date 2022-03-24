@@ -1,7 +1,7 @@
-import React, {
-    FC,
-    useState
-} from "react";
+/**
+ * Chat Screen
+ */
+import React, { FC } from "react";
 import {
     View,
     ImageBackground
@@ -21,7 +21,7 @@ export interface ChatProps {
         NativeStackNavigationProp<RootNavigatorParamsList>>;
 }
 
-const Chat:FC<ChatProps> = ({ navigation }) => {
+const Chat: FC<ChatProps> = ({ navigation }) => {
     const { authData } = useAuth();
 
     //return jsx to render UI
@@ -40,4 +40,3 @@ const Chat:FC<ChatProps> = ({ navigation }) => {
 };
 
 export default Chat;
-

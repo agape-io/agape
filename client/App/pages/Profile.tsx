@@ -1,3 +1,6 @@
+/**
+ * Profile Screen
+ */
 import React, {
   FC,
   useCallback,

@@ -10,7 +10,7 @@ type AuthNavigatorParamList = {
 type MessageStackParamList = {
   Message: {
     name?: any;
-    chatId: any
+    chatId: any;
   };
   Messages: {
     thread?: string;
@@ -38,16 +38,8 @@ type AuthContextData = {
   signIn(email: string, password: string): Promise<void>;
   signOut(): Promise<void>;
   children?: React.ReactNode;
-}
-
-type ChatContextData = {
-  children?: React.ReactNode;
-  user: any,
-  setUser: any,
-  selectedChat: any,
-  setSelectedChat: any,
-  chats: any,
-  setChats: any
+  notification: any;
+  setNotification: any;
 }
 
 type CardItemT = {
@@ -82,6 +74,5 @@ export {
   CardItemT,
   IconT,
   ProfileItemT,
-  MessageT,
-  ChatContextData
+  MessageT
 }

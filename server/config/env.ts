@@ -12,6 +12,7 @@ export const env = {
   JSONWebToken: {
     Key: process.env.JWT_TOKEN_KEY,
   },
+  ENDPOINT: process.env.ENDPOINT,
   PORT: process.env.PORT,
   NODE_ENV: process.env.NODE_ENV,
 };

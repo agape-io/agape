@@ -1,3 +1,6 @@
+/**
+ * Card Item Component
+ */
 import React from "react";
 import {
   Text,

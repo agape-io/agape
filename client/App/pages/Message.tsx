@@ -1,3 +1,6 @@
+/**
+ * Messages Screen
+ */
 import React, { FC } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
