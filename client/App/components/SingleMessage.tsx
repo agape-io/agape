@@ -40,7 +40,7 @@ const SingleMessage = ({ route, userData }: any) => {
     getMessages(chatId, token)
       .then((res: any) => {
         // Create a new message object for GiftedChat
-        let giftedChatFormat = res.data.map((message: any) => {
+        const giftedChatFormat = res.data.map((message: any) => {
           let gcf = {
             _id: message._id,
             createdAt: message.createdAt,
@@ -66,40 +66,6 @@ const SingleMessage = ({ route, userData }: any) => {
         console.error(e.message);
       });
   };
-
-  // calls set mesasges
-  const onSend = useCallback((messages = []) => {
-    let content = messages[0].text;
-    setLoading(true);
-
-    // send the message to the db
-    postMessage(userId, token, content, chatId)
-      .then((res: any) => {
-        const { _id, createdAt, content, sender } = res.data;
-
-        // formatted for giftedchat
-        let newMessage: any = {
-          _id,
-          createdAt,
-          text: content,
-          user: {
-            _id: sender._id,
-            name: sender.profile.name,
-            avatar: sender.profile.photo
-          }
-        }
-
-        // send to socket io
-        socket.emit('new message', res.data);
-
-        // GiftedChat Data is appended
-        setMessages((previousMessages: any) => GiftedChat.append(previousMessages, newMessage));
-        setLoading(false);
-      })
-      .catch((e: any) => {
-        console.error(e.message);
-      });
-  }, []);
 
   // socket-io initialization
   useEffect(() => {
@@ -128,6 +94,40 @@ const SingleMessage = ({ route, userData }: any) => {
       }
     })
   });
+
+   // calls set mesasges
+  const onSend = useCallback((messages = []) => {
+    let content = messages[0].text;
+    setLoading(true);
+
+    // send the message to the db
+    postMessage(userId, token, content, chatId)
+      .then((res: any) => {
+        const { _id, createdAt, content, sender } = res.data;
+
+        // formatted for giftedchat
+        let newMessage: any = {
+          _id,
+          createdAt,
+          text: content,
+          user: {
+            _id: sender._id,
+            name: sender.profile.name,
+            avatar: sender.profile.photo
+          }
+        };
+
+        // send to socket io
+        socket.emit('new message', res.data);
+
+        // GiftedChat Data is appended
+        setMessages((previousMessages: any) => GiftedChat.append(previousMessages, newMessage));
+        setLoading(false);
+      })
+      .catch((e: any) => {
+        console.error(e.message);
+      });
+  }, []);
 
   return (
     <>
