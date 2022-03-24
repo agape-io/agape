@@ -20,6 +20,7 @@ import {
   getMessages,
   postMessage
 } from '../utils';
+import { couldStartTrivia } from 'typescript';
 
 let socket: any;
 
@@ -76,6 +77,7 @@ const SingleMessage = ({ route, navigation, userData }: any) => {
     postMessage(userId, token, content, chatId)
       .then((res: any) => {
         const { _id, createdAt, content, sender } = res.data;
+
         let newMessage: any = {
           _id,
           createdAt,
@@ -106,6 +108,10 @@ const SingleMessage = ({ route, navigation, userData }: any) => {
   // fetch messages
   useEffect(() => {
     fetchMessages();
+
+    return () => {
+      setMessages([]);
+    }
   }, []);
 
   // Check messages recieved
@@ -122,6 +128,7 @@ const SingleMessage = ({ route, navigation, userData }: any) => {
   return (
     <>
       <GiftedChat
+        //renderBubble={()}
         messages={messages}
         onSend={messages => onSend(messages)}
         user={{ _id: userId }}
