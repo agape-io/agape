@@ -78,6 +78,7 @@ const SingleMessage = ({ route, navigation, userData }: any) => {
       .then((res: any) => {
         const { _id, createdAt, content, sender } = res.data;
 
+        // formatted for giftedchat
         let newMessage: any = {
           _id,
           createdAt,
@@ -88,8 +89,11 @@ const SingleMessage = ({ route, navigation, userData }: any) => {
             avatar: sender.profile.photo
           }
         }
+
+        // send to socket io
         socket.emit('new message', res.data);
-        // GiftedChat Data
+
+        // GiftedChat Data is appended
         setMessages((previousMessages: any) => GiftedChat.append(previousMessages, newMessage));
         setLoading(false);
       })
@@ -109,6 +113,8 @@ const SingleMessage = ({ route, navigation, userData }: any) => {
   useEffect(() => {
     fetchMessages();
 
+
+    // cleanup
     return () => {
       setMessages([]);
     }
