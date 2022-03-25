@@ -464,8 +464,8 @@ export default StyleSheet.create({
         padding: 40,
         margin: 65,
         borderRadius:10,
-        height: 500,
-        width: 350,
+        height: 510,
+        width: 360,
         shadowOpacity: 0.10,
         shadowRadius: 10,
         shadowColor: BLACK,
@@ -484,17 +484,17 @@ export default StyleSheet.create({
     },
     textTitles : {
         fontSize: 20,
-        fontWeight: 'bold',
+    },
+    textDescription: {
+        fontSize: 15,
+        margin: 5
+    },
+    addRadioButton: {
+        backgroundColor: PRIMARY_COLOR
     },
     addSubscriptionButton: {
         margin: 10,
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    subscriptionButton: {
-        justifyContent: 'center',
-        bottom:0,
-        left:0,
     }
-
 });

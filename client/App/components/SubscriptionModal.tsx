@@ -14,7 +14,7 @@ import {
   ScrollView,
   ImageBackground,
 } from 'react-native';
-import axios from 'axios';
+import { RadioButton } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as ImagePicker from 'expo-image-picker';
 import { CompositeNavigationProp } from '@react-navigation/native';
@@ -26,13 +26,6 @@ import {
 import { useAuth } from '../context';
 import { Icon, ProfileItem } from "../components";
 
-// API's
-import {
-  updateProfile,
-  getProfile
-} from '../utils';
-import { CLOUDINARY_API_URL } from '@env';
-
 // Styles
 import styles, { PRIMARY_COLOR, SECONDARY_COLOR, GRAY } from '../../assets/styles';
 
@@ -43,12 +36,12 @@ export interface SubscriptionModalProps {
 
 const SubscriptionModal: FC<SubscriptionModalProps> = ({navigation}) => {
   const auth = useAuth();
-
-  // hide create profile button if profile is already available
-  const [name, setName] = useState<string>('');
-  const { userId, token } = auth.authData;
-
-
+  const [checked, setChecked] = React.useState('silver');
+  const data = [
+    {value: 'silver'},
+    {value: 'gold'},
+    {value: 'unlimited'},
+  ];
 
   // Cancel Button for header
   const CancelButton = ({ onPress }:any) => {
@@ -71,18 +64,40 @@ const SubscriptionModal: FC<SubscriptionModalProps> = ({navigation}) => {
 
   return (
       <ScrollView contentContainerStyle={styles.modalContainer}>
-        
+     
         <View style={styles.subscriptionContainer}>
+          <Text style={styles.textTitles}>Select the plan that fits you:</Text>
           <View style={styles.subscriptionOptions}>
             <Text style={styles.textTitles}>Silver Subscription</Text>
+            <Text style={styles.textDescription}>Description here</Text>
+            <RadioButton
+              value="silver"
+              color={PRIMARY_COLOR}
+              status={ checked === 'silver' ? 'checked' : 'unchecked' }
+              onPress={() => setChecked('silver')}
+            />
           </View>
 
           <View style={styles.subscriptionOptions}>
             <Text style={styles.textTitles}>Gold Subscription</Text>
+            <Text style={styles.textDescription}>Description here</Text>
+            <RadioButton 
+              value="gold"
+              color={PRIMARY_COLOR}
+              status={ checked === 'gold' ? 'checked' : 'unchecked' }
+              onPress={() => setChecked('gold')}
+            />
           </View>
 
           <View style={styles.subscriptionOptions}>
             <Text style={styles.textTitles}>Unlimited Subscription</Text>
+            <Text style={styles.textDescription}>Description here</Text>
+            <RadioButton 
+              value="unlimited"
+              color={PRIMARY_COLOR}
+              status={ checked === 'unlimited' ? 'checked' : 'unchecked' }
+              onPress={() => setChecked('unlimited')}
+            />
           </View>
         </View>
 
