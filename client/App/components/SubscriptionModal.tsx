@@ -27,7 +27,12 @@ import { useAuth } from '../context';
 import { Icon, ProfileItem } from "../components";
 
 // Styles
-import styles, { PRIMARY_COLOR, SECONDARY_COLOR, GRAY } from '../../assets/styles';
+import styles, { 
+  PRIMARY_COLOR, 
+  SECONDARY_COLOR, 
+  GRAY, 
+  WHITE
+} from '../../assets/styles';
 
 export interface SubscriptionModalProps {
   navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Profile'>,
@@ -66,10 +71,14 @@ const SubscriptionModal: FC<SubscriptionModalProps> = ({navigation}) => {
       <ScrollView contentContainerStyle={styles.modalContainer}>
      
         <View style={styles.subscriptionContainer}>
+
           <Text style={styles.textTitles}>Select the plan that fits you:</Text>
+
           <View style={styles.subscriptionOptions}>
-            <Text style={styles.textTitles}>Silver Subscription</Text>
-            <Text style={styles.textDescription}>Description here</Text>
+            <Text style={styles.textTitles}>Agape Silver</Text>
+            <Text style={styles.textDescription}>- Get 15 more Likes per day.</Text>
+            <Text style={styles.textDescription}>- Profile booster.</Text>
+            <Text style={styles.textDescription}>- Customize location.</Text>
             <RadioButton
               value="silver"
               color={PRIMARY_COLOR}
@@ -79,8 +88,10 @@ const SubscriptionModal: FC<SubscriptionModalProps> = ({navigation}) => {
           </View>
 
           <View style={styles.subscriptionOptions}>
-            <Text style={styles.textTitles}>Gold Subscription</Text>
-            <Text style={styles.textDescription}>Description here</Text>
+            <Text style={styles.textTitles}>Agape Gold</Text>
+            <Text style={styles.textDescription}>- Get 30 more Likes per day.</Text>
+            <Text style={styles.textDescription}>- Customize location and others.</Text>
+            <Text style={styles.textDescription}>- 50% less Ads.</Text>
             <RadioButton 
               value="gold"
               color={PRIMARY_COLOR}
@@ -90,8 +101,10 @@ const SubscriptionModal: FC<SubscriptionModalProps> = ({navigation}) => {
           </View>
 
           <View style={styles.subscriptionOptions}>
-            <Text style={styles.textTitles}>Unlimited Subscription</Text>
-            <Text style={styles.textDescription}>Description here</Text>
+            <Text style={styles.textTitles}>Agape Unlimited</Text>
+            <Text style={styles.textDescription}>- Send as many Likes as you want.</Text>
+            <Text style={styles.textDescription}>- Customize all the features.</Text>
+            <Text style={styles.textDescription}>- Turn off Ads.</Text>
             <RadioButton 
               value="unlimited"
               color={PRIMARY_COLOR}
@@ -101,9 +114,9 @@ const SubscriptionModal: FC<SubscriptionModalProps> = ({navigation}) => {
           </View>
         </View>
 
-        <View style={styles.addProfileButtonContainer}>
+        <View style={styles.addSubscriptionButtonContainer}>
           <TouchableOpacity
-            style={[styles.addProfileButton, { backgroundColor: SECONDARY_COLOR }]}
+            style={[styles.addSubscriptionButton, { backgroundColor: SECONDARY_COLOR }]}
           >
             <Text>Subscribe</Text>
           </TouchableOpacity>

@@ -464,7 +464,7 @@ export default StyleSheet.create({
         padding: 40,
         margin: 65,
         borderRadius:10,
-        height: 510,
+        height: 560,
         width: 360,
         shadowOpacity: 0.10,
         shadowRadius: 10,
@@ -473,28 +473,39 @@ export default StyleSheet.create({
     subscriptionOptions: {
         flex: 1,
         backgroundColor: SECONDARY_COLOR,
-        borderWidth: 1,
-        paddingTop: 5,
+        paddingTop: 4,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         borderBottomRightRadius: 20,
         borderBottomLeftRadius: 20,
         margin: 10,
-        alignItems: 'center',
+        alignItems: "center",
     },
     textTitles : {
         fontSize: 20,
     },
     textDescription: {
         fontSize: 15,
-        margin: 5
+        margin: 1
     },
     addRadioButton: {
         backgroundColor: PRIMARY_COLOR
     },
     addSubscriptionButton: {
-        margin: 10,
-        justifyContent: 'center',
+        marginHorizontal: 15,
         alignItems: 'center',
+        justifyContent: 'center',
+        alignContent: 'space-between',
+        height: 40,
+        marginTop: 10,
+        marginBottom: 80,
+        borderRadius: 10,
+        flexBasis: '50%',
+    },
+    addSubscriptionButtonContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
     }
 });
