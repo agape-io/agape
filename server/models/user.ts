@@ -31,8 +31,14 @@ const UserModel = new Schema({
     pushNotifications: Boolean,
     membershipType: String,
   },
-  swipedLeft: [{ type: String }],
-  swipedRight: [{ type: String }],
+  swipedLeft: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
+  swipedRight: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
 }, {
   timestamps: true,
 });
