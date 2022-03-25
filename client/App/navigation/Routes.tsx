@@ -36,6 +36,7 @@ import {
   PRIMARY_COLOR
 } from '../../assets/styles';
 import { ProfileModal } from '../components';
+import { SubscriptionModal } from '../components';
 
 interface State {
   loading?: boolean;
@@ -151,6 +152,11 @@ const Routes: FC<State> = () => {
               <Screen
                 name="ProfileModal"
                 component={ProfileModal}
+                options={{ headerTransparent: true, headerTitle: '' }}
+              />
+              <Screen
+                name="SubscriptionModal"
+                component={SubscriptionModal}
                 options={{ headerTransparent: true, headerTitle: '' }}
               />
             </Group>

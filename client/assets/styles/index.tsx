@@ -337,10 +337,10 @@ export default StyleSheet.create({
         alignItems: "center",
         marginLeft: 10,
         marginRight: 10,
-        height: 50,
+        height: 40,
         borderRadius: 25,
         backgroundColor: SECONDARY_COLOR,
-        paddingHorizontal: 20
+        paddingHorizontal: 20,
     },
 
     // MENU
@@ -411,6 +411,7 @@ export default StyleSheet.create({
      * Profile Modal
      */
     modalContainer: {
+        margin: 10,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -452,5 +453,48 @@ export default StyleSheet.create({
         marginBottom: 80,
         borderRadius: 10,
         flexBasis: '40%',
+    },
+    /**
+    * Subscription Modal
+    */
+    subscriptionContainer: {
+        flex: 1,
+        justifyContent: "space-between",
+        backgroundColor: WHITE,
+        padding: 40,
+        margin: 65,
+        borderRadius:10,
+        height: 500,
+        width: 350,
+        shadowOpacity: 0.10,
+        shadowRadius: 10,
+        shadowColor: BLACK,
+    },
+    subscriptionOptions: {
+        flex: 1,
+        backgroundColor: SECONDARY_COLOR,
+        borderWidth: 1,
+        paddingTop: 5,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        borderBottomRightRadius: 20,
+        borderBottomLeftRadius: 20,
+        margin: 10,
+        alignItems: 'center',
+    },
+    textTitles : {
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    addSubscriptionButton: {
+        margin: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    subscriptionButton: {
+        justifyContent: 'center',
+        bottom:0,
+        left:0,
     }
+
 });
