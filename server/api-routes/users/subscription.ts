@@ -148,6 +148,26 @@ router.post('/subscribe', async (req: Request, res: Response) => {
  */
 router.post('/cancel', async (req: Request, res: Response) => {
   const { userId } = req.body;
+  if (userId) {
+    await connect();
+    await User.findById({
+      _id: userId,
+    })
+      .then((user) => {
+        const { settings } = user;
+        settings.billingDate = null;
+        user.save();
+        res.status(201).send({
+          status: 201,
+          message: 'Subscription canceled!',
+        });
+      });
+  } else {
+    res.status(500).send({
+      status: 500,
+      message: 'Missing User Id!',
+    });
+  }
 });
 
 export default router;
