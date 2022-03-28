@@ -1,5 +1,5 @@
 /**
- * Main Handler for Routes
+ * Routes Handler
  */
 import React, { FC } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
@@ -27,7 +27,8 @@ import {
   Discover,
   Profile,
   Chat,
-  Message
+  Message,
+  Settings
 } from '../pages';
 
 // Styles
@@ -87,7 +88,7 @@ const HomeTabs: FC = () => {
           )
         }}
       />
-       <Screen
+      <Screen
         name="Chat"
         component={Messaging}
         options={{
@@ -148,6 +149,7 @@ const Routes: FC<State> = () => {
         {authData ? (
           <>
             <Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
+            <Screen name="Settings" component={Settings} options={{ headerShown: true }} />
             <Group screenOptions={{ presentation: 'modal' }}>
               <Screen
                 name="ProfileModal"
@@ -162,6 +164,7 @@ const Routes: FC<State> = () => {
             </Group>
           </>
         ) : (
+          // <Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
           <Screen name="Auth" component={Auth} options={{ headerShown: false }} />
         )}
       </Navigator>

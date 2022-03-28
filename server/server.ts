@@ -1,8 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import { Server } from 'socket.io';
-import { createServer } from 'http';
 
 import { env } from './config/env';
 
@@ -21,7 +19,7 @@ import { authenticateToken } from './middleware/auth';
 import { notFound, errorHandler } from './middleware/error';
 
 const app = express();
-const { PORT } = env;
+const { ENDPOINT, PORT } = env;
 
 // CORS Middleware
 app.use(cors());
@@ -49,20 +47,46 @@ app.use('/swipe', authenticateToken, swipeRouter);
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Agape Server is listening on port ${PORT}!`);
 });
 
-// Socket.io config
-const httpServer = createServer(app)
-const io = new Server(httpServer, {
+const io = require('socket.io')(server, {
   pingTimeout: 60000,
   cors: {
-    origin: `http://localhost:${3000}`
-  }
+    origin: ENDPOINT,
+  },
 });
 
-io.on("connection", (socket:any) => {
-  console.log("Connected to socket.io!");
-})
+io.on('connection', (socket) => {
+  console.log('connected to socket.io');
 
+  socket.on('setup', (userId) => {
+    socket.join(userId);
+    socket.emit('connected');
+  });
+
+  socket.on('join chat', (room) => {
+    socket.join(room);
+    console.log(`User joined chat: ${room}`);
+  });
+
+  socket.on('new message', (newMessageRecieved) => {
+    const { chat } = newMessageRecieved;
+    if (!chat.users) return console.log('chat.users not defined');
+    chat.users.forEach((user) => {
+      if (user._id == newMessageRecieved.sender._id) return;
+      socket.in(user._id).emit('message recieved', newMessageRecieved);
+    });
+  });
+
+  socket.on('typing', (room) => socket.in(room).emit('typing'));
+  socket.on('stop typing', (room) => socket.in(room).emit('stop typing'));
+
+  socket.off('setup', () => {
+    console.log('USER DISCONNECTED');
+    // @ts-ignore
+    // userId is used from the socket.on("setup") event
+    socket.leave(userId);
+  });
+});

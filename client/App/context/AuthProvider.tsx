@@ -1,13 +1,12 @@
 /**
  * Auth Provider for authentication
- * 
  */
 import React, { createContext, useState, useEffect, FC, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 // Types
-import { AuthContextData, AuthData } from '../types';
+import { AuthContextData } from '../types';
 
 // API
 import { API_URL } from '@env';
@@ -16,7 +15,8 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider:FC = ({ children }) => {
   const [authData, setAuthData] = useState<any>();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<any>(true);
+  const [notification, setNotification] = useState<any>();
 
   useEffect(() => {
     loadStorageData();
@@ -63,7 +63,9 @@ const AuthProvider:FC = ({ children }) => {
         authData,
         signIn,
         signOut,
-        loading
+        loading,
+        notification,
+        setNotification,
       }}
     >
       {children}

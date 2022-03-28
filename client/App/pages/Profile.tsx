@@ -1,3 +1,6 @@
+/**
+ * Profile Screen
+ */
 import React, {
   FC,
   useCallback,
@@ -22,7 +25,7 @@ import { getProfile } from '../utils';
 
 export interface ProfileProps {
   navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Discover'>,
-  NativeStackNavigationProp<RootNavigatorParamsList>>;
+    NativeStackNavigationProp<RootNavigatorParamsList>>;
 }
 
 const Profile: FC<ProfileProps> = ({ navigation }) => {
@@ -69,32 +72,32 @@ const Profile: FC<ProfileProps> = ({ navigation }) => {
       <ScrollView style={styles.containerProfile}>
         {profile ? (
           <>
-          <ImageBackground source={{ uri: profile.photo }} style={styles.photo}>
-          <View style={styles.top}>
-            <TouchableOpacity>
-              <Icon
-                name="chevron-back"
-                size={20}
-                color={WHITE}
-                style={styles.topIconLeft}
-              />
-            </TouchableOpacity>
-            </View>
-            </ImageBackground>  
+            <ImageBackground source={{ uri: profile.photo }} style={styles.photo}>
+              <View style={styles.top}>
+                <TouchableOpacity>
+                  <Icon
+                    name="chevron-back"
+                    size={20}
+                    color={WHITE}
+                    style={styles.topIconLeft}
+                  />
+                </TouchableOpacity>
+              </View>
+            </ImageBackground>
             <ProfileItem
               data={profile}
-            /> 
+            />
           </>
         ) : (
-            <>
-              <ImageBackground source={{ uri: profile.photo }} style={styles.photo} />
-              <View style={styles.top} />
-              <ProfileItem
-                data={profile}
-              /> 
-            </>   
-        )} 
-      
+          <>
+            <ImageBackground source={{ uri: profile.photo }} style={styles.photo} />
+            <View style={styles.top} />
+            <ProfileItem
+              data={profile}
+            />
+          </>
+        )}
+
         <View style={styles.actionsProfile}>
           <TouchableOpacity style={styles.circledButton} onPress={() => navigation.navigate('ProfileModal')}>
             <Icon name="pencil-outline" size={30} color={WHITE} />
@@ -105,7 +108,7 @@ const Profile: FC<ProfileProps> = ({ navigation }) => {
           <Icon name="body-outline" size={30} color={WHITE} />
           </TouchableOpacity> */}
 
-          <TouchableOpacity style={styles.circledButton}>
+          <TouchableOpacity style={styles.circledButton} onPress={() => navigation.navigate('Settings')}>
             <Icon name="settings-outline" size={30} color={WHITE} />
           </TouchableOpacity>
 

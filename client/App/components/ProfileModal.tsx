@@ -1,3 +1,6 @@
+/**
+ * Profile Modal Component
+ */
 import React, {
   FC,
   useState,
