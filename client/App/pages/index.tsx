@@ -9,6 +9,8 @@ import Discover from './Discover';
 import Profile from './Profile';
 import Chat from './Chat';
 import Message from './Message';
+import Settings from './Settings';
+
 
 export {
   SignUp,
@@ -19,4 +21,5 @@ export {
   Profile,
   Chat,
   Message,
+  Settings
 };

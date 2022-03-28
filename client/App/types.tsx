@@ -30,6 +30,7 @@ type RootNavigatorParamsList = {
   Home: NavigatorScreenParams<HomeTabNavigatorParamList>
   ProfileModal: undefined;
   Chat: NavigatorScreenParams<MessageStackParamList>;
+  Settings: undefined;
 }
 
 type AuthContextData = {
@@ -59,6 +60,10 @@ type ProfileItemT = {
   data: any;
 };
 
+type SettingsScreenT = {
+  data: any;
+};
+
 type MessageT = {
   image: any;
   lastMessage: string;
@@ -74,5 +79,6 @@ export {
   CardItemT,
   IconT,
   ProfileItemT,
+  SettingsScreenT
   MessageT
 }

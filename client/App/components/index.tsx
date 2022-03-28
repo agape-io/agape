@@ -7,6 +7,8 @@ import City from './City';
 import Filters from './Filters';
 import ProfileItem from './ProfileItem';
 import ProfileModal from './ProfileModal';
+import { Chevron } from './Chevron';
+import { SettingsScreen, SettingsData } from 'react-native-settings-screen';
 import RecentMessage from './RecentMessage';
 import AllChats from './AllChats';
 import ThreadRow from './ThreadRow';
@@ -19,6 +21,9 @@ export {
   Filters,
   ProfileItem,
   ProfileModal,
+  Chevron,
+  SettingsScreen,
+  SettingsData,
   RecentMessage,
   AllChats,
   ThreadRow,
