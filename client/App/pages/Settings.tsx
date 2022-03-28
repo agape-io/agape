@@ -28,6 +28,7 @@ import { useAuth } from '../navigation';
 
 
 const fontFamily = Platform.OS === 'ios' ? 'Avenir' : 'sans-serif'
+import styles from "../../assets/styles";
 
 
 export interface SettingsProps {
@@ -36,10 +37,6 @@ export interface SettingsProps {
 }
 
 const Settings: FC<SettingsProps> = ({ navigation }) => {
-  // state = {
-  //   refreshing: false,
-  // }
-  // const [chat, setChat] = useState({ message: '', sid: '', time: '', rid: '' });
   const [refreshing] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -50,7 +47,6 @@ const Settings: FC<SettingsProps> = ({ navigation }) => {
   const settingsData: SettingsData = [
     {
       type: 'SECTION',
-      // header: 'General'.toUpperCase(),
       rows: [
         {
           title: 'Security',
@@ -115,16 +111,8 @@ const Settings: FC<SettingsProps> = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.settingsContainer}>
       <StatusBar barStyle="light-content" backgroundColor="white" />
-      {/* <View style={styles.navBar}>
-        <Text style={styles.navBarTitle}>Settings</Text>
-      </View> */}
-      {/* <TouchableOpacity
-        onPress={() => navigation.navigate('Profile')}
-      >
-        <Text>GO BACK</Text>
-      </TouchableOpacity> */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -163,65 +151,3 @@ const Settings: FC<SettingsProps> = ({ navigation }) => {
 export default Settings;
 
 const statusBarHeight = Platform.OS === 'ios' ? 35 : 0
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  navBar: {
-    backgroundColor: 'white',
-    height: 55 + statusBarHeight,
-    alignSelf: 'stretch',
-    paddingTop: statusBarHeight,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  navBarTitle: {
-    color: 'black',
-    fontFamily,
-    fontSize: 17,
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2
-  },
-  buttonOpen: {
-    backgroundColor: "#F194FF",
-  },
-  buttonClose: {
-    backgroundColor: "#2196F3",
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center"
-  }
-})
