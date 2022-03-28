@@ -21,7 +21,7 @@ import {
 } from '../types';
 
 // API
-import { useAuth } from '../navigation';
+import { useAuth } from '../context';
 
 // Styles
 import styles from "../../assets/styles";
@@ -61,7 +61,7 @@ const SignIn: FC<SignInProps> = ({ navigation }) => {
       .catch(e => {
         //navigation.navigate("Auth", { screen: "SignIn" });
         console.log(e.message);
-        setErrorMessage(e.message);
+        setErrorMessage(e.response.data.message);
         isError(true);
       })
       .finally(() => {

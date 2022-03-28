@@ -7,9 +7,12 @@ import City from './City';
 import Filters from './Filters';
 import ProfileItem from './ProfileItem';
 import ProfileModal from './ProfileModal';
-import Message from './MostRecentMessage';
 import { Chevron } from './Chevron';
 import { SettingsScreen, SettingsData } from 'react-native-settings-screen';
+import RecentMessage from './RecentMessage';
+import AllChats from './AllChats';
+import ThreadRow from './ThreadRow';
+import SingleMessage from './SingleMessage';
 
 export {
   Icon,
@@ -18,8 +21,11 @@ export {
   Filters,
   ProfileItem,
   ProfileModal,
-  Message,
   Chevron,
   SettingsScreen,
   SettingsData
+  RecentMessage,
+  AllChats,
+  ThreadRow,
+  SingleMessage
 };

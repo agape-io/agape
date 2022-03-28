@@ -1,8 +1,7 @@
 /**
- * Main Handler for Routes
+ * Routes Handler
  */
 import React, { FC } from 'react';
-import { Image, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -13,11 +12,11 @@ import {
   AuthNavigatorParamList,
   RootNavigatorParamsList,
   HomeTabNavigatorParamList,
-  MessageNavigatorParamList
+  MessageStackParamList
 } from '../types';
 
 // Stacks
-import { useAuth } from "../navigation";
+import { useAuth } from "../context";
 
 // Screens
 import {
@@ -47,7 +46,7 @@ interface State {
 const RootStack = createNativeStackNavigator<RootNavigatorParamsList>();
 const HomeTabStack = createMaterialBottomTabNavigator<HomeTabNavigatorParamList>();
 const AuthStack = createNativeStackNavigator<AuthNavigatorParamList>();
-const MessageStack = createNativeStackNavigator<MessageNavigatorParamList>();
+const MessageStack = createNativeStackNavigator<MessageStackParamList>();
 
 const Messaging: FC = () => {
   const { Navigator, Screen } = MessageStack;
@@ -63,7 +62,7 @@ const Messaging: FC = () => {
       <Screen
         name="Message"
         component={Message}
-      //options={({ route }) => ({ title: route.params.user })}
+        options={({ route }) => ({ title: route.params?.name || "Message"})}
       />
     </Navigator>
   )
@@ -118,15 +117,9 @@ const HomeTabs: FC = () => {
           )
         }}
       />
-
-      {/* <Screen
-        name="Message"
-        component={Message}
-      /> */}
     </Navigator>
   )
 }
-
 
 const Auth: FC = () => {
   const { Navigator, Screen } = AuthStack;
@@ -136,8 +129,6 @@ const Auth: FC = () => {
       <Screen name="SignUp" component={SignUp} />
       <Screen name="SignIn" component={SignIn} />
       <Screen name="Landing" component={Landing} />
-      {/* <Screen name="Message" component={Message} /> */}
-
     </Navigator>
   )
 }
