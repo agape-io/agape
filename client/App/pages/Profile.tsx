@@ -103,12 +103,17 @@ const Profile: FC<ProfileProps> = ({ navigation }) => {
             <Icon name="pencil-outline" size={30} color={WHITE} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.roundedButton}>
-            <Text style={styles.textButton}>Change Your Preferences</Text>
-          </TouchableOpacity>
+          {/* <TouchableOpacity style={styles.roundedButton}>
+          <Text>Change Preferences</Text>
+          <Icon name="body-outline" size={30} color={WHITE} />
+          </TouchableOpacity> */}
 
           <TouchableOpacity style={styles.circledButton} onPress={() => navigation.navigate('Settings')}>
             <Icon name="settings-outline" size={30} color={WHITE} />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.circledButton} onPress={() => navigation.navigate('SubscriptionModal')}>
+            <Icon name="card-outline" size={30} color={WHITE} />
           </TouchableOpacity>
 
         </View>

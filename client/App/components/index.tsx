@@ -7,6 +7,7 @@ import City from './City';
 import Filters from './Filters';
 import ProfileItem from './ProfileItem';
 import ProfileModal from './ProfileModal';
+import SubscriptionModal from './SubscriptionModal';
 import { Chevron } from './Chevron';
 import { SettingsScreen, SettingsData } from 'react-native-settings-screen';
 import RecentMessage from './RecentMessage';
@@ -21,6 +22,7 @@ export {
   Filters,
   ProfileItem,
   ProfileModal,
+  SubscriptionModal,
   Chevron,
   SettingsScreen,
   SettingsData,

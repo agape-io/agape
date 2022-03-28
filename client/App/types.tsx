@@ -29,6 +29,7 @@ type RootNavigatorParamsList = {
   Auth: NavigatorScreenParams<AuthNavigatorParamList>
   Home: NavigatorScreenParams<HomeTabNavigatorParamList>
   ProfileModal: undefined;
+  SubscriptionModal: undefined;
   Chat: NavigatorScreenParams<MessageStackParamList>;
   Settings: undefined;
 }
@@ -79,6 +80,6 @@ export {
   CardItemT,
   IconT,
   ProfileItemT,
-  SettingsScreenT
+  SettingsScreenT,
   MessageT
 }

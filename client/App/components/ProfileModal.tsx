@@ -17,7 +17,7 @@ import {
   ScrollView,
 } from 'react-native';
 import axios from 'axios';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { MaterialCommunityIcons } from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as ImagePicker from 'expo-image-picker';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -116,7 +116,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
   const CancelButton = ({ onPress }:any) => {
     return (
       <TouchableOpacity onPress={onPress}>
-        <MaterialCommunityIcons name="arrow-left" size={26} color="black" />
+        <MaterialCommunityIcons name="arrow-left" size={26} color="black"/>
       </TouchableOpacity>
     );
   }
