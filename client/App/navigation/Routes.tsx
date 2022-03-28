@@ -28,7 +28,8 @@ import {
   Discover,
   Profile,
   Chat,
-  Message
+  Message,
+  Settings
 } from '../pages';
 
 // Styles
@@ -62,7 +63,7 @@ const Messaging: FC = () => {
       <Screen
         name="Message"
         component={Message}
-        //options={({ route }) => ({ title: route.params.user })}
+      //options={({ route }) => ({ title: route.params.user })}
       />
     </Navigator>
   )
@@ -87,7 +88,7 @@ const HomeTabs: FC = () => {
           )
         }}
       />
-       <Screen
+      <Screen
         name="Chat"
         component={Messaging}
         options={{
@@ -117,7 +118,7 @@ const HomeTabs: FC = () => {
           )
         }}
       />
-     
+
       {/* <Screen
         name="Message"
         component={Message}
@@ -156,6 +157,7 @@ const Routes: FC<State> = () => {
         {authData ? (
           <>
             <Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
+            <Screen name="Settings" component={Settings} options={{ headerShown: true }} />
             <Group screenOptions={{ presentation: 'modal' }}>
               <Screen
                 name="ProfileModal"
@@ -165,6 +167,7 @@ const Routes: FC<State> = () => {
             </Group>
           </>
         ) : (
+          // <Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
           <Screen name="Auth" component={Auth} options={{ headerShown: false }} />
         )}
       </Navigator>

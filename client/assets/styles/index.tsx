@@ -405,7 +405,7 @@ export default StyleSheet.create({
     authError: {
         color: ERROR_MESSAGE,
         fontSize: 20,
-        paddingTop:10
+        paddingTop: 10
     },
     /**
      * Profile Modal
@@ -453,4 +453,5 @@ export default StyleSheet.create({
         borderRadius: 10,
         flexBasis: '40%',
     }
+
 });

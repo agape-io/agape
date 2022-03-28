@@ -8,6 +8,8 @@ import Filters from './Filters';
 import ProfileItem from './ProfileItem';
 import ProfileModal from './ProfileModal';
 import Message from './MostRecentMessage';
+import { Chevron } from './Chevron';
+import { SettingsScreen, SettingsData } from 'react-native-settings-screen';
 
 export {
   Icon,
@@ -16,5 +18,8 @@ export {
   Filters,
   ProfileItem,
   ProfileModal,
-  Message
+  Message,
+  Chevron,
+  SettingsScreen,
+  SettingsData
 };
