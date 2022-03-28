@@ -13,28 +13,27 @@ import {
 } from 'react-native'
 // import Icon from 'react-native-vector-icons/Entypo'
 
-import { SettingsScreen, SettingsData, Chevron } from '../components'
+import { SettingsScreen, SettingsData } from '../components'
 
 import {
   HomeTabNavigatorParamList,
   RootNavigatorParamsList,
-  MessageStackParamList
 } from "../types";
 import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-import { useAuth } from '../navigation';
-
+import { useAuth } from '../context';
 
 const fontFamily = Platform.OS === 'ios' ? 'Avenir' : 'sans-serif'
 import styles from "../../assets/styles";
-
 
 export interface SettingsProps {
   navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Settings'>,
     NativeStackNavigationProp<RootNavigatorParamsList>>;
 }
+
+const statusBarHeight = Platform.OS === 'ios' ? 35 : 0
 
 const Settings: FC<SettingsProps> = ({ navigation }) => {
   const [refreshing] = useState([]);
@@ -149,5 +148,3 @@ const Settings: FC<SettingsProps> = ({ navigation }) => {
 };
 
 export default Settings;
-
-const statusBarHeight = Platform.OS === 'ios' ? 35 : 0

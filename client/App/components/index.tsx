@@ -23,7 +23,7 @@ export {
   ProfileModal,
   Chevron,
   SettingsScreen,
-  SettingsData
+  SettingsData,
   RecentMessage,
   AllChats,
   ThreadRow,

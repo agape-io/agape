@@ -51,7 +51,7 @@ export class SettingsScreen extends React.Component<Props> {
 }
 
 const SettingsScrollView = styled.ScrollView`
-  flex: 1;
+  flex: 1; 
   align-self: stretch;
   background-color: hsl(0, 0%, 97%);
 `
