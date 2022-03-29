@@ -216,6 +216,54 @@ const getMessages = async (chatId: string, token: string) => {
   });
 }
 
+/**
+ * Send Notifications
+ * 
+ * @param userId 
+ * @param chatId 
+ * @param token 
+ */
+const postNotification = async(userId: string, chatId: string, text: string,token: string) => {
+  return axios.post(`${API_URL}/notifcation`, {
+    chatId, userId, text, token
+  });
+}
+
+/**
+ * Get User Notifications
+ * 
+ * Checks whether or not the notifs are read
+ * 
+ * @param userId 
+ * @param token 
+ * 
+ * @returns notification id
+ */
+const getNotifications = async(userId: string, token: string) => {
+  return axios.get(`${API_URL}/notification`, {
+    headers: {
+      "x-access-token": token,
+      "content-type": "application/json"
+    },
+    params: {
+      userId,
+    }
+  });
+}
+
+/**
+ * Notification is read
+ * 
+ * @param notificationId 
+ * @param token 
+ */
+const isReadNotification = async (notificationId: string, token: string) => {
+  return axios.put(`${API_URL}/notification/read`, {
+    notificationId,
+    token
+  });
+}
+ 
 export {
   getProfile,
   updateProfile,
@@ -224,5 +272,8 @@ export {
   getUserChats,
   createChat,
   getMessages,
-  postMessage
+  postMessage,
+  postNotification,
+  getNotifications,
+  isReadNotification
 }
