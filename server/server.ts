@@ -14,6 +14,7 @@ import settingsRouter from './api-routes/users/settings';
 import swipeRouter from './api-routes/users/swipe';
 import chatRouter from './api-routes/chats/chat';
 import messageRouter from './api-routes/chats/message';
+import notificationRouter from './api-routes/chats/notification';
 
 import { authenticateToken } from './middleware/auth';
 import { notFound, errorHandler } from './middleware/error';
@@ -35,6 +36,7 @@ app.use('/signout', signoutRouter);
 // chat routes
 app.use('/chats', authenticateToken, chatRouter);
 app.use('/messages', authenticateToken, messageRouter);
+app.use('/notification', authenticateToken, notificationRouter);
 
 // user routes
 app.use('/discover', authenticateToken, discoverRouter);
