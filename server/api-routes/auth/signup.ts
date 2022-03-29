@@ -35,7 +35,7 @@ const router = Router();
  * email: string
  * password: string
  * verifyPassword: string
- * 
+ *
  * @apiVersion 0.1.0
  */
 router.post('/email', async (req: Request, res: Response) => {

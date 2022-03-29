@@ -18,7 +18,7 @@ const router = Router();
  * @body
  * userId: string
  * matchUserId: string
- * 
+ *
  * @apiVersion 0.1.0
  */
 router.put('/left', async (req: Request, res: Response) => {
@@ -69,7 +69,7 @@ router.put('/left', async (req: Request, res: Response) => {
  * @body
  * userId: string
  * matchUserId: string
- * 
+ *
  * @apiVersion 0.1.0
  */
 router.put('/right', async (req: Request, res: Response) => {
