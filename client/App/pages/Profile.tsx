@@ -97,7 +97,6 @@ const Profile: FC<ProfileProps> = ({ navigation }) => {
             />
           </>
         )}
-
         <View style={styles.actionsProfile}>
           <TouchableOpacity style={styles.circledButton} onPress={() => navigation.navigate('ProfileModal')}>
             <Icon name="pencil-outline" size={30} color={WHITE} />

@@ -109,6 +109,9 @@ const createProfile = async (
  * @param hobbies 
  * @param photo
  * @param sexuality
+ * 
+ * When calling this function, use a then() and a 
+ * catch() to get the response.
  */
 const updateProfile = async (
   userId: string,

@@ -2,6 +2,7 @@
  * Routes Handler
  */
 import React, { FC } from 'react';
+import { Image, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -88,6 +89,16 @@ const HomeTabs: FC = () => {
           )
         }}
       />
+       <Screen
+        name="Chat"
+        component={Messaging}
+        options={{
+          tabBarLabel: 'Chat',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="message-outline" color={color} size={26} />
+          )
+        }}
+      />
       <Screen
         name="Chat"
         component={Messaging}
@@ -118,9 +129,15 @@ const HomeTabs: FC = () => {
           )
         }}
       />
+     
+      {/* <Screen
+        name="Message"
+        component={Message}
+      /> */}
     </Navigator>
   )
 }
+
 
 const Auth: FC = () => {
   const { Navigator, Screen } = AuthStack;
@@ -130,6 +147,8 @@ const Auth: FC = () => {
       <Screen name="SignUp" component={SignUp} />
       <Screen name="SignIn" component={SignIn} />
       <Screen name="Landing" component={Landing} />
+      {/* <Screen name="Message" component={Message} /> */}
+
     </Navigator>
   )
 }
