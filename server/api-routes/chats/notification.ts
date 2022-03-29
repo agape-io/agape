@@ -30,7 +30,7 @@ router.post('/', async (req: Request, res: Response) => {
     const newNotification = {
       chat: chatId,
       user: userId,
-      text: text,
+      text,
       read: false,
     };
     let notification = await Notification.create(newNotification);
@@ -53,7 +53,7 @@ router.post('/', async (req: Request, res: Response) => {
  * @apiName Read Notification
  * @apiGroup Chats
  * @apiDescription Read notification
- * 
+ *
  * @apiSuccess (201)
  *
  * @apiSampleRequest PUT /
@@ -63,7 +63,7 @@ router.post('/', async (req: Request, res: Response) => {
  *
  * @apiVersion 0.1.0
  */
- router.put('/read', async (req: Request, res: Response) => {
+router.put('/read', async (req: Request, res: Response) => {
   const { notificationId } = req.body;
   if (notificationId) {
     await connect();
@@ -107,8 +107,8 @@ router.get('/', async (req: Request, res: Response) => {
       .then((results) => {
         const notifs = results.filter((notif) => {
           if (all) return true;
-          else if (!notif.read) return true; 
-          else return false;
+          if (!notif.read) return true;
+          return false;
         });
         res.status(200).send(notifs);
       });
