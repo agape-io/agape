@@ -8,8 +8,14 @@ type AuthNavigatorParamList = {
 }
 
 type MessageStackParamList = {
-  Message: undefined;
-  Messages: undefined;
+  Message: {
+    name?: any;
+    chatId: any;
+  };
+  Messages: {
+    thread?: string;
+    id?: any;
+  };
 }
 
 type HomeTabNavigatorParamList = {
@@ -23,22 +29,19 @@ type RootNavigatorParamsList = {
   Auth: NavigatorScreenParams<AuthNavigatorParamList>
   Home: NavigatorScreenParams<HomeTabNavigatorParamList>
   ProfileModal: undefined;
+  SubscriptionModal: undefined;
   Chat: NavigatorScreenParams<MessageStackParamList>;
+  Settings: undefined;
 }
 
 type AuthContextData = {
-  authData: AuthData;
+  authData: any;
   loading: boolean;
   signIn(email: string, password: string): Promise<void>;
   signOut(): Promise<void>;
   children?: React.ReactNode;
-}
-
-type AuthData = {
-  token: string,
-  email: string,
-  userId: string,
-  isOnline: boolean,
+  notification: any;
+  setNotification: any;
 }
 
 type CardItemT = {
@@ -58,7 +61,11 @@ type ProfileItemT = {
   data: any;
 };
 
-export type MessageT = {
+type SettingsScreenT = {
+  data: any;
+};
+
+type MessageT = {
   image: any;
   lastMessage: string;
   name: string;
@@ -70,8 +77,9 @@ export {
   MessageStackParamList,
   AuthNavigatorParamList,
   AuthContextData,
-  AuthData,
   CardItemT,
   IconT,
-  ProfileItemT
+  ProfileItemT,
+  SettingsScreenT,
+  MessageT
 }

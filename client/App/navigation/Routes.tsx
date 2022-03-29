@@ -1,5 +1,5 @@
 /**
- * Main Handler for Routes
+ * Routes Handler
  */
 import React, { FC } from 'react';
 import { Image, TouchableOpacity } from 'react-native';
@@ -13,11 +13,11 @@ import {
   AuthNavigatorParamList,
   RootNavigatorParamsList,
   HomeTabNavigatorParamList,
-  MessageNavigatorParamList
+  MessageStackParamList
 } from '../types';
 
 // Stacks
-import { useAuth } from "../navigation";
+import { useAuth } from "../context";
 
 // Screens
 import {
@@ -28,7 +28,8 @@ import {
   Discover,
   Profile,
   Chat,
-  Message
+  Message,
+  Settings
 } from '../pages';
 
 // Styles
@@ -37,6 +38,7 @@ import {
   PRIMARY_COLOR
 } from '../../assets/styles';
 import { ProfileModal } from '../components';
+import { SubscriptionModal } from '../components';
 
 interface State {
   loading?: boolean;
@@ -46,7 +48,7 @@ interface State {
 const RootStack = createNativeStackNavigator<RootNavigatorParamsList>();
 const HomeTabStack = createMaterialBottomTabNavigator<HomeTabNavigatorParamList>();
 const AuthStack = createNativeStackNavigator<AuthNavigatorParamList>();
-const MessageStack = createNativeStackNavigator<MessageNavigatorParamList>();
+const MessageStack = createNativeStackNavigator<MessageStackParamList>();
 
 const Messaging: FC = () => {
   const { Navigator, Screen } = MessageStack;
@@ -62,7 +64,7 @@ const Messaging: FC = () => {
       <Screen
         name="Message"
         component={Message}
-        //options={({ route }) => ({ title: route.params.user })}
+        options={({ route }) => ({ title: route.params?.name || "Message"})}
       />
     </Navigator>
   )
@@ -88,6 +90,16 @@ const HomeTabs: FC = () => {
         }}
       />
        <Screen
+        name="Chat"
+        component={Messaging}
+        options={{
+          tabBarLabel: 'Chat',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="message-outline" color={color} size={26} />
+          )
+        }}
+      />
+      <Screen
         name="Chat"
         component={Messaging}
         options={{
@@ -156,15 +168,22 @@ const Routes: FC<State> = () => {
         {authData ? (
           <>
             <Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
+            <Screen name="Settings" component={Settings} options={{ headerShown: true }} />
             <Group screenOptions={{ presentation: 'modal' }}>
               <Screen
                 name="ProfileModal"
                 component={ProfileModal}
                 options={{ headerTransparent: true, headerTitle: '' }}
               />
+              <Screen
+                name="SubscriptionModal"
+                component={SubscriptionModal}
+                options={{ headerTransparent: true, headerTitle: '' }}
+              />
             </Group>
           </>
         ) : (
+          // <Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
           <Screen name="Auth" component={Auth} options={{ headerShown: false }} />
         )}
       </Navigator>

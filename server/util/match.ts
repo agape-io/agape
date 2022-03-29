@@ -98,8 +98,5 @@ export const generatePercentage = (user1, user2, romantic) => {
   return percentage;
 };
 
-export const sortByPercentage = (users) => {
-  return users.sort((user1, user2) => (user1.percentage > user2.percentage) ? -1 : 1);
-};
 
-
+export const sortByPercentage = (users) => users.sort((user1, user2) => ((user1.percentage > user2.percentage) ? -1 : 1));

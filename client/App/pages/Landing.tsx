@@ -1,7 +1,6 @@
 /**
- * Landing Page
+ * Landing Screen
  */
-// Packages
 import React, { FC } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
