@@ -212,12 +212,12 @@ const getMessages = async (chatId: string, token: string) => {
 /**
  * Send Notifications
  * 
- * @param userId 
  * @param chatId 
+ * @param userId 
  * @param token 
  */
-const postNotification = async(userId: string, chatId: string, text: string,token: string) => {
-  return axios.post(`${API_URL}/notifcation`, {
+const postNotification = async(chatId: string, userId: string, text: string, token: string) => {
+  return axios.post(`${API_URL}/notification`, {
     chatId, userId, text, token
   });
 }

@@ -28,7 +28,6 @@ const SingleMessage = ({ route, userData }: any) => {
   const [messages, setMessages] = useState<any>([]);
   const [loading, setLoading] = useState<any>(false);
   const [socketConnected, isSocketConnected] = useState<boolean>(false);
-
   const { notification, setNotification } = useAuth();
   const { token, userId } = userData;
   const { chatId } = route.params;
@@ -87,7 +86,9 @@ const SingleMessage = ({ route, userData }: any) => {
   useEffect(() => {
     socket.on('message recieved', (newMessageRecieved: any) => {
       if (chatId !== newMessageRecieved.chat._id) {
+        console.log('am i here?');
         if (!notification.includes(newMessageRecieved)) {
+          console.log('i wanna be here');
           setNotification([newMessageRecieved, ...notification]);
         }
       } else {
@@ -125,20 +126,20 @@ const SingleMessage = ({ route, userData }: any) => {
         setMessages((previousMessages: any) => GiftedChat.append(previousMessages, newMessage));
         setLoading(false);
       })
-      .then(() => {
-        // send notification
-        postNotification(userId, chatId, content, token)
-          .then((res: any) => {
-            const { data } = res;
-            console.log('notif sent', data);
-          })
-          .catch((e: any) => {
-            console.error(e.message);
-          });
+      .catch((e: any) => {
+        console.error(e.message);
+      });
+    
+    // send notification
+    postNotification(chatId, userId, content, token)
+      .then((res: any) => {
+        const { data } = res;
+        console.log('notif sent', data);
       })
       .catch((e: any) => {
         console.error(e.message);
       });
+
   }, []);
 
   return (

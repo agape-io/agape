@@ -4,16 +4,14 @@
 import React, {
   useState,
   useRef,
-  useCallback
+  useCallback,
+  useEffect
 } from 'react';
 import {
   FlatList,
   Text
 } from 'react-native';
-import {
-  useNavigation,
-  useFocusEffect
-} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { useAuth } from '../context';
 import {
@@ -25,9 +23,9 @@ import { ThreadRow } from '../components';
 
 const AllChats = ({ navigation }: any) => {
   const [chats, setChats] = useState<any>();
+  const [notificationId, setNotificationId] = useState<any>();
   const isMounted = useRef<any>(null);
 
-  //const navigation = useNavigation();
   const { authData, notification, setNotification } = useAuth();
   const { userId, token } = authData;
 
@@ -36,8 +34,11 @@ const AllChats = ({ navigation }: any) => {
     getNotifications(userId, token)
       .then(res => {
         const { data } = res;
+        console.log('notis', res.data);
         // get notification id
-        console.log('notifs', data);
+        //console.log('notifs retrieved', data);
+        // array of notifs
+        setNotification(data);
       })
       .catch((e: any) => {
         console.error(e.message);
@@ -82,7 +83,6 @@ const AllChats = ({ navigation }: any) => {
           return c;
         });
         // set chats
-        console.log(chatArr);
         setChats(chatArr);
       })
       .catch(e => {
@@ -95,10 +95,12 @@ const AllChats = ({ navigation }: any) => {
   useFocusEffect(
     useCallback(() => {
       fetchChats();
+      fetchNotifications();
       isMounted.current = true;
 
       return () => {
         setChats([]);
+        setNotification([]);
         isMounted.current = false;
       }
     }, [])
