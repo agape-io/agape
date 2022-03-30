@@ -16,21 +16,47 @@ import {
 } from '@react-navigation/native';
 
 import { useAuth } from '../context';
-import { getUserChats, getNotifications } from '../utils';
 import {
-  RecentMessage,
-  ThreadRow
-} from '../components';
+  getUserChats,
+  getNotifications,
+  isReadNotification,
+} from '../utils';
+import { ThreadRow } from '../components';
 
-const AllChats = () => {
+const AllChats = ({ navigation }: any) => {
   const [chats, setChats] = useState<any>();
   const isMounted = useRef<any>(null);
 
-  const navigation = useNavigation();
-
-  const { authData } = useAuth();
+  //const navigation = useNavigation();
+  const { authData, notification, setNotification } = useAuth();
   const { userId, token } = authData;
 
+  // fetch any notifications
+  const fetchNotifications = async () => {
+    getNotifications(userId, token)
+      .then(res => {
+        const { data } = res;
+        // get notification id
+        console.log('notifs', data);
+      })
+      .catch((e: any) => {
+        console.error(e.message);
+      });
+  }
+
+  // check if thread is unread
+  const isThreadUnread = (notificationId: any) => {
+    isReadNotification(notificationId, token)
+      .then((res: any) => {
+        const { data } = res;
+        console.log('isRead', data);
+      })
+      .catch((e: any) => {
+        console.error(e.message);
+      })
+  }
+
+  // fetch all user chats 
   const fetchChats = async () => {
     getUserChats(userId, token)
       .then(res => {
@@ -56,6 +82,7 @@ const AllChats = () => {
           return c;
         });
         // set chats
+        console.log(chatArr);
         setChats(chatArr);
       })
       .catch(e => {
@@ -64,6 +91,7 @@ const AllChats = () => {
       });
   }
   
+  // persist on screen
   useFocusEffect(
     useCallback(() => {
       fetchChats();
@@ -87,15 +115,13 @@ const AllChats = () => {
               onPress={() => navigation.navigate('Message', {
                 chatId: item._id,
                 name: item.latestMessage.chattedUser.profile.name,
+                
               })}
-            >
-              <RecentMessage
-                image={item.latestMessage.chattedUser.profile.photo}
-                name={item.latestMessage.chattedUser.profile.name}
-                latestMessage={item.latestMessage.content}
-                unread={false}
-              />
-            </ThreadRow>
+              image={item.latestMessage.chattedUser.profile.photo}
+              name={item.latestMessage.chattedUser.profile.name}
+              latestMessage={item.latestMessage.content}
+              unread={false}
+            />
           )}
         />
       ) : (

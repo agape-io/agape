@@ -18,7 +18,8 @@ import { API_URL } from '@env';
 import { useAuth } from '../context';
 import {
   getMessages,
-  postMessage
+  postMessage,
+  postNotification
 } from '../utils';
 
 let socket: any;
@@ -27,8 +28,6 @@ const SingleMessage = ({ route, userData }: any) => {
   const [messages, setMessages] = useState<any>([]);
   const [loading, setLoading] = useState<any>(false);
   const [socketConnected, isSocketConnected] = useState<boolean>(false);
-  // const [typing, setTyping] = useState<any>(false);
-  // const [isTyping, setIsTyping] = useState<any>(false);
 
   const { notification, setNotification } = useAuth();
   const { token, userId } = userData;
@@ -97,7 +96,7 @@ const SingleMessage = ({ route, userData }: any) => {
     })
   });
 
-  // calls set mesasges
+  // calls set mesasges and post notification
   const onSend = useCallback((messages = []) => {
     let content = messages[0].text;
     setLoading(true);
@@ -126,6 +125,17 @@ const SingleMessage = ({ route, userData }: any) => {
         setMessages((previousMessages: any) => GiftedChat.append(previousMessages, newMessage));
         setLoading(false);
       })
+      .then(() => {
+        // send notification
+        postNotification(userId, chatId, content, token)
+          .then((res: any) => {
+            const { data } = res;
+            console.log('notif sent', data);
+          })
+          .catch((e: any) => {
+            console.error(e.message);
+          });
+      })
       .catch((e: any) => {
         console.error(e.message);
       });
@@ -134,7 +144,6 @@ const SingleMessage = ({ route, userData }: any) => {
   return (
     <>
       <GiftedChat
-        //renderBubble={()}
         messages={messages}
         onSend={messages => onSend(messages)}
         user={{ _id: userId }}

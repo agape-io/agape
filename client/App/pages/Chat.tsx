@@ -32,7 +32,7 @@ const Chat: FC<ChatProps> = ({ navigation }) => {
         >
             <View style={styles.containerMessages}>
                 {
-                    authData ? <AllChats /> : <ActivityIndicator style={styles.indicator} size="large" color="#F0ABC1" />
+                    authData ? <AllChats navigation={navigation} /> : <ActivityIndicator style={styles.indicator} size="large" color="#F0ABC1" />
                 }
             </View>
         </ImageBackground >

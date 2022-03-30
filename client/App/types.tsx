@@ -65,12 +65,6 @@ type SettingsScreenT = {
   data: any;
 };
 
-type MessageT = {
-  image: any;
-  lastMessage: string;
-  name: string;
-};
-
 export {
   HomeTabNavigatorParamList,
   RootNavigatorParamsList,
@@ -81,5 +75,4 @@ export {
   IconT,
   ProfileItemT,
   SettingsScreenT,
-  MessageT
 }

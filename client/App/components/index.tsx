@@ -8,9 +8,8 @@ import Filters from './Filters';
 import ProfileItem from './ProfileItem';
 import ProfileModal from './ProfileModal';
 import SubscriptionModal from './SubscriptionModal';
-import { Chevron } from './Chevron';
+import Chevron from './Chevron';
 import { SettingsScreen, SettingsData } from 'react-native-settings-screen';
-import RecentMessage from './RecentMessage';
 import AllChats from './AllChats';
 import ThreadRow from './ThreadRow';
 import SingleMessage from './SingleMessage';
@@ -26,7 +25,6 @@ export {
   Chevron,
   SettingsScreen,
   SettingsData,
-  RecentMessage,
   AllChats,
   ThreadRow,
   SingleMessage

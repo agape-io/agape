@@ -119,11 +119,6 @@ const HomeTabs: FC = () => {
           )
         }}
       />
-     
-      {/* <Screen
-        name="Message"
-        component={Message}
-      /> */}
     </Navigator>
   )
 }
