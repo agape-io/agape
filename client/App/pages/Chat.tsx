@@ -6,7 +6,7 @@ import {
     View,
     ImageBackground
 } from 'react-native';
-import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
+import { CompositeNavigationProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ActivityIndicator } from "react-native-paper";
 
@@ -23,7 +23,6 @@ export interface ChatProps {
 
 const Chat: FC<ChatProps> = ({ navigation }) => {
     const { authData } = useAuth();
-
 
     //return jsx to render UI
     return (

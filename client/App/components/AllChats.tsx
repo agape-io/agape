@@ -16,7 +16,7 @@ import {
 } from '@react-navigation/native';
 
 import { useAuth } from '../context';
-import { getUserChats } from '../utils';
+import { getUserChats, getNotifications } from '../utils';
 import {
   RecentMessage,
   ThreadRow
@@ -93,6 +93,7 @@ const AllChats = () => {
                 image={item.latestMessage.chattedUser.profile.photo}
                 name={item.latestMessage.chattedUser.profile.name}
                 latestMessage={item.latestMessage.content}
+                unread={false}
               />
             </ThreadRow>
           )}

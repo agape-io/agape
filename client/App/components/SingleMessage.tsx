@@ -30,7 +30,7 @@ const SingleMessage = ({ route, userData }: any) => {
   // const [typing, setTyping] = useState<any>(false);
   // const [isTyping, setIsTyping] = useState<any>(false);
 
-  const { notification, setNotification } = useAuth().authData;
+  const { notification, setNotification } = useAuth();
   const { token, userId } = userData;
   const { chatId } = route.params;
 
@@ -88,14 +88,16 @@ const SingleMessage = ({ route, userData }: any) => {
   useEffect(() => {
     socket.on('message recieved', (newMessageRecieved: any) => {
       if (chatId !== newMessageRecieved.chat._id) {
-        // give notification
+        if (!notification.includes(newMessageRecieved)) {
+          setNotification([newMessageRecieved, ...notification]);
+        }
       } else {
         setMessages([...messages, newMessageRecieved]);
       }
     })
   });
 
-   // calls set mesasges
+  // calls set mesasges
   const onSend = useCallback((messages = []) => {
     let content = messages[0].text;
     setLoading(true);

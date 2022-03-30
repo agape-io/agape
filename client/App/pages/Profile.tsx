@@ -41,10 +41,9 @@ const Profile: FC<ProfileProps> = ({ navigation }) => {
     getProfile(userId, token)
       .then(res => {
         const { profile } = res.data;
-        console.log(profile);
         setProfile(profile);
       }).catch(e => {
-        console.log(e.message);
+        console.error(e.message);
       });
   }
 

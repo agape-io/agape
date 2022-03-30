@@ -100,16 +100,6 @@ const HomeTabs: FC = () => {
         }}
       />
       <Screen
-        name="Chat"
-        component={Messaging}
-        options={{
-          tabBarLabel: 'Chat',
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="message-outline" color={color} size={26} />
-          )
-        }}
-      />
-      <Screen
         name="Discover"
         component={Discover}
         options={{

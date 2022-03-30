@@ -16,7 +16,7 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 const AuthProvider:FC = ({ children }) => {
   const [authData, setAuthData] = useState<any>();
   const [loading, setLoading] = useState<any>(true);
-  const [notification, setNotification] = useState<any>();
+  const [notification, setNotification] = useState<any>([]);
 
   useEffect(() => {
     loadStorageData();

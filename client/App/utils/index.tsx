@@ -59,9 +59,6 @@ const getProfile = async (userId: string, token: string) => {
  * @param location 
  * @param hobbies 
  * @param photo 
- * 
- * When calling this function, use a then() and a 
- * catch() to get the response.
  */
 const createProfile = async (
   userId: string,
@@ -109,9 +106,6 @@ const createProfile = async (
  * @param hobbies 
  * @param photo
  * @param sexuality
- * 
- * When calling this function, use a then() and a 
- * catch() to get the response.
  */
 const updateProfile = async (
   userId: string,
@@ -171,7 +165,6 @@ const getUserChats = async (userId: string, token: string) => {
 const createChat = async (userId: string, matchedUserId: string, token: string) => {
   let userIds = [];
   userIds.push(matchedUserId, userId);
-  console.log(userIds);
   
   return axios.post(`${API_URL}/chats`, { userIds, token });
 }
