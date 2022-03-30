@@ -134,7 +134,11 @@ const SingleMessage = ({ route, userData }: any) => {
     postNotification(chatId, userId, content, token)
       .then((res: any) => {
         const { data } = res;
-        console.log('notif sent', data);
+        //console.log('notif sent', data);
+        // let notifsArr = []
+        // notifsArr.push(data);
+        // console.log('notifsArr', notifsArr);
+        // setNotification(notifsArr);
       })
       .catch((e: any) => {
         console.error(e.message);

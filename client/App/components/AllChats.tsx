@@ -23,22 +23,26 @@ import { ThreadRow } from '../components';
 
 const AllChats = ({ navigation }: any) => {
   const [chats, setChats] = useState<any>();
-  const [notificationId, setNotificationId] = useState<any>();
+  const [notificationIds, setNotificationIds] = useState<any>();
   const isMounted = useRef<any>(null);
 
-  const { authData, notification, setNotification } = useAuth();
+  const { authData } = useAuth();
   const { userId, token } = authData;
 
   // fetch any notifications
   const fetchNotifications = async () => {
     getNotifications(userId, token)
       .then(res => {
-        const { data } = res;
-        console.log('notis', res.data);
-        // get notification id
-        //console.log('notifs retrieved', data);
-        // array of notifs
-        setNotification(data);
+        // get notification ids
+        const notifIds = res.data.map((notifs: any) => {
+          let notifsObj = {
+            _id: notifs._id,
+            chatId: notifs.chat._id,
+          }
+          return notifsObj;
+        });
+
+        setNotificationIds(notifIds);
       })
       .catch((e: any) => {
         console.error(e.message);
@@ -47,14 +51,14 @@ const AllChats = ({ navigation }: any) => {
 
   // check if thread is unread
   const isThreadUnread = (notificationId: any) => {
-    isReadNotification(notificationId, token)
-      .then((res: any) => {
-        const { data } = res;
-        console.log('isRead', data);
-      })
-      .catch((e: any) => {
-        console.error(e.message);
-      })
+    // get every notification id 
+    console.log(userId, notificationId);
+    
+    // check if notif id matches with chat id
+    //console.log('noti id from function', notificationId);
+
+    // if there are ids, set the specified chatId to true
+    
   }
 
   // fetch all user chats 
@@ -100,7 +104,7 @@ const AllChats = ({ navigation }: any) => {
 
       return () => {
         setChats([]);
-        setNotification([]);
+        setNotificationIds([]);
         isMounted.current = false;
       }
     }, [])
@@ -122,7 +126,7 @@ const AllChats = ({ navigation }: any) => {
               image={item.latestMessage.chattedUser.profile.photo}
               name={item.latestMessage.chattedUser.profile.name}
               latestMessage={item.latestMessage.content}
-              unread={false}
+              unread={isThreadUnread(notificationIds)}
             />
           )}
         />

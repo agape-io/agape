@@ -16,7 +16,6 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 const AuthProvider:FC = ({ children }) => {
   const [authData, setAuthData] = useState<any>();
   const [loading, setLoading] = useState<any>(true);
-  const [notification, setNotification] = useState<any>([]);
 
   useEffect(() => {
     loadStorageData();
@@ -63,9 +62,7 @@ const AuthProvider:FC = ({ children }) => {
         authData,
         signIn,
         signOut,
-        loading,
-        notification,
-        setNotification,
+        loading
       }}
     >
       {children}

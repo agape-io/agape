@@ -40,8 +40,6 @@ type AuthContextData = {
   signIn(email: string, password: string): Promise<void>;
   signOut(): Promise<void>;
   children?: React.ReactNode;
-  notification: any;
-  setNotification: any;
 }
 
 type CardItemT = {
