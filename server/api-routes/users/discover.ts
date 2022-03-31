@@ -3,7 +3,7 @@ import { Router, Request, Response } from 'express';
 import { User } from '../../models/user';
 import connect from '../../config/db';
 import {
-  getId, getProfile, getPreferences, generatePercentage, sortByPercentage, completeUser,
+  getId, getProfile, getPreferences, generatePercentage, sortByPercentage, verifyUser,
 } from '../../util/match';
 
 const router = Router();
@@ -35,20 +35,22 @@ router.get('/', async (req: Request, res: Response) => {
     await connect();
     User.findOne({ _id: userId }, async (err, existingUser) => {
       if (existingUser) {
-        if (completeUser(existingUser)) {
+        if (verifyUser(existingUser)) {
           const users = await User.find({});
           let similarUsers = [];
           users.forEach((user) => {
-            const percentage = generatePercentage(existingUser, user, romantic);
-            if (percentage > parseFloat(threshold as string)) {
-              similarUsers.push({
-                userId: getId(user),
-                profile: getProfile(user),
-                preferences: {
-                  sexuality: getPreferences(user).sexuality,
-                },
-                percentage,
-              });
+            if (verifyUser(user)) {
+              const percentage = generatePercentage(existingUser, user, romantic);
+              if (percentage > parseFloat(threshold as string)) {
+                similarUsers.push({
+                  userId: getId(user),
+                  profile: getProfile(user),
+                  preferences: {
+                    sexuality: getPreferences(user).sexuality,
+                  },
+                  percentage,
+                });
+              }
             }
           });
           if (similarUsers.length > 0) {

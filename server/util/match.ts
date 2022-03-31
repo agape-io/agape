@@ -100,14 +100,12 @@ export const generatePercentage = (user1, user2, romantic) => {
 
 export const sortByPercentage = (users) => users.sort((user1, user2) => ((user1.percentage > user2.percentage) ? -1 : 1));
 
-export const completeUser = (user) => {
+export const verifyUser = (user) => {
   const profile = getProfile(user);
   const preferences = getPreferences(user);
-  console.log('user profile', profile);
-  console.log('user preferences', preferences);
-  // check user profile
+  // verify profile
   if (!(profile && profile.hobbies && profile.gender && profile.age)) return false;
-  // check user preferences
+  // verify preferences
   if (!(preferences && preferences.sexuality && preferences.minAge && preferences.maxAge && preferences.religion)) return false;
   return true;
 };
