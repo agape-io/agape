@@ -15,7 +15,6 @@ import io from 'socket.io-client';
 
 // APIs
 import { API_URL } from '@env';
-import { useAuth } from '../context';
 import {
   getMessages,
   postMessage,
@@ -27,8 +26,8 @@ let socket: any;
 const SingleMessage = ({ route, userData }: any) => {
   const [messages, setMessages] = useState<any>([]);
   const [loading, setLoading] = useState<any>(false);
+  const [notification, setNotification] = useState<any>([]);
   const [socketConnected, isSocketConnected] = useState<boolean>(false);
-  const { notification, setNotification } = useAuth();
   const { token, userId } = userData;
   const { chatId } = route.params;
 
@@ -85,10 +84,8 @@ const SingleMessage = ({ route, userData }: any) => {
   // Check messages recieved
   useEffect(() => {
     socket.on('message recieved', (newMessageRecieved: any) => {
-      if (chatId !== newMessageRecieved.chat._id) {
-        console.log('am i here?');
+      if (!chatId || chatId !== newMessageRecieved.chat._id) {
         if (!notification.includes(newMessageRecieved)) {
-          console.log('i wanna be here');
           setNotification([newMessageRecieved, ...notification]);
         }
       } else {
@@ -134,11 +131,9 @@ const SingleMessage = ({ route, userData }: any) => {
     postNotification(chatId, userId, content, token)
       .then((res: any) => {
         const { data } = res;
-        //console.log('notif sent', data);
-        // let notifsArr = []
-        // notifsArr.push(data);
-        // console.log('notifsArr', notifsArr);
-        // setNotification(notifsArr);
+        let notifsArr = []
+        notifsArr.push(data);
+        setNotification(notifsArr);
       })
       .catch((e: any) => {
         console.error(e.message);

@@ -4,8 +4,7 @@
 import React, {
   useState,
   useRef,
-  useCallback,
-  useEffect
+  useCallback
 } from 'react';
 import {
   FlatList,
@@ -38,6 +37,10 @@ const AllChats = ({ navigation }: any) => {
           let notifsObj = {
             _id: notifs._id,
             chatId: notifs.chat._id,
+            user: notifs.user,
+            createdAt: notifs.createdAt,
+            read: notifs.read,
+            text: notifs.text
           }
           return notifsObj;
         });
@@ -50,15 +53,29 @@ const AllChats = ({ navigation }: any) => {
   }
 
   // check if thread is unread
-  const isThreadUnread = (notificationId: any) => {
-    // get every notification id 
-    console.log(userId, notificationId);
-    
-    // check if notif id matches with chat id
-    //console.log('noti id from function', notificationId);
+  const isThreadUnread = (notification: any) => {
+    //console.log('isThreadUnread', notification, 'ids', notificationIds);
 
-    // if there are ids, set the specified chatId to true
-    
+    // compare messages with parsed notifications
+
+    // // get every notification id
+    let matchedChatNotif = notificationIds.some((notifs: any, index: any) => notifs.chatId === notification.latestMessage.chat);
+    console.log('matched', matchedChatNotif);
+
+    // if the notification is found, set it to unread
+    // if (matchedChatNotif) {
+    //   return true;
+    // } else {
+    //   // When user picks specified thread, set it to false on pressed
+    //   // isReadNotification(matchedChatNotif._id, token)
+    //   // .then(() => {
+    //   // })
+    //   // .catch((e: any) => {
+    //   //   console.error(e.message);
+    //   // });
+
+    //   return false;
+    // }
   }
 
   // fetch all user chats 
@@ -86,7 +103,7 @@ const AllChats = ({ navigation }: any) => {
 
           return c;
         });
-        // set chats
+
         setChats(chatArr);
       })
       .catch(e => {
@@ -121,12 +138,11 @@ const AllChats = ({ navigation }: any) => {
               onPress={() => navigation.navigate('Message', {
                 chatId: item._id,
                 name: item.latestMessage.chattedUser.profile.name,
-                
               })}
               image={item.latestMessage.chattedUser.profile.photo}
               name={item.latestMessage.chattedUser.profile.name}
               latestMessage={item.latestMessage.content}
-              unread={isThreadUnread(notificationIds)}
+              unread={isThreadUnread(item)}
             />
           )}
         />

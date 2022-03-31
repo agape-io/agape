@@ -1,7 +1,13 @@
 /**
  * Auth Provider for authentication
  */
-import React, { createContext, useState, useEffect, FC, useContext } from 'react';
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  FC,
+  useContext
+} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
