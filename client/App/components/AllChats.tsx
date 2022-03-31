@@ -58,24 +58,28 @@ const AllChats = ({ navigation }: any) => {
 
     // compare messages with parsed notifications
 
-    // // get every notification id
-    let matchedChatNotif = notificationIds.some((notifs: any, index: any) => notifs.chatId === notification.latestMessage.chat);
+    // get every notification id
+    let matchedChatNotif = notificationIds.find((notifs: any, index: any) => {
+      return notifs.chatId === notification.latestMessage.chat
+        && notifs.text === notification.latestMessage.content;
+    });
     console.log('matched', matchedChatNotif);
+    console.log('isRead?', matchedChatNotif?.read);
 
     // if the notification is found, set it to unread
-    // if (matchedChatNotif) {
-    //   return true;
-    // } else {
-    //   // When user picks specified thread, set it to false on pressed
-    //   // isReadNotification(matchedChatNotif._id, token)
-    //   // .then(() => {
-    //   // })
-    //   // .catch((e: any) => {
-    //   //   console.error(e.message);
-    //   // });
+    if (matchedChatNotif?.read === false) {
+      return true;
+    } else {
+      // When user picks specified thread, set it to false on pressed
+      // isReadNotification(matchedChatNotif._id, token)
+      // .then(() => {
+      // })
+      // .catch((e: any) => {
+      //   console.error(e.message);
+      // });
 
-    //   return false;
-    // }
+      return false;
+    }
   }
 
   // fetch all user chats 

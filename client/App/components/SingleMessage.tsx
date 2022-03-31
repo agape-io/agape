@@ -26,7 +26,7 @@ let socket: any;
 const SingleMessage = ({ route, userData }: any) => {
   const [messages, setMessages] = useState<any>([]);
   const [loading, setLoading] = useState<any>(false);
-  const [notification, setNotification] = useState<any>([]);
+  const [sentNotification, setSentNotification] = useState<any>([]);
   const [socketConnected, isSocketConnected] = useState<boolean>(false);
   const { token, userId } = userData;
   const { chatId } = route.params;
@@ -85,8 +85,8 @@ const SingleMessage = ({ route, userData }: any) => {
   useEffect(() => {
     socket.on('message recieved', (newMessageRecieved: any) => {
       if (!chatId || chatId !== newMessageRecieved.chat._id) {
-        if (!notification.includes(newMessageRecieved)) {
-          setNotification([newMessageRecieved, ...notification]);
+        if (!sentNotification.includes(newMessageRecieved)) {
+          setSentNotification([newMessageRecieved, ...sentNotification]);
         }
       } else {
         setMessages([...messages, newMessageRecieved]);
@@ -118,6 +118,18 @@ const SingleMessage = ({ route, userData }: any) => {
 
         // send to socket io
         socket.emit('new message', res.data);
+        
+        // send notification
+        postNotification(chatId, userId, content, token)
+          .then((res: any) => {
+            const { data } = res;
+            let notifsArr = []
+            notifsArr.push(data);
+            setSentNotification(notifsArr);
+          })
+          .catch((e: any) => {
+            console.error(e.message);
+          });
 
         // GiftedChat Data is appended
         setMessages((previousMessages: any) => GiftedChat.append(previousMessages, newMessage));
@@ -126,19 +138,6 @@ const SingleMessage = ({ route, userData }: any) => {
       .catch((e: any) => {
         console.error(e.message);
       });
-    
-    // send notification
-    postNotification(chatId, userId, content, token)
-      .then((res: any) => {
-        const { data } = res;
-        let notifsArr = []
-        notifsArr.push(data);
-        setNotification(notifsArr);
-      })
-      .catch((e: any) => {
-        console.error(e.message);
-      });
-
   }, []);
 
   return (
