@@ -22,9 +22,18 @@ const UserModel = new Schema({
   },
   preferences: {
     sexuality: { type: String },
-    maxDist: { type: String },
-    minAge: { type: String },
-    maxAge: { type: String },
+    maxDist: {
+      type: String,
+      default: 100,
+    },
+    minAge: {
+      type: String,
+      default: 18,
+    },
+    maxAge: {
+      type: String,
+      default: 23,
+    },
     religion: [{ type: String }],
   },
   settings: {

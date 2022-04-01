@@ -3,7 +3,7 @@ import { Router, Request, Response } from 'express';
 import { User } from '../../models/user';
 import connect from '../../config/db';
 import {
-  getId, getProfile, getPreferences, generatePercentage, sortByPercentage,
+  getId, getProfile, getPreferences, generatePercentage, sortByPercentage, verifyUser,
 } from '../../util/match';
 
 const router = Router();
@@ -35,35 +35,44 @@ router.get('/', async (req: Request, res: Response) => {
     await connect();
     User.findOne({ _id: userId }, async (err, existingUser) => {
       if (existingUser) {
-        const users = await User.find({});
-        let similarUsers = [];
-        users.forEach((user) => {
-          const percentage = generatePercentage(existingUser, user, romantic);
-          if (percentage > parseFloat(threshold as string)) {
-            similarUsers.push({
-              userId: getId(user),
-              profile: getProfile(user),
-              preferences: {
-                sexuality: getPreferences(user).sexuality,
-              },
-              percentage,
+        if (verifyUser(existingUser)) {
+          const users = await User.find({});
+          let similarUsers = [];
+          users.forEach((user) => {
+            if (verifyUser(user)) {
+              const percentage = generatePercentage(existingUser, user, romantic);
+              if (percentage > parseFloat(threshold as string)) {
+                similarUsers.push({
+                  userId: getId(user),
+                  profile: getProfile(user),
+                  preferences: {
+                    sexuality: getPreferences(user).sexuality,
+                  },
+                  percentage,
+                });
+              }
+            }
+          });
+          if (similarUsers.length > 0) {
+            if (numUsers > 0 || sort === 'true') {
+              similarUsers = sortByPercentage(similarUsers);
+              if (numUsers > 0) similarUsers = similarUsers.slice(0, parseInt(numUsers as string));
+            }
+            res.status(200).send({
+              status: 200,
+              users: similarUsers,
+            });
+          } else {
+            res.status(500).send({
+              status: 500,
+              users: [],
+              message: 'No matches found!',
             });
           }
-        });
-        if (similarUsers.length > 0) {
-          if (numUsers > 0 || sort === 'true') {
-            similarUsers = sortByPercentage(similarUsers);
-            if (numUsers > 0) similarUsers = similarUsers.slice(0, parseInt(numUsers as string));
-          }
-          res.status(200).send({
-            status: 200,
-            users: similarUsers,
-          });
         } else {
-          res.status(500).send({
-            status: 500,
-            users: [],
-            message: 'No matches found!',
+          res.status(400).send({
+            status: 400,
+            message: 'User has not completed their profile or preferences!',
           });
         }
       } else {
