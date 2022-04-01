@@ -19,68 +19,16 @@ import {
   isReadNotification,
 } from '../utils';
 import { ThreadRow } from '../components';
+import { isJSDocReadonlyTag } from 'typescript';
 
 const AllChats = ({ navigation }: any) => {
-  const [chats, setChats] = useState<any>();
-  const [notificationIds, setNotificationIds] = useState<any>();
+  const [chats, setChats] = useState<any>([]);
+  const [notificationIds, setNotificationIds] = useState<any>([]);
+  const [isRead, setIsRead] = useState<any>(false);
   const isMounted = useRef<any>(null);
 
   const { authData } = useAuth();
   const { userId, token } = authData;
-
-  // fetch any notifications
-  const fetchNotifications = async () => {
-    getNotifications(userId, token)
-      .then(res => {
-        // get notification ids
-        const notifIds = res.data.map((notifs: any) => {
-          let notifsObj = {
-            _id: notifs._id,
-            chatId: notifs.chat._id,
-            user: notifs.user,
-            createdAt: notifs.createdAt,
-            read: notifs.read,
-            text: notifs.text
-          }
-          return notifsObj;
-        });
-
-        setNotificationIds(notifIds);
-      })
-      .catch((e: any) => {
-        console.error(e.message);
-      });
-  }
-
-  // check if thread is unread
-  const isThreadUnread = (notification: any) => {
-    //console.log('isThreadUnread', notification, 'ids', notificationIds);
-
-    // compare messages with parsed notifications
-
-    // get every notification id
-    let matchedChatNotif = notificationIds.find((notifs: any, index: any) => {
-      return notifs.chatId === notification.latestMessage.chat
-        && notifs.text === notification.latestMessage.content;
-    });
-    console.log('matched', matchedChatNotif);
-    console.log('isRead?', matchedChatNotif?.read);
-
-    // if the notification is found, set it to unread
-    if (matchedChatNotif?.read === false) {
-      return true;
-    } else {
-      // When user picks specified thread, set it to false on pressed
-      // isReadNotification(matchedChatNotif._id, token)
-      // .then(() => {
-      // })
-      // .catch((e: any) => {
-      //   console.error(e.message);
-      // });
-
-      return false;
-    }
-  }
 
   // fetch all user chats 
   const fetchChats = async () => {
@@ -115,16 +63,87 @@ const AllChats = ({ navigation }: any) => {
         console.error(e.message);
       });
   }
+
+  // fetch any notifications
+  const fetchNotifications = async () => {
+    getNotifications(userId, token)
+      .then(res => {
+        // get notification ids
+        const notifIds = res.data.map((notifs: any) => {
+          let notifsObj = {
+            _id: notifs._id,
+            chatId: notifs.chat._id,
+            user: notifs.user,
+            createdAt: notifs.createdAt,
+            read: notifs.read,
+            text: notifs.text
+          }
+          return notifsObj;
+        });
+
+        setNotificationIds(notifIds);
+      })
+      .catch((e: any) => {
+        console.error(e.message);
+      });
+  }
+
+  // check if thread is unread
+  const isThreadUnread = (notification: any) => {
+    // get every notification id
+    let matchedChatNotif = notificationIds.find((notifs: any) => {
+      return notifs.chatId === notification.latestMessage.chat
+        && notifs.text === notification.latestMessage.content;
+    });
+
+    // should never return undefined...
+    console.log('matched', matchedChatNotif);
+    console.log('isRead?', matchedChatNotif?.read);
+    console.log('id', matchedChatNotif?._id);
+
+    // handle undefined
+
+    // if the notification is found, set it to unread
+    // if (matchedChatNotif.read === false) {
+    //   // not read
+    //   setIsRead(false);
+    //   return isRead;
+    // } else if (matchedChatNotif.read === true) {
+    //   // is already read, run the function
+    //   // isReadNotification(matchedChatNotif?._id, token)
+    //   //   .then(() => {
+    //   //     setIsRead(true);
+    //   //     console.log('done!');
+    //   //     return isRead;
+    //   // })
+    //   // .catch((e: any) => {
+    //   //   console.error(e.message);
+    //   // });
+    //   setIsRead(true);
+    //   return isRead;
+    // }
+  }
   
-  // persist on screen
+  // persist on screen CHATS
   useFocusEffect(
     useCallback(() => {
       fetchChats();
-      fetchNotifications();
       isMounted.current = true;
 
       return () => {
         setChats([]);
+        isMounted.current = false;
+      }
+    }, [])
+  );
+
+  // persist on screen NOTIFS
+  useFocusEffect(
+    useCallback(() => {
+      fetchNotifications();
+      isMounted.current = true;
+
+      return () => {
         setNotificationIds([]);
         isMounted.current = false;
       }
