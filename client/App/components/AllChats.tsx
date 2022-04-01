@@ -24,7 +24,6 @@ import { isJSDocReadonlyTag } from 'typescript';
 const AllChats = ({ navigation }: any) => {
   const [chats, setChats] = useState<any>([]);
   const [notificationIds, setNotificationIds] = useState<any>([]);
-  const [isRead, setIsRead] = useState<any>(false);
   const isMounted = useRef<any>(null);
 
   const { authData } = useAuth();
@@ -70,10 +69,12 @@ const AllChats = ({ navigation }: any) => {
       .then(res => {
         // get notification ids
         const notifIds = res.data.map((notifs: any) => {
+          // get the sender
+          const senderUser = notifs.chat.users.find((user: any) => user !== userId);
           let notifsObj = {
             _id: notifs._id,
             chatId: notifs.chat._id,
-            user: notifs.user,
+            sender: senderUser,
             createdAt: notifs.createdAt,
             read: notifs.read,
             text: notifs.text
@@ -92,36 +93,36 @@ const AllChats = ({ navigation }: any) => {
   const isThreadUnread = (notification: any) => {
     // get every notification id
     let matchedChatNotif = notificationIds.find((notifs: any) => {
+      console.log(notifs);
       return notifs.chatId === notification.latestMessage.chat
-        && notifs.text === notification.latestMessage.content;
+        && notifs.text === notification.latestMessage.content
+        && notifs.sender === notification.latestMessage.sender._id;
     });
 
-    // should never return undefined...
-    console.log('matched', matchedChatNotif);
-    console.log('isRead?', matchedChatNotif?.read);
-    console.log('id', matchedChatNotif?._id);
-
-    // handle undefined
+    console.log(matchedChatNotif);
 
     // if the notification is found, set it to unread
-    // if (matchedChatNotif.read === false) {
-    //   // not read
-    //   setIsRead(false);
-    //   return isRead;
-    // } else if (matchedChatNotif.read === true) {
-    //   // is already read, run the function
-    //   // isReadNotification(matchedChatNotif?._id, token)
-    //   //   .then(() => {
-    //   //     setIsRead(true);
-    //   //     console.log('done!');
-    //   //     return isRead;
-    //   // })
-    //   // .catch((e: any) => {
-    //   //   console.error(e.message);
-    //   // });
-    //   setIsRead(true);
-    //   return isRead;
-    // }
+    if (matchedChatNotif) {
+      if (matchedChatNotif.read === false) {
+        // not read
+        console.log('false happening');
+        return true;
+      } else {
+        // is already read, run the function
+        console.log('true happening');
+        isReadNotification(matchedChatNotif._id, token)
+          .then(() => {
+            console.log('done!');
+            return false;
+        })
+        .catch((e: any) => {
+          console.error(e.message);
+        });
+      }
+    } else {
+      // data is undefined
+      return false;
+    }
   }
   
   // persist on screen CHATS
