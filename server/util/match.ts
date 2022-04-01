@@ -1,4 +1,4 @@
-const commonElements = (array1, array2) => array1.some((item) => array2.includes(item));
+const commonElements = (array1, array2) => array1.filter((item) => array2.includes(item));
 
 export const getProfile = (user) => JSON.parse(JSON.stringify(user)).profile;
 
@@ -17,7 +17,7 @@ const isAlreadySwiped = (user1, user2) => {
 const commonHobbies = (user1, user2) => {
   const user1Profile = getProfile(user1);
   const user2Profile = getProfile(user2);
-  return commonElements(user1Profile.hobbies, user2Profile.hobbies);
+  return commonElements(user1Profile.hobbies, user2Profile.hobbies).length;
 };
 
 const matchSexuality = (user1, user2) => {
@@ -92,10 +92,10 @@ const validateUsers = (user1, user2, romantic) => {
 export const generatePercentage = (user1, user2, romantic) => {
   if (!validateUsers(user1, user2, romantic)) return 0;
   let percentage = 50;
-  if (commonHobbies(user1, user2)) percentage += 20;
+  percentage += commonHobbies(user1, user2)/3 * 20;
   if (matchAge(user1, user2)) percentage += 20;
   if (matchReligion(user1, user2)) percentage += 10;
-  return percentage;
+  return Math.ceil(percentage);
 };
 
 export const sortByPercentage = (users) => users.sort((user1, user2) => ((user1.percentage > user2.percentage) ? -1 : 1));
