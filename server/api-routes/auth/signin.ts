@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import moment from 'moment';
 
 import { User } from '../../models/user';
 import connect from '../../config/db';
@@ -47,12 +48,18 @@ router.post('/email', async (req: Request, res: Response) => {
                 expiresIn: '1hr',
               },
             );
+            const subscription = {
+              billingDate: moment(existingUser.settings.billingDate).format('MM/DD/YYYY'),
+              endingDate: moment(existingUser.settings.endingDate).format('MM/DD/YYYY'),
+              promptResubscription: moment(existingUser.settings.endingDate).isSame(new Date(), 'day'),
+            };
             user.token = token;
             user.isOnline = true;
             res.status(200).send({
               status: 200,
               message: 'Logged In!',
               user,
+              subscription,
             });
           } else {
             res.status(500).send({
