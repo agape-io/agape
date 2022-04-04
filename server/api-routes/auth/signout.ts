@@ -2,14 +2,16 @@ import { Router, Request, Response } from 'express';
 
 import { User } from '../../models/user';
 import connect from '../../config/db';
+import { MISSING_FIELDS, UNKNOWN_ERROR } from '../../constants/error';
+import { SIGNOUT_SUCCESS } from '../../constants/statusMessages';
 
 const router = Router();
 
 /**
  * @api {post} /email
- * @apiName Signout
+ * @apiName Signout via Email
  * @apiGroup Auth
- * @apiDescription Signout user
+ * @apiDescription Signout user using email/password authentication
  *
  * @apiSuccess (201)
  *
@@ -17,40 +19,43 @@ const router = Router();
  *
  * @body
  * userId: string
- * 
+ *
  * @apiVersion 0.1.0
  */
-router.post('/email', async (req: Request, res: Response) => {
+router.post('/email', (req: Request, res: Response) => {
   const { userId } = req.body;
   if (userId) {
-    await connect();
-    User.findOneAndUpdate(
-      { userId },
-      {
-        $set: {
-          isOnline: false,
+    connect()
+      .then(() => User.findOneAndUpdate(
+        { _id: userId },
+        {
+          $set: {
+            isOnline: false,
+          },
         },
-      },
-      { upsert: true },
-      (err, doc) => {
-        if (err) {
-          res.status(500).send({
-            status: 500,
-            message: 'Error signing out!',
-          });
-          console.error(err);
-        } else {
-          res.status(201).send({
-            status: 201,
-            message: 'Succesfully signed out!',
-          });
-        }
-      },
-    );
+        { upsert: true },
+      ))
+      .then((user) => {
+        res.status(201).send({
+          status: 201,
+          message: SIGNOUT_SUCCESS,
+          user: {
+            userId: user._id,
+            isOnline: user.isOnline,
+          },
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send({
+          status: 500,
+          message: UNKNOWN_ERROR,
+        });
+      });
   } else {
-    res.status(500).send({
-      status: 500,
-      message: 'Missing User Id!',
+    res.status(400).send({
+      status: 400,
+      message: MISSING_FIELDS,
     });
   }
 });
