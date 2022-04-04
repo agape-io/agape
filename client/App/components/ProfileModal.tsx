@@ -1,6 +1,3 @@
-/**
- * Profile Modal Component
- */
 import React, {
   FC,
   useState,
@@ -17,7 +14,7 @@ import {
   ScrollView,
 } from 'react-native';
 import axios from 'axios';
-import { MaterialCommunityIcons } from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as ImagePicker from 'expo-image-picker';
 import { ProfileModalProps } from '../types';
 import { useAuth } from '../context';
@@ -26,8 +23,8 @@ import { useAuth } from '../context';
 import {
   updateProfile,
   getProfile,
-  updatePreferences,
-  getPreferences
+  getPreferences,
+  updatePreferences
 } from '../utils';
 import { CLOUDINARY_API_URL } from '@env';
 
@@ -38,28 +35,28 @@ import styles, { PRIMARY_COLOR } from '../../assets/styles';
 const CancelButton = ({ onPress }:any) => {
   return (
     <TouchableOpacity onPress={onPress}>
-      <MaterialCommunityIcons name="arrow-left" size={26} color="black"/>
+      <MaterialCommunityIcons name="arrow-left" size={26} color="black" />
     </TouchableOpacity>
   );
 }
 
-const ProfileModal: FC<ProfileModalProps> = ({ navigation }) => {
+const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
   const auth = useAuth();
 
   // hide create profile button if profile is already available
   const [profile, hasProfile] = useState<any>();
-  const [userPreference, hasUserPreference] = useState<any>();
+  const [preferences, hasPreferences] = useState<any>();
   const [photo, setPhoto] = useState<any>(null);
   const [cloudinary, getCloudinary] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [name, setName] = useState<string>('');
+  const [maxDist, setMaxDist] = useState<string>('');
+  const [minAge, setMinAge] = useState<string>('');
+  const [maxAge, setMaxAge] = useState<string>('');
   const [gender, setGender] = useState<string>('');
   const [aboutMe, setAboutMe] = useState<string>('');
   const [location, setLocation] = useState<string>('');
   const [religion, setReligion] = useState<string>('');
-  const [maxAge, setMaxAge] = useState<string>('');
-  const [minAge, setMinAge] = useState<string>('');
-  const [maxDist, setMaxDist] = useState<string>('');
   const [preference, setPreference] = useState<string>('');
   const [userAge, setUserAge] = useState<string>('');
   const [yearBorn, setYearBorn] = useState<string>('');
@@ -69,6 +66,33 @@ const ProfileModal: FC<ProfileModalProps> = ({ navigation }) => {
   const isMounted = useRef<any>(null);
 
   const { userId, token } = auth.authData;
+
+  const getUserProfile = () => {
+    getProfile(userId, token)
+      .then((res: any) => {
+        const { profile } = res.data;
+          
+        setPhoto(profile.photo);
+
+        // check if profile exists
+        hasProfile(profile);
+      })
+      .catch((e: any) => {
+        console.error(e.message);
+      });
+  }
+
+  const getUserPreferences = () => {
+    getPreferences(userId, token)
+      .then((res: any) => {
+        const { preferences } = res.data;
+
+        hasPreferences(preferences);
+      })
+      .catch((e: any) => {
+        console.error(e.message);
+      });
+  }
 
   const uploadPhoto = async () => {
     setLoading(true);
@@ -126,13 +150,19 @@ const ProfileModal: FC<ProfileModalProps> = ({ navigation }) => {
     aboutMe: string,
     religion: string,
     location: string,
+    maxDist: string,
+    minAge: string,
+    maxAge: string,
     hobbies: string[],
     sexuality: string,
     photo: string,
   ) => {
     // Convert strings to integers
     let convertAge = parseInt(age),
-      convertYearBorn = parseInt(yearBorn);
+      convertYearBorn = parseInt(yearBorn),
+      convertMaxDist = parseInt(maxDist),
+      convertMinAge = parseInt(minAge),
+      convertMaxAge = parseInt(maxAge);
     
     return updateProfile(
       userId,
@@ -147,45 +177,26 @@ const ProfileModal: FC<ProfileModalProps> = ({ navigation }) => {
       hobbies,
       sexuality,
       photo)
-      .then((res: any) => {
-        // Go back to profile screen
-        setLoading(false);
-        console.log(res.data);
-        alert('Profile Updated!');
+      .then(() => {
+        // Update preferences
+        updatePreferences(userId, token, sexuality, convertMaxDist, convertMinAge, convertMaxAge, religion)
+          .then((res: any) => {
+            // Go back to Profile Screen
+            setLoading(false);
 
-        navigation.navigate('Profile');
-      }).catch((e: any) => {
+            alert('Profile and Preferences Updated!');
+            navigation.navigate('Profile');
+          })
+          .catch((e: any) => {
+            console.error(e.messaeg);
+          })
+      })
+      .catch((e: any) => {
         console.log(e);
         alert(e.message);
       })
       .finally(() => {
         if (isMounted.current) setLoading(false);
-      });
-  }
-
-  const getUserProfile = () => {
-    getProfile(userId, token)
-      .then((res: any) => {
-        const { profile } = res.data;
-        
-        setPhoto(profile.photo);
-
-        // check if profile exists
-        hasProfile(profile);
-      })
-      .catch((e: any) => {
-        console.error(e.message);
-      })
-  };
-
-  const getUserPreference = () => {
-    getPreferences(userId, token)
-      .then((res: any) => {
-        const { preference } = res.data;
-        console.log(preference);
-      })
-      .catch((e: any) => {
-        console.error(e.message);
       });
   }
 
@@ -200,14 +211,13 @@ const ProfileModal: FC<ProfileModalProps> = ({ navigation }) => {
 
   // Persist profile data
   useEffect(() => {
-
     getUserProfile();
-    getUserPreference();
+    getUserPreferences();
 
     return () => {
       // cleanup
       hasProfile(null);
-      hasUserPreference(null);
+      hasPreferences(null);
     }
   }, []);
 
@@ -230,7 +240,7 @@ const ProfileModal: FC<ProfileModalProps> = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={[styles.form, { marginTop: -30 }]}>
+      <View style={[styles.form, { marginTop: -30}]}>
         <TextInput
           style={styles.input}
           placeholder="Name"
@@ -332,6 +342,36 @@ const ProfileModal: FC<ProfileModalProps> = ({ navigation }) => {
         />
         <TextInput
           style={styles.input}
+          placeholder="Max Distance from you"
+          placeholderTextColor="#b1b1b1"
+          returnKeyType="next"
+          keyboardType="numeric"
+          textContentType="none"
+          value={maxDist}
+          onChangeText={maxDist => setMaxDist(maxDist)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Minimum Age for Match"
+          placeholderTextColor="#b1b1b1"
+          returnKeyType="next"
+          keyboardType="numeric"
+          textContentType="none"
+          value={minAge}
+          onChangeText={minAge => setMinAge(minAge)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Maximum Age for Match"
+          placeholderTextColor="#b1b1b1"
+          returnKeyType="next"
+          keyboardType="numeric"
+          textContentType="none"
+          value={maxAge}
+          onChangeText={maxAge => setMaxAge(maxAge)}
+        />
+        <TextInput
+          style={styles.input}
           placeholder="Sexuality"
           placeholderTextColor="#b1b1b1"
           returnKeyType="next"
@@ -344,7 +384,20 @@ const ProfileModal: FC<ProfileModalProps> = ({ navigation }) => {
       <View style={styles.addProfileButtonContainer}>
         <TouchableOpacity
           style={[styles.addProfileButton, { backgroundColor: PRIMARY_COLOR }]}
-          onPress={() => handleUpdateProfile(name, gender, userAge, yearBorn, aboutMe, religion, location, [firstHobby, secondHobby, thirdHobby], preference, cloudinary)}>
+          onPress={() => handleUpdateProfile(
+            name,
+            gender,
+            userAge,
+            yearBorn,
+            aboutMe,
+            religion,
+            location,
+            maxDist,
+            minAge,
+            maxAge,
+            [firstHobby, secondHobby, thirdHobby],
+            preference,
+            cloudinary)}>
           <Text>Update Profile</Text>
         </TouchableOpacity>
       </View>

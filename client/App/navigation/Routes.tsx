@@ -80,7 +80,7 @@ const HomeTabs: FC = () => {
       activeColor={SECONDARY_COLOR}
       barStyle={{ backgroundColor: PRIMARY_COLOR }}
     >
-      <Screen
+      {/* <Screen
         name="Test"
         component={TestPage}
         options={{
@@ -89,7 +89,7 @@ const HomeTabs: FC = () => {
             <MaterialCommunityIcons name="test-tube-empty" color={color} size={26} />
           )
         }}
-      />
+      /> */}
        <Screen
         name="Chat"
         component={Messaging}

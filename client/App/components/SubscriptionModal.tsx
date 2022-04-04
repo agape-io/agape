@@ -12,11 +12,7 @@ import {
 } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { CompositeNavigationProp } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import {
-  ProfileModalProps
-} from '../types';
+import { ProfileModalProps } from '../types';
 import { useAuth } from '../context';
 
 // Styles
