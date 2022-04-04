@@ -24,7 +24,6 @@ export interface ChatProps {
 const Chat: FC<ChatProps> = ({ navigation }) => {
     const { authData } = useAuth();
 
-
     //return jsx to render UI
     return (
         <ImageBackground

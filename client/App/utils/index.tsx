@@ -145,6 +145,94 @@ const updateProfile = async (
 }
 
 /**
+ * Get user preferences
+ * 
+ * @param userId User ID
+ * @param token User token
+ */
+const getPreferences = async (userId: string, token: string) => {
+  return axios.get(`${API_URL}/preferences/`, {
+    headers: {
+      "x-access-token": token,
+      "content-type": "application/json"
+    },
+    params: {
+      userId,
+    }
+  });
+}
+
+/**
+ * Creates user preferences
+ * 
+ * @param userId 
+ * @param token
+ * @param sexuality
+ * @param maxDist
+ * @param minAge
+ * @param maxAge
+ * @param religion
+ * 
+ * When calling this function, use a then() and a 
+ * catch() to get the response.
+ */
+const createPreferences = async (
+  userId: string,
+  token: string,
+  sexuality: string,
+  maxDist: number,
+  minAge: number,
+  maxAge: number,
+  religion: string,
+) => {
+  // call axios to the API
+  return axios.post(`${API_URL}/preferences/create`, {
+    userId,
+    token,
+    sexuality,
+    maxDist,
+    minAge,
+    maxAge,
+    religion
+  });
+}
+
+/**
+ * Updates user preferences
+ * 
+ * @param userId 
+ * @param token
+ * @param sexuality
+ * @param maxDist
+ * @param minAge
+ * @param maxAge
+ * @param religion
+ * 
+ * When calling this function, use a then() and a 
+ * catch() to get the response.
+ */
+const updatePreferences = async (
+  userId: string,
+  token: string,
+  sexuality: string,
+  maxDist: number,
+  minAge: number,
+  maxAge: number,
+  religion: string,
+) => {
+  // call axios to the API
+  return axios.put(`${API_URL}/preferences/update`, {
+    userId,
+    token,
+    sexuality,
+    maxDist,
+    minAge,
+    maxAge,
+    religion
+  });
+}
+
+/**
  * Get user chats
  * 
  * @param userId User's ID
@@ -220,6 +308,9 @@ export {
   getProfile,
   updateProfile,
   createProfile,
+  getPreferences,
+  createPreferences,
+  updatePreferences,
   getMatches,
   getUserChats,
   createChat,
