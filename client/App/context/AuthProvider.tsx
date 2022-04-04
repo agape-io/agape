@@ -32,7 +32,6 @@ const AuthProvider:FC = ({ children }) => {
       .then((authDataSerialized:any) => {
         const _authData = JSON.parse(authDataSerialized);
         
-        console.log(_authData);
         setAuthData(_authData);
         setLoading(false);
       }).catch(e => { 

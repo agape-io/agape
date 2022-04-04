@@ -29,8 +29,7 @@ const fontFamily = Platform.OS === 'ios' ? 'Avenir' : 'sans-serif'
 import styles from "../../assets/styles";
 
 export interface SettingsProps {
-  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Settings'>,
-    NativeStackNavigationProp<RootNavigatorParamsList>>;
+  navigation: NativeStackNavigationProp<RootNavigatorParamsList>;
 }
 
 const statusBarHeight = Platform.OS === 'ios' ? 35 : 0

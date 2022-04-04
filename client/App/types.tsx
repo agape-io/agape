@@ -1,5 +1,6 @@
 import React from 'react';
-import { NavigatorScreenParams } from "@react-navigation/native";
+import { CompositeNavigationProp, NavigatorScreenParams } from "@react-navigation/native";
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type AuthNavigatorParamList = {
   SignIn: undefined;
@@ -63,6 +64,17 @@ type SettingsScreenT = {
   data: any;
 };
 
+type MessageT = {
+  image: any;
+  lastMessage: string;
+  name: string;
+};
+
+type ProfileModalProps = {
+  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Profile'>,
+  NativeStackNavigationProp<RootNavigatorParamsList>>;
+}
+
 export {
   HomeTabNavigatorParamList,
   RootNavigatorParamsList,
@@ -73,4 +85,6 @@ export {
   IconT,
   ProfileItemT,
   SettingsScreenT,
+  MessageT,
+  ProfileModalProps
 }
