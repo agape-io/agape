@@ -70,11 +70,14 @@ const AllChats = ({ navigation }: any) => {
       .then(res => {
         // get notification ids\
         const notifIds = res.data.map((notifs: any) => {
+          // retrieved message cannot be the current user that sent it.
+          const chattedUser = notifs.chat.users.find((sender: any) => sender !== userId);
           // create new notif object
           let notifsObj = {
             _id: notifs._id,
             chatId: notifs.chat._id,
-            sender: notifs.user,
+            //sender: notifs.user,
+            sender: chattedUser,
             createdAt: notifs.createdAt,
             read: notifs.read,
             text: notifs.text
@@ -92,20 +95,18 @@ const AllChats = ({ navigation }: any) => {
   const isThreadUnread = (notification: any) => {
     // get every notification id
     let matchedChatNotif = notificationIds.find((notifs: any) => {
-      // console.log('curr user', userId, 'check conditons 1', notifs.chatId === notification.chat,
-      //   '2', notifs.text === notification.content, '3', notifs.sender === notification.sender._id);
-      // console.log('curr user', userId);
+      //console.log('curr user', userId, 'check conditons 1', notifs.chatId === notification.chat,
+         //'2', notifs.text === notification.content, '3', notifs.sender === notification.sender._id);
       
-      // console.log('condition 1', notifs.chatId, notification.chat);
-      // console.log('condition 2', notifs.text, notification.content);
-      // console.log('condition 3', notifs.sender, notification.sender._id)
-      // console.log('currU', userId, 'from ids', notifs);
+      // console.log('curr user', userId, 'condition 1 chatId:', notifs.chatId, 'from notifs', notification.chat);
+      console.log('curr user', userId, 'condition 2 text:', notifs.text, 'from notifs', notification.content);
+      // console.log('curr user', userId, 'condition 3 sender:', notifs.sender, 'from notifs', notification.sender._id);
       return notifs.chatId === notification.chat
         && notifs.text === notification.content
         && notifs.sender !== userId;
     });
 
-    console.log('curr user', userId,'matched notifs?', matchedChatNotif);
+    //console.log('curr user', userId,'matched notifs?', matchedChatNotif);
 
     // if the notification is found, set it to unread
     // if (matchedChatNotif) {
