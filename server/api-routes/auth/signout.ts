@@ -1,9 +1,9 @@
 import { Router, Request, Response } from 'express';
 
-import { User } from '../../models/user';
 import connect from '../../config/db';
 import { MISSING_FIELDS, UNKNOWN_ERROR } from '../../constants/error';
 import { SIGNOUT_SUCCESS } from '../../constants/statusMessages';
+import { User } from '../../models/user';
 
 const router = Router();
 
