@@ -192,7 +192,6 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
           })
       })
       .catch((e: any) => {
-        console.log(e);
         alert(e.message);
       })
       .finally(() => {

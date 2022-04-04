@@ -27,9 +27,15 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
   const auth = useAuth();
   const [checked, setChecked] = React.useState('silver');
   const data = [
-    {value: 'silver'},
-    {value: 'gold'},
-    {value: 'unlimited'},
+    {
+      color: 'silver',
+    },
+    {
+      value: 'gold',
+    },
+    {
+      value: 'unlimited'
+    },
   ];
 
   // Cancel Button for header
@@ -83,9 +89,9 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
               onPress={() => setChecked('gold')}
             />
           </View>
-
+        
           <View style={styles.subscriptionOptions}>
-            <Text style={styles.textTitles}>Agape Unlimited</Text>
+            <Text style={styles.textTitles}></Text>
             <Text style={styles.textDescription}>- Send as many Likes as you want.</Text>
             <Text style={styles.textDescription}>- Customize all the features.</Text>
             <Text style={styles.textDescription}>- Turn off Ads.</Text>
