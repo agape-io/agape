@@ -3,9 +3,9 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const UserModel = new Schema({
-  email: { type: String },
+  email: { type: String, unique: true },
   password: { type: String },
-  isOnline: { type: Boolean },
+  isOnline: { type: Boolean, default: false },
   profile: {
     name: { type: String },
     age: { type: Number },
