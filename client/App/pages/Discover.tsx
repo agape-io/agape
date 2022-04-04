@@ -41,6 +41,7 @@ export interface DiscoverProps {
 const Discover: FC<DiscoverProps> = ({ navigation }) => {
     const [swiper, setSwiper] = useState<CardStack | null>(null);
     //const [loading, setLoading] = useState<boolean>(true);
+    const [errorMessage, setErrorMessage] = useState<any>('');
     const [matches, setMatches] = useState<any>(null);
     const isMounted = useRef<any>(null);
 
@@ -55,7 +56,8 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                     const { users } = res.data;
                     setMatches(users);
                 }).catch(e => {
-                    console.error(e.response.data.message);
+                    setErrorMessage(e.response.data.message);
+                    //console.error(e.response.data.message);
                 });
         };
 
@@ -93,7 +95,7 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                     {/* <City /> */}
                     {/* <Filters /> */} 
                 </View>
-                {matches && (
+                {matches ? (
                     <CardStack
                         verticalSwipe={false}
                         renderNoMoreCards={() => <NoMoreCards />}
@@ -113,6 +115,10 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                             )
                         })}
                     </CardStack>
+                ) : (
+                        <>
+                            <Text style={{textAlign: 'center', marginTop: 250}}>{errorMessage}</Text>
+                    </>
                 )}
             </View>
         </ImageBackground>
