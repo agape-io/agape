@@ -19,34 +19,36 @@ import {
 import axios from 'axios';
 import { MaterialCommunityIcons } from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as ImagePicker from 'expo-image-picker';
-import { CompositeNavigationProp } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import {
-  HomeTabNavigatorParamList,
-  RootNavigatorParamsList
-} from '../types';
+import { ProfileModalProps } from '../types';
 import { useAuth } from '../context';
 
 // API's
 import {
   updateProfile,
-  getProfile
+  getProfile,
+  updatePreferences,
+  getPreferences
 } from '../utils';
 import { CLOUDINARY_API_URL } from '@env';
 
 // Styles
 import styles, { PRIMARY_COLOR } from '../../assets/styles';
 
-export interface ProfileModalProps {
-  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Profile'>,
-  NativeStackNavigationProp<RootNavigatorParamsList>>;
+// Cancel Button for header
+const CancelButton = ({ onPress }:any) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <MaterialCommunityIcons name="arrow-left" size={26} color="black"/>
+    </TouchableOpacity>
+  );
 }
 
-const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
+const ProfileModal: FC<ProfileModalProps> = ({ navigation }) => {
   const auth = useAuth();
 
   // hide create profile button if profile is already available
   const [profile, hasProfile] = useState<any>();
+  const [userPreference, hasUserPreference] = useState<any>();
   const [photo, setPhoto] = useState<any>(null);
   const [cloudinary, getCloudinary] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -55,6 +57,9 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
   const [aboutMe, setAboutMe] = useState<string>('');
   const [location, setLocation] = useState<string>('');
   const [religion, setReligion] = useState<string>('');
+  const [maxAge, setMaxAge] = useState<string>('');
+  const [minAge, setMinAge] = useState<string>('');
+  const [maxDist, setMaxDist] = useState<string>('');
   const [preference, setPreference] = useState<string>('');
   const [userAge, setUserAge] = useState<string>('');
   const [yearBorn, setYearBorn] = useState<string>('');
@@ -112,15 +117,6 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
       });
   }
 
-  // Cancel Button for header
-  const CancelButton = ({ onPress }:any) => {
-    return (
-      <TouchableOpacity onPress={onPress}>
-        <MaterialCommunityIcons name="arrow-left" size={26} color="black"/>
-      </TouchableOpacity>
-    );
-  }
-
   // Update Profile
   const handleUpdateProfile = async (
     name: string,
@@ -167,6 +163,32 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
       });
   }
 
+  const getUserProfile = () => {
+    getProfile(userId, token)
+      .then((res: any) => {
+        const { profile } = res.data;
+        
+        setPhoto(profile.photo);
+
+        // check if profile exists
+        hasProfile(profile);
+      })
+      .catch((e: any) => {
+        console.error(e.message);
+      })
+  };
+
+  const getUserPreference = () => {
+    getPreferences(userId, token)
+      .then((res: any) => {
+        const { preference } = res.data;
+        console.log(preference);
+      })
+      .catch((e: any) => {
+        console.error(e.message);
+      });
+  }
+
   // Header button initialization
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -178,26 +200,14 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
 
   // Persist profile data
   useEffect(() => {
-    const getUserProfile = () => {
-      getProfile(userId, token)
-        .then((res: any) => {
-          const { profile } = res.data;
-          
-          setPhoto(profile.photo);
-
-          // check if profile exists
-          hasProfile(profile);
-        })
-        .catch((e: any) => {
-          console.log(e.message);
-      })
-    };
 
     getUserProfile();
+    getUserPreference();
 
     return () => {
       // cleanup
       hasProfile(null);
+      hasUserPreference(null);
     }
   }, []);
 
@@ -220,7 +230,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={[styles.form, { marginTop: -30}]}>
+      <View style={[styles.form, { marginTop: -30 }]}>
         <TextInput
           style={styles.input}
           placeholder="Name"

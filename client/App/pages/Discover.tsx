@@ -4,7 +4,7 @@
 import React, {
     useState,
     FC,
-    useEffect,
+    useCallback,
     useRef
 } from "react";
 import {
@@ -13,8 +13,12 @@ import {
     Text,
 } from "react-native";
 import CardStack, { Card } from "react-native-card-stack-swiper";
-import { CompositeNavigationProp } from "@react-navigation/native";
+import {
+    CompositeNavigationProp,
+    useFocusEffect
+} from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+
 import { useAuth } from "../context";
 import {
     HomeTabNavigatorParamList,
@@ -52,7 +56,7 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                     //console.log(token, userId);
                     setMatches(users);
                 }).catch(e => {
-                    console.log(e.message);
+                    console.log(e.response.data.message);
                 });
         };
 
@@ -68,15 +72,17 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
     }
     
     // Load matches
-    useEffect(() => {
-        loadMatches();
-        isMounted.current = true;
+    useFocusEffect(
+        useCallback(() => {
+            loadMatches();
+            isMounted.current = true;
 
-        return () => {
-            setMatches(null);
-            isMounted.current = false;
-        }
-    }, []);
+            return () => {
+                setMatches(null);
+                isMounted.current = false;
+            }
+        }, [])
+    );
 
     return (
         <ImageBackground
@@ -91,7 +97,6 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                 {matches && (
                     <CardStack
                         verticalSwipe={false}
-                        loop // keep loop to true for now
                         renderNoMoreCards={() => <NoMoreCards />}
                         ref={newSwiper => setSwiper(newSwiper)}
                     >

@@ -2,7 +2,6 @@
  * Routes Handler
  */
 import React, { FC } from 'react';
-import { Image, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -31,14 +30,16 @@ import {
   Message,
   Settings
 } from '../pages';
+import {
+  ProfileModal,
+  SubscriptionModal
+} from '../components';
 
 // Styles
 import {
   SECONDARY_COLOR,
   PRIMARY_COLOR
 } from '../../assets/styles';
-import { ProfileModal } from '../components';
-import { SubscriptionModal } from '../components';
 
 interface State {
   loading?: boolean;
@@ -100,16 +101,6 @@ const HomeTabs: FC = () => {
         }}
       />
       <Screen
-        name="Chat"
-        component={Messaging}
-        options={{
-          tabBarLabel: 'Chat',
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="message-outline" color={color} size={26} />
-          )
-        }}
-      />
-      <Screen
         name="Discover"
         component={Discover}
         options={{
@@ -129,11 +120,6 @@ const HomeTabs: FC = () => {
           )
         }}
       />
-     
-      {/* <Screen
-        name="Message"
-        component={Message}
-      /> */}
     </Navigator>
   )
 }
@@ -147,8 +133,6 @@ const Auth: FC = () => {
       <Screen name="SignUp" component={SignUp} />
       <Screen name="SignIn" component={SignIn} />
       <Screen name="Landing" component={Landing} />
-      {/* <Screen name="Message" component={Message} /> */}
-
     </Navigator>
   )
 }
@@ -183,7 +167,6 @@ const Routes: FC<State> = () => {
             </Group>
           </>
         ) : (
-          // <Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
           <Screen name="Auth" component={Auth} options={{ headerShown: false }} />
         )}
       </Navigator>

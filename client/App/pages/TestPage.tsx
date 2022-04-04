@@ -22,8 +22,12 @@ import {
   getMatches,
   getProfile,
   createProfile,
-  updateProfile
+  updateProfile,
+  updatePreferences,
+  getPreferences,
+  createPreferences
 } from '../utils';
+import { StringLiteralLike } from 'typescript';
 
 export interface TestPageProps {
   navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Test'>,
@@ -46,12 +50,24 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
   let testAboutMe = "Where's Hange? Levi?";
   let testReligion = "Walls";
   let testLocation = "Paradis";
+  let testMaxDist = 10;
+  let testMinAge = 18;
+  let testMaxAge = 40;
 
   const testMatches = async () => {
     getMatches(userId, token).then(res => {
       console.log(res.data);
     }).catch(e => {
       console.log('something went wrong: ', e.message);
+    })
+    .then(() => navigation.navigate('Test'));
+  }
+
+  const testPreferences = async () => {
+    getPreferences(userId, token).then(res => {
+      console.log(res.data);
+    }).catch(e => {
+      console.log('Something went wrong: ', e);
     })
     .then(() => navigation.navigate('Test'));
   }
@@ -85,6 +101,44 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
         console.log('something went wrong: ', e.message);
       })
       .then(() => navigation.navigate('Test'));
+  }
+
+  const testCreatePreference = async (
+    sexuality: string,
+    maxDist: number,
+    minAge: number,
+    maxAge: number,
+    religion: string
+  ) => {
+    createPreferences(userId, token, sexuality, maxDist, minAge, maxAge, religion)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(e => {
+        console.log('something went wrong: ', e.message);
+      })
+      .then(() => {
+          navigation.navigate('Test');
+      });
+  }
+
+  const testUpdatePreference = async (
+    sexuality: string,
+    maxDist: number,
+    minAge: number,
+    maxAge: number,
+    religion: string
+  ) => {
+    updatePreferences(userId, token, sexuality, maxDist, minAge, maxAge, religion)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(e => {
+        console.log('something went wrong: ', e.message);
+      })
+      .then(() => {
+          navigation.navigate('Test');
+      });
   }
 
   const testCreateProfile = async (
@@ -132,6 +186,15 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
       </TouchableOpacity>
       <TouchableOpacity onPress={() => testCreateProfile(testName, testGender, testAge, testYearBorn, testAboutMe, testReligion, testLocation, testHobbies, testSexuality, testPhoto)}>
         <Text>Test Create Profile</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => testPreferences()}>
+        <Text>Test Get Preferences</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => testUpdatePreference(testSexuality, testMaxDist, testMinAge, testMaxAge, testReligion)}>
+        <Text>Test Update Preference</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => testCreatePreference(testSexuality, testMaxDist, testMinAge, testMaxAge, testReligion)}>
+        <Text>Test Create Preference</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => signOut()}

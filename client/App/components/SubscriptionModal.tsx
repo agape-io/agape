@@ -3,28 +3,21 @@ import React, {
   useState,
   useLayoutEffect,
   useEffect,
-  useRef
 } from 'react';
 import {
   Text,
-  Image,
   View,
   TouchableOpacity,
-  TextInput,
-  ScrollView,
-  ImageBackground,
+  ScrollView
 } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import * as ImagePicker from 'expo-image-picker';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
-  HomeTabNavigatorParamList,
-  RootNavigatorParamsList
+  ProfileModalProps
 } from '../types';
 import { useAuth } from '../context';
-import { Icon, ProfileItem } from "../components";
 
 // Styles
 import styles, { 
@@ -34,12 +27,7 @@ import styles, {
   WHITE
 } from '../../assets/styles';
 
-export interface SubscriptionModalProps {
-  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Profile'>,
-  NativeStackNavigationProp<RootNavigatorParamsList>>;
-}
-
-const SubscriptionModal: FC<SubscriptionModalProps> = ({navigation}) => {
+const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
   const auth = useAuth();
   const [checked, setChecked] = React.useState('silver');
   const data = [
