@@ -98,15 +98,16 @@ router.post('/subscribe', async (req: Request, res: Response) => {
     await connect();
     const date = new Date();
     const nextMonthDate = date.setMonth(date.getMonth() + 1);
+    const settings = {
+      membershipType: planId,
+      endingDate: nextMonthDate,
+      billingDate: nextMonthDate,
+    };
     await User.findByIdAndUpdate(
       { _id: userId },
       {
         $set: {
-          settings: {
-            membershipType: planId,
-            endingDate: nextMonthDate,
-            billingDate: nextMonthDate,
-          },
+          settings,
         },
       },
       (err, doc) => {
@@ -159,7 +160,7 @@ router.post('/cancel', async (req: Request, res: Response) => {
         user.save();
         res.status(201).send({
           status: 201,
-          message: 'Subscription canceled!',
+          message: 'Subscription canceled! User will not be billed at the end of the month!',
         });
       });
   } else {

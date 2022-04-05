@@ -31,50 +31,56 @@ router.post('/email', async (req: Request, res: Response) => {
   const { email, password } = req.body;
   if (email && password) {
     await connect();
-    User.findOne({ email }, async (err, existingUser) => {
-      if (existingUser) {
-        await bcrypt.compare(password, existingUser.password, (err, passwordMatch) => {
-          if (passwordMatch) {
-            const user = {
-              userId: existingUser._id,
-              email,
-              token: null,
-              isOnline: false,
-            };
-            const token = jwt.sign(
-              { email: user.email },
-              JSONWebToken.Key,
-              {
-                expiresIn: '1hr',
-              },
-            );
-            const subscription = {
-              billingDate: moment(existingUser.settings.billingDate).format('MM/DD/YYYY'),
-              endingDate: moment(existingUser.settings.endingDate).format('MM/DD/YYYY'),
-              promptResubscription: moment(existingUser.settings.endingDate).isSame(new Date(), 'day'),
-            };
-            user.token = token;
-            user.isOnline = true;
-            res.status(200).send({
-              status: 200,
-              message: 'Logged In!',
-              user,
-              subscription,
-            });
-          } else {
-            res.status(500).send({
-              status: 500,
-              message: 'Incorrect password!',
-            });
-          }
-        });
-      } else {
-        res.status(500).send({
-          status: 500,
-          message: 'Invalid Email!',
-        });
-      }
-    });
+    await User.findOne({
+      email,
+    })
+      .then(async (user) => {
+        if (user) {
+          await bcrypt.compare(password, user.password, (err, passwordMatch) => {
+            if (passwordMatch) {
+              const userObj = {
+                userId: user._id,
+                email,
+                token: null,
+                isOnline: false,
+              };
+              const token = jwt.sign(
+                { email: user.email },
+                JSONWebToken.Key,
+                {
+                  expiresIn: '1hr',
+                },
+              );
+              const subscriptionReset = moment(user.settings.endingDate).isSame(new Date(), 'day');
+              if (subscriptionReset) {
+                const { settings } = user;
+                settings.billingDate = null;
+                settings.endingDate = null;
+                settings.membershipType = '6233c60d59af3002b221b0ce';
+                user.save();
+              }
+              userObj.token = token;
+              userObj.isOnline = true;
+              res.status(200).send({
+                status: 200,
+                message: 'Logged In!',
+                userObj,
+                subscriptionReset,
+              });
+            } else {
+              res.status(500).send({
+                status: 500,
+                message: 'Incorrect password!',
+              });
+            }
+          });
+        } else {
+          res.status(500).send({
+            status: 500,
+            message: 'Invalid Email!',
+          });
+        }
+      });
   } else {
     res.status(500).send({
       status: 500,
