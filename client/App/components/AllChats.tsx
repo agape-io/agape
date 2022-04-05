@@ -67,7 +67,7 @@ const AllChats = ({ navigation }: any) => {
   // fetch any notifications
   const fetchNotifications = async () => {
     getNotifications(userId, token)
-      .then(res => {
+      .then((res: any) => {
         // get notification ids\
         const notifIds = res.data.map((notifs: any) => {
           // retrieved message cannot be the current user that sent it.
