@@ -8,7 +8,6 @@ import axios from 'axios';
 // API
 import { API_URL } from '@env';
 
-
 /**
  * Sign Up
  * 
