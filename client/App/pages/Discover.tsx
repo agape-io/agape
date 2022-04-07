@@ -57,7 +57,6 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                     setMatches(users);
                 }).catch(e => {
                     setErrorMessage(e.response.data.message);
-                    //console.error(e.response.data.message);
                 });
         };
 

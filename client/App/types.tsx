@@ -38,8 +38,8 @@ type RootNavigatorParamsList = {
 type AuthContextData = {
   authData: any;
   loading: boolean;
-  signIn(email: string, password: string): Promise<void>;
-  signOut(): Promise<void>;
+  signIn(email: string, password: string): any;
+  signOut(): any;
   children?: React.ReactNode;
   notification: any;
   setNotification: any;
@@ -77,6 +77,10 @@ type ProfileModalProps = {
   NativeStackNavigationProp<RootNavigatorParamsList>>;
 }
 
+type SettingsProps = {
+  navigation: NativeStackNavigationProp<RootNavigatorParamsList, 'Settings'>;
+}
+
 export {
   HomeTabNavigatorParamList,
   RootNavigatorParamsList,
@@ -88,5 +92,6 @@ export {
   ProfileItemT,
   SettingsScreenT,
   MessageT,
-  ProfileModalProps
+  ProfileModalProps,
+  SettingsProps
 }

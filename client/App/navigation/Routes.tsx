@@ -150,7 +150,7 @@ const Routes: FC<State> = () => {
     <NavigationContainer>
       <Navigator>
         {authData ? (
-          <>
+          <Group>
             <Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
             <Screen name="Settings" component={Settings} options={{ headerShown: true }} />
             <Group screenOptions={{ presentation: 'modal' }}>
@@ -165,9 +165,11 @@ const Routes: FC<State> = () => {
                 options={{ headerTransparent: true, headerTitle: '' }}
               />
             </Group>
-          </>
+          </Group>
         ) : (
-          <Screen name="Auth" component={Auth} options={{ headerShown: false }} />
+            <Group screenOptions={{ headerShown: false }}>
+              <Screen name="Auth" component={Auth} />
+            </Group>
         )}
       </Navigator>
     </NavigationContainer>
