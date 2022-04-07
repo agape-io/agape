@@ -51,7 +51,7 @@ const Profile: FC<ProfileProps> = ({ navigation }) => {
         const { profile } = res.data;
         setProfile(profile);
       }).catch(e => {
-        console.error(e.message);
+        console.error(e.response.data.message);
       });
   }
 

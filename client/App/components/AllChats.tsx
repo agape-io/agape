@@ -60,7 +60,7 @@ const AllChats = () => {
       })
       .catch(e => {
         // throw error
-        console.error(e.message);
+        console.error(e.response.data.message);
       });
   }
   

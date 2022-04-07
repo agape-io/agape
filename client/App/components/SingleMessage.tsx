@@ -63,7 +63,7 @@ const SingleMessage = ({ route, userData }: any) => {
         socket.emit('join chat', chatId);
       })
       .catch((e: any) => {
-        console.error(e.message);
+        console.error(e.response.data.message);
       });
   };
 
@@ -125,7 +125,7 @@ const SingleMessage = ({ route, userData }: any) => {
         setLoading(false);
       })
       .catch((e: any) => {
-        console.error(e.message);
+        console.error(e.response.data.message);
       });
   }, []);
 

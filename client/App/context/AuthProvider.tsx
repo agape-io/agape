@@ -31,7 +31,7 @@ const AuthProvider:FC = ({ children }) => {
         setAuthData(_authData);
         setLoading(false);
       }).catch(e => { 
-        Promise.reject(e.message);
+        Promise.reject(e.response.data.message);
       })
   }
 
@@ -58,11 +58,11 @@ const AuthProvider:FC = ({ children }) => {
           Promise.resolve('User is signed out!');
         })
         .catch((e: any) => {
-          Promise.reject(e.message);
+          Promise.reject(e.response.data.message);
         });
       })
       .catch((e: any) => {
-        Promise.reject(e.message);
+        Promise.reject(e.response.data.message);
       });  
   }
 

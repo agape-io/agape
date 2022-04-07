@@ -78,7 +78,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         hasProfile(profile);
       })
       .catch((e: any) => {
-        console.error(e.message);
+        console.error(e.response.data.message);
       });
   }
 
@@ -90,7 +90,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         hasPreferences(preferences);
       })
       .catch((e: any) => {
-        console.error(e.message);
+        console.error(e.response.data.message);
       });
   }
 
@@ -137,7 +137,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
       .catch((e: any) => {
         setLoading(true);
 
-        alert(e.message);
+        alert(e.response.data.message);
       });
   }
 
@@ -188,11 +188,11 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
             navigation.navigate('Profile');
           })
           .catch((e: any) => {
-            console.error(e.messaeg);
+            console.error(e.response.data.message);
           })
       })
       .catch((e: any) => {
-        alert(e.message);
+        alert(e.response.data.message);
       })
       .finally(() => {
         if (isMounted.current) setLoading(false);
