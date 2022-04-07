@@ -51,7 +51,7 @@ const Profile: FC<ProfileProps> = ({ navigation }) => {
         const { profile } = res.data;
         setProfile(profile);
       }).catch(e => {
-        console.error(e.message);
+        console.error(e.response.data.message);
       });
   }
 
@@ -80,7 +80,7 @@ const Profile: FC<ProfileProps> = ({ navigation }) => {
         {profile ? (
           <>
             <ImageBackground source={{ uri: profile.photo }} style={styles.photo}>
-              <View style={styles.top}>
+              {/* <View style={styles.top}>
                 <TouchableOpacity>
                   <Icon
                     name="chevron-back"
@@ -89,7 +89,7 @@ const Profile: FC<ProfileProps> = ({ navigation }) => {
                     style={styles.topIconLeft}
                   />
                 </TouchableOpacity>
-              </View>
+              </View> */}
             </ImageBackground>
             <ProfileItem
               data={profile}

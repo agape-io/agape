@@ -10,7 +10,6 @@ import React, {
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
   SafeAreaView,
   Image,
@@ -24,7 +23,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthNavigatorParamList } from '../types';
 
 // API
-import { API_URL } from '@env';
+import { signUp } from '../utils';
 
 // Styles
 import styles from "../../assets/styles";
@@ -54,11 +53,7 @@ const SignUp: FC<SignUpProps> = ({ navigation }) => {
   }, []);
 
   const runSignUp = async (email: string, password: string, verifyPassword: string) => {
-    axios.post(`${API_URL}/signup/email`, {
-      email,
-      password,
-      verifyPassword
-    })
+    signUp(email, password, verifyPassword)
       .then(res => {
         // check if there is a response
         // Tell the user try signing in
@@ -69,7 +64,6 @@ const SignUp: FC<SignUpProps> = ({ navigation }) => {
       .catch(e => {
         // display errors to the UI
         isError(true);
-        console.log(e.message);
         setErrorMessage(e.response.data.message);
       })
       .finally(() => {

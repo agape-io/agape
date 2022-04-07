@@ -58,9 +58,8 @@ const SignIn: FC<SignInProps> = ({ navigation }) => {
         isError(false);
         setLoading(false);
       })
-      .catch(e => {
-        //navigation.navigate("Auth", { screen: "SignIn" });
-        console.log(e.message);
+      .catch((e: any) => {
+        // sign in fails
         setErrorMessage(e.response.data.message);
         isError(true);
       })

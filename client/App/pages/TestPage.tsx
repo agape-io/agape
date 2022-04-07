@@ -58,7 +58,7 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
     getMatches(userId, token).then(res => {
       console.log(res.data);
     }).catch(e => {
-      console.log('something went wrong: ', e.message);
+      console.error('something went wrong: ', e.response.data.message);
     })
     .then(() => navigation.navigate('Test'));
   }
@@ -67,7 +67,7 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
     getPreferences(userId, token).then(res => {
       console.log(res.data);
     }).catch(e => {
-      console.log('Something went wrong: ', e);
+      console.error('Something went wrong: ', e.response.data.message);
     })
     .then(() => navigation.navigate('Test'));
   }
@@ -76,7 +76,7 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
     getProfile(userId, token).then(res => {
       console.log(res.data);
     }).catch(e => {
-      console.log('something went wrong: ', e.message);
+      console.error('something went wrong: ', e.response.data.message);
     })
     .then(() => navigation.navigate('Test'));
   }
@@ -98,7 +98,7 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
         console.log(res.data);
       })
       .catch(e => {
-        console.log('something went wrong: ', e.message);
+        console.error('something went wrong: ', e.response.data.message);
       })
       .then(() => navigation.navigate('Test'));
   }
@@ -115,7 +115,7 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
         console.log(res.data);
       })
       .catch(e => {
-        console.log('something went wrong: ', e.message);
+        console.error('something went wrong: ', e.response.data.message);
       })
       .then(() => {
           navigation.navigate('Test');
@@ -134,7 +134,7 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
         console.log(res.data);
       })
       .catch(e => {
-        console.log('something went wrong: ', e.message);
+        console.error('something went wrong: ', e.response.data.message);
       })
       .then(() => {
           navigation.navigate('Test');
@@ -158,7 +158,7 @@ const TestPage:FC<TestPageProps> = ({ navigation }) => {
         console.log(res.data);
       })
       .catch(e => {
-        console.log('something went wrong: ', e);
+        console.error('something went wrong: ', e.response.data.message);
       })
       .then(() => {
           navigation.navigate('Test');

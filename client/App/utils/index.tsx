@@ -9,6 +9,32 @@ import axios from 'axios';
 import { API_URL } from '@env';
 
 /**
+ * Sign Up
+ * 
+ * @param email 
+ * @param password 
+ * @param verifyPassword 
+ */
+const signUp = async (email: string, password: string, verifyPassword: string) => {
+  return axios.post(`${API_URL}/signup/email`, {
+      email,
+      password,
+      verifyPassword
+  });
+}
+
+/**
+ * Log Out
+ * 
+ * @param userId 
+ */
+const logOut = async (userId: string) => {
+  return axios.post(`${API_URL}/signout/email`, {
+    userId
+  });
+}
+
+/**
  * Get matches
  * 
  * @param userId User ID
@@ -305,6 +331,8 @@ const getMessages = async (chatId: string, token: string) => {
 }
 
 export {
+  logOut,
+  signUp,
   getProfile,
   updateProfile,
   createProfile,

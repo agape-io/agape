@@ -1,13 +1,20 @@
-import React, { useState, useEffect, useRef, FC } from "react";
+/**
+ * Settings Screen
+ */
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  FC
+} from "react";
 import {
-  StyleSheet,
   Text,
   View,
   StatusBar,
   Image,
   Platform,
   RefreshControl,
-  Switch,
+  TouchableOpacity,
   Alert,
   Modal
 } from 'react-native'
@@ -15,23 +22,13 @@ import {
 
 import { SettingsScreen, SettingsData } from '../components'
 
-import {
-  HomeTabNavigatorParamList,
-  RootNavigatorParamsList,
-} from "../types";
-import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { SettingsProps } from "../types";
 
 import { useAuth } from '../context';
 
-const fontFamily = Platform.OS === 'ios' ? 'Avenir' : 'sans-serif'
 import styles from "../../assets/styles";
 
-export interface SettingsProps {
-  navigation: NativeStackNavigationProp<RootNavigatorParamsList>;
-}
-
+const fontFamily = Platform.OS === 'ios' ? 'Avenir' : 'sans-serif';
 const statusBarHeight = Platform.OS === 'ios' ? 35 : 0
 
 const Settings: FC<SettingsProps> = ({ navigation }) => {
@@ -77,7 +74,7 @@ const Settings: FC<SettingsProps> = ({ navigation }) => {
   const signOut = async () => {
     auth.signOut()
       .then(() => {
-        navigation.navigate("Auth", { screen: "SignIn" });
+        navigation.navigate("Auth", { screen: "SignIn"});
       });
   };
 
