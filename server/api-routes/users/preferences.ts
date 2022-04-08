@@ -1,7 +1,10 @@
 import { Router, Request, Response } from 'express';
 
-import { User } from '../../models/user';
 import connect from '../../config/db';
+import { MISSING_FIELDS, UNKNOWN_ERROR, USER_ERRORS } from '../../config/errorMessages';
+import { CREATE_PREFERENCES_SUCCESS, GET_PREFERENCES_SUCCESS, UPDATE_PREFERENCES_SUCCESS } from '../../config/statusMessages';
+
+import { User } from '../../models/user';
 
 const router = Router();
 
@@ -20,28 +23,37 @@ const router = Router();
  *
  * @apiVersion 0.1.0
  */
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', (req: Request, res: Response) => {
   const { userId } = req.query;
   if (userId) {
-    await connect();
-    User.findOne({ _id: userId }, (err, existingUser) => {
-      if (existingUser) {
+    connect()
+      .then(() => User.findOne({ _id: userId }, 'preferences'))
+      .then((user: any) => {
+        if (!user) throw new Error(USER_ERRORS.INVALID_ID);
         res.status(200).send({
           status: 200,
-          message: 'User preferences found!',
-          preferences: existingUser.preferences,
+          message: GET_PREFERENCES_SUCCESS,
+          preferences: user.preferences,
         });
-      } else {
-        res.status(500).send({
-          status: 500,
-          message: 'User preferences does not exist!',
-        });
-      }
-    });
+      })
+      .catch((err: any) => {
+        if (err.message === USER_ERRORS.INVALID_ID) {
+          res.status(400).send({
+            status: 400,
+            message: err.message,
+          });
+        } else {
+          console.error(err.message);
+          res.status(500).send({
+            status: 500,
+            message: UNKNOWN_ERROR,
+          });
+        }
+      });
   } else {
-    res.status(500).send({
-      status: 500,
-      message: 'Missing User Id!',
+    res.status(400).send({
+      status: 400,
+      message: MISSING_FIELDS,
     });
   }
 });
@@ -66,10 +78,9 @@ router.get('/', async (req: Request, res: Response) => {
  *
  * @apiVersion 0.1.0
  */
-router.post('/create', async (req: Request, res: Response) => {
+router.post('/create', (req: Request, res: Response) => {
   const { userId, sexuality } = req.body;
   if (userId && sexuality) {
-    await connect();
     const {
       maxDist, minAge, maxAge, religion, userId,
     } = req.body;
@@ -80,33 +91,33 @@ router.post('/create', async (req: Request, res: Response) => {
       maxAge: maxAge || '',
       religion: religion || '',
     };
-    User.findOneAndUpdate(
-      { _id: userId },
-      {
-        $set: {
-          preferences,
+    connect()
+      .then(() => User.findOneAndUpdate(
+        { _id: userId },
+        {
+          $set: {
+            preferences,
+          },
         },
-      },
-      { upsert: true },
-      (err, doc) => {
-        if (err) {
-          res.status(500).send({
-            status: 500,
-            message: `Error creating preferences! ${err}`,
-          });
-          console.error(err);
-        } else {
-          res.status(201).send({
-            status: 201,
-            message: 'Preferences created!',
-          });
-        }
-      },
-    );
+        { upsert: true },
+      ))
+      .then(() => {
+        res.status(201).send({
+          status: 201,
+          message: CREATE_PREFERENCES_SUCCESS,
+        });
+      })
+      .catch((err: any) => {
+        console.error(err.message);
+        res.status(500).send({
+          status: 500,
+          message: UNKNOWN_ERROR,
+        });
+      });
   } else {
-    res.status(500).send({
-      status: 500,
-      message: 'Missing User Id!',
+    res.status(400).send({
+      status: 400,
+      message: MISSING_FIELDS,
     });
   }
 });
@@ -117,7 +128,7 @@ router.post('/create', async (req: Request, res: Response) => {
  * @apiGroup Users
  * @apiDescription Update user's preferences
  *
- * @apiSuccess (201)
+ * @apiSuccess (204)
  *
  * @apiSampleRequest PUT /update
  *
@@ -131,10 +142,9 @@ router.post('/create', async (req: Request, res: Response) => {
  *
  * @apiVersion 0.1.0
  */
-router.put('/update', async (req: Request, res: Response) => {
+router.put('/update', (req: Request, res: Response) => {
   const { userId, sexuality } = req.body;
   if (userId && sexuality) {
-    await connect();
     const {
       maxDist, minAge, maxAge, religion, userId,
     } = req.body;
@@ -145,33 +155,33 @@ router.put('/update', async (req: Request, res: Response) => {
       maxAge: maxAge || '',
       religion: religion || '',
     };
-    User.findOneAndUpdate(
-      { _id: userId },
-      {
-        $set: {
-          preferences,
+    connect()
+      .then(() => User.findOneAndUpdate(
+        { _id: userId },
+        {
+          $set: {
+            preferences,
+          },
         },
-      },
-      { upsert: true },
-      (err, doc) => {
-        if (err) {
-          res.status(500).send({
-            status: 500,
-            message: `Error updating preferences! ${err}`,
-          });
-          console.error(err);
-        } else {
-          res.status(201).send({
-            status: 201,
-            message: 'Preferences updated!',
-          });
-        }
-      },
-    );
+        { upsert: true },
+      ))
+      .then(() => {
+        res.status(204).send({
+          status: 204,
+          message: UPDATE_PREFERENCES_SUCCESS,
+        });
+      })
+      .catch((err: any) => {
+        console.error(err.message);
+        res.status(500).send({
+          status: 500,
+          message: UNKNOWN_ERROR,
+        });
+      });
   } else {
-    res.status(500).send({
-      status: 500,
-      message: 'Missing User Id!',
+    res.status(400).send({
+      status: 400,
+      message: MISSING_FIELDS,
     });
   }
 });

@@ -1,8 +1,9 @@
 import { Router, Request, Response } from 'express';
 
 import connect from '../../config/db';
-import { MISSING_FIELDS, UNKNOWN_ERROR } from '../../constants/error';
-import { SIGNOUT_SUCCESS } from '../../constants/statusMessages';
+import { MISSING_FIELDS, UNKNOWN_ERROR } from '../../config/errorMessages';
+import { SIGNOUT_SUCCESS } from '../../config/statusMessages';
+
 import { User } from '../../models/user';
 
 const router = Router();
@@ -35,7 +36,7 @@ router.post('/email', (req: Request, res: Response) => {
         },
         { upsert: true },
       ))
-      .then((user) => {
+      .then((user: any) => {
         res.status(201).send({
           status: 201,
           message: SIGNOUT_SUCCESS,
@@ -45,7 +46,7 @@ router.post('/email', (req: Request, res: Response) => {
           },
         });
       })
-      .catch((err) => {
+      .catch((err: any) => {
         console.error(err);
         res.status(500).send({
           status: 500,

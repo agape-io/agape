@@ -4,7 +4,7 @@ import passwordValidator from 'password-validator';
 const schema = new passwordValidator();
 schema
   .is().min(8)
-  .is().max(100)
+  .is().max(30)
   .has()
   .uppercase()
   .has()

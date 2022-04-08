@@ -1,7 +1,10 @@
 import { Router, Request, Response } from 'express';
 
-import { User } from '../../models/user';
 import connect from '../../config/db';
+import { MISSING_FIELDS, UNKNOWN_ERROR, USER_ERRORS } from '../../config/errorMessages';
+import { SWIPE_LEFT_SUCCESS, SWIPE_RIGHT_MATCH_SUCCESS, SWIPE_RIGHT_NO_MATCH_SUCCESS } from '../../config/statusMessages';
+
+import { User } from '../../models/user';
 
 const router = Router();
 
@@ -21,37 +24,36 @@ const router = Router();
  *
  * @apiVersion 0.1.0
  */
-router.put('/left', async (req: Request, res: Response) => {
+router.put('/left', (req: Request, res: Response) => {
   const { userId, matchUserId } = req.body;
   if (userId && matchUserId) {
-    await connect();
-    User.findByIdAndUpdate(
-      { _id: userId },
-      {
-        $push: {
-          swipedLeft: matchUserId,
+    connect()
+      .then(() => User.findByIdAndUpdate(
+        { _id: userId },
+        {
+          $push: {
+            swipedLeft: matchUserId,
+          },
         },
-      },
-      { upsert: true },
-      (err, doc) => {
-        if (err) {
-          res.status(500).send({
-            status: 500,
-            message: `Error updating Swiped Left Array! ${err}`,
-          });
-          console.error(err);
-        } else {
-          res.status(201).send({
-            status: 201,
-            message: 'Swiped Left Array updated!',
-          });
-        }
-      },
-    );
+        { upsert: true },
+      ))
+      .then(() => {
+        res.status(201).send({
+          status: 201,
+          message: SWIPE_LEFT_SUCCESS,
+        });
+      })
+      .catch((err: any) => {
+        console.error(err.message);
+        res.status(500).send({
+          status: 500,
+          message: UNKNOWN_ERROR,
+        });
+      });
   } else {
-    res.status(500).send({
-      status: 500,
-      message: 'Missing User Id or Match User Id!',
+    res.status(400).send({
+      status: 400,
+      message: MISSING_FIELDS,
     });
   }
 });
@@ -72,56 +74,59 @@ router.put('/left', async (req: Request, res: Response) => {
  *
  * @apiVersion 0.1.0
  */
-router.put('/right', async (req: Request, res: Response) => {
+router.put('/right', (req: Request, res: Response) => {
   const { userId, matchUserId } = req.body;
   if (userId && matchUserId) {
-    await connect();
-    User.findByIdAndUpdate(
-      { _id: userId },
-      {
-        $push: {
-          swipedRight: matchUserId,
-        },
-      },
-      { upsert: true },
-      (err, doc) => {
-        if (err) {
+    let potentialMatch: any = {};
+    connect()
+      .then(() => User.findOne({ _id: matchUserId }))
+      .then((user: any) => {
+        if (!user) throw new Error(USER_ERRORS.INVALID_MATCH_ID);
+        potentialMatch = user;
+        return User.findByIdAndUpdate(
+          { _id: userId },
+          {
+            $push: {
+              swipedRight: matchUserId,
+            },
+          },
+          { upsert: true },
+        );
+      })
+      .then(() => {
+        const { swipedRight } = potentialMatch;
+        if (swipedRight && swipedRight.includes(userId)) {
+          res.status(201).send({
+            status: 201,
+            match: true,
+            message: SWIPE_RIGHT_MATCH_SUCCESS,
+          });
+        } else {
+          res.status(201).send({
+            status: 201,
+            match: false,
+            message: SWIPE_RIGHT_NO_MATCH_SUCCESS,
+          });
+        }
+      })
+      .catch((err: any) => {
+        if (err.message === USER_ERRORS.INVALID_MATCH_ID) {
+          res.status(400).send({
+            status: 400,
+            message: err.message,
+          });
+        } else {
+          console.error(err.message);
           res.status(500).send({
             status: 500,
-            message: `Error updating Swiped Right Array! ${err}`,
+            message: UNKNOWN_ERROR,
           });
-          console.error(err);
         }
-      },
-    );
-    User.findOne({ userId: matchUserId }, (err, user) => {
-      if (err) {
-        res.status(500).send({
-          status: 500,
-          message: `Could not find user ${err}`,
-        });
-      } else {
-        const rightArray = user.swipedRight;
-        for (let i = 0; i < rightArray.length; i++) {
-          if (rightArray[i] == userId) {
-            res.status(201).send({
-              status: 201,
-              match: true,
-              message: 'ITS A MATCH!!!',
-            });
-          }
-        }
-        res.status(201).send({
-          status: 201,
-          match: false,
-          message: 'Not a match',
-        });
-      }
-    });
+      });
   } else {
-    res.status(500).send({
-      status: 500,
-      message: 'Missing User Id or Match User Id!',
+    res.status(400).send({
+      status: 400,
+      message: MISSING_FIELDS,
     });
   }
 });

@@ -1,7 +1,10 @@
 import { Router, Request, Response } from 'express';
 
-import { Plan } from '../../models/plan';
 import connect from '../../config/db';
+import { MISSING_FIELDS, UNKNOWN_ERROR } from '../../config/errorMessages';
+import { SUBSCRIPTION_CREATE_PLAN_SUCCESS, SUBSCRIPTION_GET_PLANS_SUCCESS, SUBSCRIPTION_UPDATE_PLAN_SUCCESS } from '../../config/statusMessages';
+
+import { Plan } from '../../models/plan';
 
 const router = Router();
 
@@ -17,20 +20,21 @@ const router = Router();
  *
  * @apiVersion 0.1.0
  */
-router.get('/', async (req: Request, res: Response) => {
-  try {
-    await connect();
-    const plans = await Plan.find({}, '-createdAt -updatedAt -__v');
-    res.status(200).send({
+router.get('/', (req: Request, res: Response) => {
+  connect()
+    .then(() => Plan.find({}, '-createdAt -updatedAt -__v'))
+    .then((plans: any[]) => res.status(200).send({
       status: 200,
       plans,
+      message: SUBSCRIPTION_GET_PLANS_SUCCESS,
+    }))
+    .catch((err: any) => {
+      console.error(err);
+      res.status(500).send({
+        status: 500,
+        message: UNKNOWN_ERROR,
+      });
     });
-  } catch {
-    res.status(500).send({
-      status: 500,
-      message: 'Error fetching plans!',
-    });
-  }
 });
 
 /**
@@ -49,39 +53,31 @@ router.get('/', async (req: Request, res: Response) => {
  *
  * @apiVersion 0.1.0
  */
-router.post('/create', async (req: any, res: Response) => {
+router.post('/create', (req: any, res: Response) => {
   const { name, price } = req.body;
   if (name && price) {
-    await connect();
-    Plan.create(
-      {
-        name,
-        price,
-      },
-      (err, doc) => {
-        if (err) {
-          res.status(500).send({
-            status: 500,
-            message: `Error creating plan! ${err}`,
-          });
-          console.error(err);
-        } else {
-          res.status(201).send({
-            status: 201,
-            plan: {
-              planId: doc._id,
-              name: doc.name,
-              price: doc.price,
-            },
-            message: 'Plan created!',
-          });
-        }
-      },
-    );
+    connect()
+      .then(() => Plan.create({ name, price }))
+      .then((plan: any) => res.status(201).send({
+        status: 201,
+        plan: {
+          planId: plan._id,
+          name: plan.name,
+          price: plan.price,
+        },
+        message: SUBSCRIPTION_CREATE_PLAN_SUCCESS,
+      }))
+      .catch((err: any) => {
+        console.error(err);
+        res.status(500).send({
+          status: 500,
+          message: UNKNOWN_ERROR,
+        });
+      });
   } else {
-    res.status(500).send({
-      status: 500,
-      message: 'Missing one of the required inputs!',
+    res.status(400).send({
+      status: 400,
+      message: MISSING_FIELDS,
     });
   }
 });
@@ -102,38 +98,35 @@ router.post('/create', async (req: any, res: Response) => {
  *
  * @apiVersion 0.1.0
  */
-router.put('/update', async (req: any, res: Response) => {
+router.put('/update', (req: any, res: Response) => {
   const { planId, name, price } = req.body;
   if (planId && name && price) {
-    await connect();
-    Plan.findOneAndUpdate(
-      { _id: planId },
-      {
-        $set: {
-          name,
-          price,
+    connect()
+      .then(() => Plan.findOneAndUpdate(
+        { _id: planId },
+        {
+          $set: {
+            name,
+            price,
+          },
         },
-      },
-      { upsert: true },
-      (err, doc) => {
-        if (err) {
-          res.status(500).send({
-            status: 500,
-            message: `Error updating plan! ${err}`,
-          });
-          console.error(err);
-        } else {
-          res.status(204).send({
-            status: 204,
-            message: 'Plan updated!',
-          });
-        }
-      },
-    );
+        { upsert: true },
+      ))
+      .then(() => res.status(204).send({
+        status: 204,
+        message: SUBSCRIPTION_UPDATE_PLAN_SUCCESS,
+      }))
+      .catch((err: any) => {
+        console.error(err);
+        res.status(500).send({
+          status: 500,
+          message: UNKNOWN_ERROR,
+        });
+      });
   } else {
-    res.status(500).send({
-      status: 500,
-      message: 'Missing one of the required inputs!',
+    res.status(400).send({
+      status: 400,
+      message: MISSING_FIELDS,
     });
   }
 });

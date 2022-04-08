@@ -1,9 +1,11 @@
 import { Router, Request, Response } from 'express';
 
 import connect from '../../config/db';
-import { AUTH_ERRORS, MISSING_FIELDS, UNKNOWN_ERROR } from '../../constants/error';
-import { SIGNUP_SUCCESS } from '../../constants/statusMessages';
+import { AUTH_ERRORS, MISSING_FIELDS, UNKNOWN_ERROR } from '../../config/errorMessages';
+import { SIGNUP_SUCCESS } from '../../config/statusMessages';
+
 import { User } from '../../models/user';
+
 import { generateHash, validatePassword } from '../../util/auth';
 
 const router = Router();
@@ -25,7 +27,7 @@ const router = Router();
  *
  * @apiVersion 0.1.0
  */
-router.post('/email', async (req: Request, res: Response) => {
+router.post('/email', (req: Request, res: Response) => {
   const { email, password, verifyPassword } = req.body;
   if (email && password && verifyPassword) {
     if (!(password === verifyPassword)) {
@@ -36,12 +38,12 @@ router.post('/email', async (req: Request, res: Response) => {
     } else if (validatePassword(password)) {
       let pass = '';
       generateHash(password)
-        .then((hash) => {
+        .then((hash: string) => {
           pass = hash;
           return connect();
         })
         .then(() => User.findOne({ email }))
-        .then((existingUser) => {
+        .then((existingUser: any) => {
           if (existingUser) throw new Error(AUTH_ERRORS.EXISTING_EMAIL);
         })
         .then(() => {
@@ -51,7 +53,7 @@ router.post('/email', async (req: Request, res: Response) => {
           });
           return user.save();
         })
-        .then((user) => {
+        .then((user: any) => {
           res.status(200).send({
             status: 200,
             message: SIGNUP_SUCCESS,
@@ -62,7 +64,7 @@ router.post('/email', async (req: Request, res: Response) => {
             },
           });
         })
-        .catch((err) => {
+        .catch((err: any) => {
           if (err.message === AUTH_ERRORS.EXISTING_EMAIL) {
             res.status(400).send({
               status: 400,

@@ -1,15 +1,15 @@
 import { Router, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import moment from "moment";
+import moment from 'moment';
 
-import { User } from '../../models/user';
+import { JWT_TOKEN_EXPIRY_TIME, MEMBERSHIP_TYPES } from '../../config/constants';
 import connect from '../../config/db';
 import { env } from '../../config/env';
+import { AUTH_ERRORS, MISSING_FIELDS, UNKNOWN_ERROR } from '../../config/errorMessages';
+import { SIGNIN_SUCCESS } from '../../config/statusMessages';
 
-import { JWT_TOKEN_EXPIRY_TIME } from '../../constants/auth';
-import { AUTH_ERRORS, MISSING_FIELDS, UNKNOWN_ERROR } from '../../constants/error';
-import { SIGNIN_SUCCESS } from '../../constants/statusMessages';
+import { User } from '../../models/user';
 
 const { JSONWebToken } = env;
 const router = Router();
@@ -37,22 +37,21 @@ router.post('/email', (req: Request, res: Response) => {
     let needResubscription = false;
     connect()
       .then(() => User.findOne({ email }, 'password settings'))
-      .then((existingUser) => {
+      .then((existingUser: any) => {
         if (!existingUser) throw new Error(AUTH_ERRORS.INVALID_EMAIL);
         user = existingUser;
         return bcrypt.compare(password, user.password);
       })
-      .then((passwordMatch) => {
+      .then((passwordMatch: boolean) => {
         if (!passwordMatch) throw new Error(AUTH_ERRORS.INVALID_PASSWORD);
-        console.log(user);
         return moment(user.settings.endingDate).isSame(new Date(), 'day');
       })
-      .then((subscriptionReset) => {
+      .then((subscriptionReset: boolean) => {
         if (subscriptionReset) {
           const { settings } = user;
           settings.billingDate = null;
           settings.endingDate = null;
-          settings.membershipType = '6233c60d59af3002b221b0ce';
+          settings.membershipType = MEMBERSHIP_TYPES.BASIC;
           needResubscription = true;
           return user.save();
         }
@@ -78,10 +77,10 @@ router.post('/email', (req: Request, res: Response) => {
           status: 200,
           message: SIGNIN_SUCCESS,
           user: validatedUser,
-          needResubscription
+          needResubscription,
         });
       })
-      .catch((err) => {
+      .catch((err: any) => {
         if (err.message === AUTH_ERRORS.INVALID_EMAIL || err.message === AUTH_ERRORS.INVALID_PASSWORD) {
           res.status(400).send({
             status: 400,
