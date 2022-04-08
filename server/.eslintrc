@@ -2,10 +2,17 @@
     "root": true,
     "parser": "@typescript-eslint/parser",
     "plugins": [
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "only-warn"
     ],
     "extends": [
-        "airbnb-base"
+        "airbnb-base",
+        "plugin:import/errors",
+        "plugin:import/warnings",
+        "plugin:import/typescript"
     ],
-    "rules": {}
+    "rules": {
+        "linebreak-style": 0,
+        "import/extensions": 0
+    }
 }

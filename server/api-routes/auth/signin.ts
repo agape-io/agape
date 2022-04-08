@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import moment from "moment";
 
 import { User } from '../../models/user';
 import connect from '../../config/db';
@@ -33,8 +34,9 @@ router.post('/email', (req: Request, res: Response) => {
   const { email, password } = req.body;
   if (email && password) {
     let user: any = {};
+    let needResubscription = false;
     connect()
-      .then(() => User.findOne({ email }, 'password'))
+      .then(() => User.findOne({ email }, 'password settings'))
       .then((existingUser) => {
         if (!existingUser) throw new Error(AUTH_ERRORS.INVALID_EMAIL);
         user = existingUser;
@@ -42,6 +44,21 @@ router.post('/email', (req: Request, res: Response) => {
       })
       .then((passwordMatch) => {
         if (!passwordMatch) throw new Error(AUTH_ERRORS.INVALID_PASSWORD);
+        console.log(user);
+        return moment(user.settings.endingDate).isSame(new Date(), 'day');
+      })
+      .then((subscriptionReset) => {
+        if (subscriptionReset) {
+          const { settings } = user;
+          settings.billingDate = null;
+          settings.endingDate = null;
+          settings.membershipType = '6233c60d59af3002b221b0ce';
+          needResubscription = true;
+          return user.save();
+        }
+        return Promise.resolve();
+      })
+      .then(() => {
         const validatedUser = {
           userId: user._id,
           email,
@@ -61,6 +78,7 @@ router.post('/email', (req: Request, res: Response) => {
           status: 200,
           message: SIGNIN_SUCCESS,
           user: validatedUser,
+          needResubscription
         });
       })
       .catch((err) => {

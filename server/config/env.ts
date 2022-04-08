@@ -15,4 +15,8 @@ export const env = {
   ENDPOINT: process.env.ENDPOINT,
   PORT: process.env.PORT,
   NODE_ENV: process.env.NODE_ENV,
+  ADMIN: {
+    Domain: process.env.ADMIN_DOMAIN,
+    TokenKey: process.env.ADMIN_JWT_TOKEN_KEY,
+  },
 };

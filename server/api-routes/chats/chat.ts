@@ -18,7 +18,7 @@ const router = Router();
  *
  * @query
  * userId: string
- * 
+ *
  * @apiVersion 0.1.0
  */
 router.get('/', async (req: Request, res: Response) => {
@@ -58,7 +58,7 @@ router.get('/', async (req: Request, res: Response) => {
  *
  * @query
  * userIds: [string]
- * 
+ *
  * @apiVersion 0.1.0
  */
 router.post('/', async (req: Request, res: Response) => {

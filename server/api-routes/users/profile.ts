@@ -17,7 +17,7 @@ const router = Router();
  *
  * @query
  * userId: string
- * 
+ *
  * @apiVersion 0.1.0
  */
 router.get('/', async (req: Request, res: Response) => {
@@ -68,7 +68,7 @@ router.get('/', async (req: Request, res: Response) => {
  * location: string
  * hobbies: [string]
  * sexuality: string
- * 
+ *
  * @apiVersion 0.1.0
  */
 router.post('/create', async (req: any, res: Response) => {
@@ -148,7 +148,7 @@ router.post('/create', async (req: any, res: Response) => {
  * location: string
  * hobbies: [string]
  * sexuality: string
- * 
+ *
  * @apiVersion 0.1.0
  */
 router.put('/update', async (req: any, res: Response) => {

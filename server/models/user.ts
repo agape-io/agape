@@ -38,7 +38,19 @@ const UserModel = new Schema({
   },
   settings: {
     pushNotifications: Boolean,
-    membershipType: String,
+    membershipType: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Plan',
+      default: '6233c60d59af3002b221b0ce',
+    },
+    endingDate: {
+      type: Date,
+      default: null,
+    },
+    billingDate: {
+      type: Date,
+      default: null,
+    },
   },
   swipedLeft: [{
     type: mongoose.Schema.Types.ObjectId,

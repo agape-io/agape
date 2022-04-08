@@ -21,7 +21,7 @@ const router = Router();
  * userId: string
  * content: string
  * chatId: string
- * 
+ *
  * @apiVersion 0.1.0
  */
 router.post('/', async (req: Request, res: Response) => {
@@ -64,7 +64,7 @@ router.post('/', async (req: Request, res: Response) => {
  *
  * @query
  * chatId: string
- * 
+ *
  * @apiVersion 0.1.0
  */
 router.get('/', async (req: Request, res: Response) => {
