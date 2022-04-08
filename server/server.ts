@@ -1,8 +1,8 @@
-import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import express from 'express';
 
-import { env } from './config/env';
+import adminSubscriptionRouter from './api-routes/admin/subscription';
 
 import signinRouter from './api-routes/auth/signin';
 import signupRouter from './api-routes/auth/signup';
@@ -16,7 +16,7 @@ import chatRouter from './api-routes/chats/chat';
 import messageRouter from './api-routes/chats/message';
 import subscriptionRouter from './api-routes/users/subscription';
 
-import adminSubscriptionRouter from './api-routes/admin/subscription';
+import { env } from './config/env';
 
 import { authenticateToken, authenticateAdmin } from './middleware/auth';
 import { notFound, errorHandler } from './middleware/error';
@@ -65,20 +65,20 @@ const io = require('socket.io')(server, {
   },
 });
 
-io.on('connection', (socket) => {
+io.on('connection', (socket: any) => {
   console.log('connected to socket.io');
 
-  socket.on('setup', (userId) => {
+  socket.on('setup', (userId: string) => {
     socket.join(userId);
     socket.emit('connected');
   });
 
-  socket.on('join chat', (room) => {
+  socket.on('join chat', (room: string) => {
     socket.join(room);
     console.log(`User joined chat: ${room}`);
   });
 
-  socket.on('new message', (newMessageRecieved) => {
+  socket.on('new message', (newMessageRecieved: any) => {
     const { chat } = newMessageRecieved;
     if (!chat.users) return console.log('chat.users not defined');
     chat.users.forEach((user) => {
@@ -87,13 +87,12 @@ io.on('connection', (socket) => {
     });
   });
 
-  socket.on('typing', (room) => socket.in(room).emit('typing'));
-  socket.on('stop typing', (room) => socket.in(room).emit('stop typing'));
+  socket.on('typing', (room: string) => socket.in(room).emit('typing'));
+  socket.on('stop typing', (room: string) => socket.in(room).emit('stop typing'));
 
   socket.off('setup', () => {
-    console.log('USER DISCONNECTED');
     // @ts-ignore
-    // userId is used from the socket.on("setup") event
+    // userId is initialized in the socket.on("setup") event
     socket.leave(userId);
   });
 });
