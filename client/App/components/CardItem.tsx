@@ -1,3 +1,6 @@
+/**
+ * Card Item Component
+ */
 import React from "react";
 import {
   Text,
@@ -24,17 +27,6 @@ const CardItem = ({
 }: CardItemT) => {
   // Custom styling
   const fullWidth = Dimensions.get("window").width;
-  let today = new Date(),
-    year = today.getFullYear(),
-    age = year - parseInt(data.yearBorn);
-  
-  const images = [
-    require('../../assets/images/cy.png'),
-    require('../../assets/images/leo.png'),
-    require('../../assets/images/randy.png'),
-    require('../../assets/images/nat.png'),
-    require('../../assets/images/tim.png')
-  ];
 
   const imageStyle = [
     {
@@ -57,22 +49,22 @@ const CardItem = ({
   return (
     <View style={styles.containerCardItem}>
       {/* IMAGE */}
-      {data.image ? <Image source={data.image} style={imageStyle} /> : <Image source={images[Math.floor(Math.random() * images.length)]} style={imageStyle}/>}
+      {data.image ? <Image source={data.image} style={imageStyle} /> : <Image source={{ uri: data.profile.photo }} style={imageStyle}/>}
 
       {/* MATCHES */}
       {!data.matches && (
         <View style={styles.matchesCardItem}>
           <Text style={styles.matchesTextCardItem}>
-            <Icon name="heart" color={WHITE} size={13} /> {data.matches}% Match!
+            <Icon name="heart" color={WHITE} size={13} /> {data.percentage}% Match!
           </Text>
         </View>
       )}
 
       {/* NAME */}
-      <Text style={nameStyle}>{data.name}</Text>
+      <Text style={nameStyle}>{data.profile.name}</Text>
       
       {/* ABOUT ME */}
-      {data.aboutMe && <Text style={styles.descriptionCardItem}>{data.aboutMe}</Text>}
+      {data.aboutMe && <Text style={styles.descriptionCardItem}>{data.profile.aboutMe}</Text>}
 
       <View
         style={{
@@ -85,16 +77,18 @@ const CardItem = ({
       />
 
       {/* GENDER */}
-      <Text style={styles.descriptionCardItem}>{data.gender}</Text>
+      <Text style={styles.descriptionCardItem}>{data.profile.gender}</Text>
 
       {/* LOCATION */}
-      <Text style={styles.descriptionCardItem}>{data.location}</Text>
+      <Text style={styles.descriptionCardItem}>{data.profile.location}</Text>
 
       {/* RELIGION */}
-      <Text style={styles.descriptionCardItem}>{data.religion}</Text>
+      <Text style={styles.descriptionCardItem}>{data.profile.religion}</Text>
 
-      {/* YEAR BORN */}
-      <Text style={styles.descriptionCardItem}>{age}</Text>
+      {/* AGE */}
+      <Text style={styles.descriptionCardItem}>{data.profile.age}</Text>
+
+      {/* HOBBIES - use a map to iterate for each hobby */}
 
       {/* STATUS */}
       {!data.aboutMe && (

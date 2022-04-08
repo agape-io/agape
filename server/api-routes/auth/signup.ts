@@ -1,23 +1,10 @@
 import { Router, Request, Response } from 'express';
-import bcrypt from 'bcrypt';
-import passwordValidator from 'password-validator';
 
-import { User } from '../../models/user';
 import connect from '../../config/db';
-
-const schema = new passwordValidator();
-schema
-  .is().min(8)
-  .is().max(100)
-  .has()
-  .uppercase()
-  .has()
-  .lowercase()
-  .has()
-  .digits(2)
-  .has()
-  .not()
-  .spaces();
+import { AUTH_ERRORS, MISSING_FIELDS, UNKNOWN_ERROR } from '../../constants/error';
+import { SIGNUP_SUCCESS } from '../../constants/statusMessages';
+import { User } from '../../models/user';
+import { generateHash, validatePassword } from '../../util/auth';
 
 const router = Router();
 
@@ -25,7 +12,7 @@ const router = Router();
  * @api {post} /email
  * @apiName Signup via Email
  * @apiGroup Auth
- * @apiDescription Signup user using email and password
+ * @apiDescription Signup user using email/password authentication
  *
  * @apiSuccess (200)
  *
@@ -41,55 +28,64 @@ const router = Router();
 router.post('/email', async (req: Request, res: Response) => {
   const { email, password, verifyPassword } = req.body;
   if (email && password && verifyPassword) {
-    const errorDetails = schema.validate(password, { details: true });
-    if ((errorDetails as []).length === 0) {
-      const saltRounds = 10;
-      await bcrypt.genSalt(saltRounds, async (err, salt) => {
-        await bcrypt.hash(password, salt, async (err, hash) => {
-          await connect();
-          User.findOne({ email }, (err, existingUser) => {
-            if (existingUser) {
-              res.status(500).send({
-                status: 500,
-                message: 'Email already exists!',
-              });
-            } else if (password == verifyPassword) {
-              const user = new User({
-                email,
-                password: hash,
-              });
-              user.save((err, result) => {
-                if (err) console.log(err);
-                else {
-                  res.status(200).send({
-                    status: 200,
-                    message: 'User created!',
-                    user: {
-                      userId: result._id,
-                      email: result.email,
-                    },
-                  });
-                }
-              });
-            } else {
-              res.status(500).send({
-                status: 500,
-                message: 'Passwords do not match!',
-              });
-            }
-          });
-        });
+    if (!(password === verifyPassword)) {
+      res.status(400).send({
+        status: 400,
+        message: AUTH_ERRORS.PASSWORD_MISMATCH,
       });
+    } else if (validatePassword(password)) {
+      let pass = '';
+      generateHash(password)
+        .then((hash) => {
+          pass = hash;
+          return connect();
+        })
+        .then(() => User.findOne({ email }))
+        .then((existingUser) => {
+          if (existingUser) throw new Error(AUTH_ERRORS.EXISTING_EMAIL);
+        })
+        .then(() => {
+          const user = new User({
+            email,
+            password: pass,
+          });
+          return user.save();
+        })
+        .then((user) => {
+          res.status(200).send({
+            status: 200,
+            message: SIGNUP_SUCCESS,
+            user: {
+              userId: user._id,
+              email: user.email,
+              isOnline: false,
+            },
+          });
+        })
+        .catch((err) => {
+          if (err.message === AUTH_ERRORS.EXISTING_EMAIL) {
+            res.status(400).send({
+              status: 400,
+              message: err.message,
+            });
+          } else {
+            console.error(err.message);
+            res.status(500).send({
+              status: 500,
+              message: UNKNOWN_ERROR,
+            });
+          }
+        });
     } else {
-      res.status(500).send({
-        status: 500,
-        message: `Invalid password: ${errorDetails}`,
+      res.status(400).send({
+        status: 400,
+        message: AUTH_ERRORS.INVALID_PASSWORD,
       });
     }
   } else {
-    res.status(500).send({
-      status: 500,
-      error: 'Missing Email or Password!',
+    res.status(400).send({
+      status: 400,
+      message: MISSING_FIELDS,
     });
   }
 });

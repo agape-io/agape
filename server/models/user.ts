@@ -3,9 +3,9 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const UserModel = new Schema({
-  email: { type: String },
+  email: { type: String, unique: true },
   password: { type: String },
-  isOnline: { type: Boolean },
+  isOnline: { type: Boolean, default: false },
   profile: {
     name: { type: String },
     age: { type: Number },
@@ -22,9 +22,18 @@ const UserModel = new Schema({
   },
   preferences: {
     sexuality: { type: String },
-    maxDist: { type: String },
-    minAge: { type: String },
-    maxAge: { type: String },
+    maxDist: {
+      type: String,
+      default: 100,
+    },
+    minAge: {
+      type: String,
+      default: 18,
+    },
+    maxAge: {
+      type: String,
+      default: 23,
+    },
     religion: [{ type: String }],
   },
   settings: {
@@ -43,8 +52,14 @@ const UserModel = new Schema({
       default: null,
     },
   },
-  swipedLeft: [{ type: String }],
-  swipedRight: [{ type: String }],
+  swipedLeft: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
+  swipedRight: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
 }, {
   timestamps: true,
 });

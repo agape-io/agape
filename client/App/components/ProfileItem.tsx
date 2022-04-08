@@ -1,19 +1,17 @@
+/**
+ * Profile Item Component
+ */
 import React from "react";
 import { Text, View } from "react-native";
 import Icon from "./Icon";
 import { ProfileItemT } from "../types";
-import styles, { DARK_GRAY, WHITE, GRAY } from "../../assets/styles";
+import styles, {
+    DARK_GRAY,
+    WHITE,
+    GRAY
+} from "../../assets/styles";
 
-const ProfileItem = ({
-    age,
-    info1,
-    info2,
-    info3,
-    info4,
-    location,
-    matches,
-    name,
-}: ProfileItemT) => (
+const ProfileItem = ({ data }: ProfileItemT) => (
     <View style={styles.containerProfileItem}>
         {/* <View style={styles.matchesProfileItem}>
             <Text style={styles.matchesTextProfileItem}>
@@ -21,25 +19,40 @@ const ProfileItem = ({
             </Text>
         </View> */}
 
-        <Text style={styles.name}>{name}</Text>
+        {data.name ? (<Text style={styles.name}>{data.name}</Text>) : (<Text style={styles.name}>Welcome user!</Text>)}
 
-        <Text style={styles.descriptionProfileItem}>
-            {age} - {location}
-        </Text>
+        {data.aboutMe && (
+            <>
+                <Text style={styles.descriptionProfileItem}>
+                    {data.age} - {data.location}
+                </Text>
+                <View style={styles.info}>
+                    <Text style={styles.infoContent}>About: {data.aboutMe}</Text>
+                </View>
 
-        <View style={styles.info}>
-            <Text style={styles.infoContent}>About: {info1}</Text>
-        </View>
+                <View style={styles.info}>
+                    <Text style={styles.infoContent}>Religion: {data.religion}</Text>
+                </View>
 
-        <View style={styles.info}>
-            <Text style={styles.infoContent}>Religion: {info2}</Text>
-        </View>
+                {data.hobbies.includes("") ?(
+                    <View style={styles.info}>
+                        <Text style={styles.infoContent}>Hobbies: None!</Text>
+                    </View>
 
-        <View style={styles.info}>
-            <Text style={styles.infoContent}>Hobbies: {info3}</Text>
-        </View>
-
-
+                ) : (
+                    <View style={styles.info}>
+                        <Text style={styles.infoContent}>Hobbies: {"\n"}
+                            {data.hobbies.map((item: any, index: any) => {
+                                return (
+                                    <Text style={styles.infoContentHobbies} key={index}>{"\t"}{item}{"\n"}</Text>
+                                )
+                            })}
+                        </Text>
+                    </View>
+                )}
+            </>
+        )}
+    
         <View
             style={{
                 borderBottomColor: GRAY,
@@ -52,9 +65,16 @@ const ProfileItem = ({
         />
 
         {/* This section would be their bio */}
-        <View style={styles.info}>
-            <Text style={styles.infoContent}>{info4}</Text>
-        </View>
+        {data.gender ? (
+            <View style={styles.info}>
+                <Text style={styles.infoContent}>{data.gender}</Text>
+            </View>
+        ) : (
+            <View style={styles.info}>
+                <Text style={styles.infoContent}>Update your profile by clicking on the left stylus!</Text>
+            </View>
+        )}
+        
     </View>
 );
 

@@ -97,7 +97,8 @@ router.post('/subscribe', async (req: Request, res: Response) => {
   if (userId && planId) {
     await connect();
     const date = new Date();
-    const nextMonthDate = date.setMonth(date.getMonth() + 1);
+    // const nextMonthDate = date.setMonth(date.getMonth() + 1);
+    const nextMonthDate = date.setSeconds(date.getSeconds() + 1);
     const settings = {
       membershipType: planId,
       endingDate: nextMonthDate,

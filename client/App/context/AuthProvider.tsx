@@ -1,13 +1,12 @@
 /**
  * Auth Provider for authentication
- * 
  */
 import React, { createContext, useState, useEffect, FC, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 // Types
-import { AuthContextData, AuthData } from '../types';
+import { AuthContextData } from '../types';
 
 // API
 import { API_URL } from '@env';
@@ -15,8 +14,9 @@ import { API_URL } from '@env';
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider:FC = ({ children }) => {
-  const [authData, setAuthData] = useState<AuthData>();
-  const [loading, setLoading] = useState(true);
+  const [authData, setAuthData] = useState<any>();
+  const [loading, setLoading] = useState<any>(true);
+  const [notification, setNotification] = useState<any>();
 
   useEffect(() => {
     loadStorageData();
@@ -24,10 +24,9 @@ const AuthProvider:FC = ({ children }) => {
 
   const loadStorageData = async () => {
     AsyncStorage.getItem('@auth')
-      .then(authDataSerialized => {
-        const _authData: AuthData = JSON.parse(authDataSerialized);
+      .then((authDataSerialized:any) => {
+        const _authData = JSON.parse(authDataSerialized);
         
-        console.log(_authData);
         setAuthData(_authData);
         setLoading(false);
       }).catch(e => { 
@@ -63,7 +62,9 @@ const AuthProvider:FC = ({ children }) => {
         authData,
         signIn,
         signOut,
-        loading
+        loading,
+        notification,
+        setNotification,
       }}
     >
       {children}

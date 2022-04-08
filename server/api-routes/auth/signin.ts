@@ -1,21 +1,24 @@
 import { Router, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import moment from 'moment';
+import moment from "moment";
 
 import { User } from '../../models/user';
 import connect from '../../config/db';
 import { env } from '../../config/env';
 
-const { JSONWebToken } = env;
+import { JWT_TOKEN_EXPIRY_TIME } from '../../constants/auth';
+import { AUTH_ERRORS, MISSING_FIELDS, UNKNOWN_ERROR } from '../../constants/error';
+import { SIGNIN_SUCCESS } from '../../constants/statusMessages';
 
+const { JSONWebToken } = env;
 const router = Router();
 
 /**
  * @api {post} /email
  * @apiName Signin via Email
  * @apiGroup Auth
- * @apiDescription Signin user using email and password
+ * @apiDescription Signin user using email/password authentication
  *
  * @apiSuccess (200)
  *
@@ -27,64 +30,75 @@ const router = Router();
  *
  * @apiVersion 0.1.0
  */
-router.post('/email', async (req: Request, res: Response) => {
+router.post('/email', (req: Request, res: Response) => {
   const { email, password } = req.body;
   if (email && password) {
-    await connect();
-    await User.findOne({
-      email,
-    })
-      .then(async (user) => {
-        if (user) {
-          await bcrypt.compare(password, user.password, (err, passwordMatch) => {
-            if (passwordMatch) {
-              const userObj = {
-                userId: user._id,
-                email,
-                token: null,
-                isOnline: false,
-              };
-              const token = jwt.sign(
-                { email: user.email },
-                JSONWebToken.Key,
-                {
-                  expiresIn: '1hr',
-                },
-              );
-              const subscriptionReset = moment(user.settings.endingDate).isSame(new Date(), 'day');
-              if (subscriptionReset) {
-                const { settings } = user;
-                settings.billingDate = null;
-                settings.endingDate = null;
-                settings.membershipType = '6233c60d59af3002b221b0ce';
-                user.save();
-              }
-              userObj.token = token;
-              userObj.isOnline = true;
-              res.status(200).send({
-                status: 200,
-                message: 'Logged In!',
-                userObj,
-                subscriptionReset,
-              });
-            } else {
-              res.status(500).send({
-                status: 500,
-                message: 'Incorrect password!',
-              });
-            }
+    let user: any = {};
+    let needResubscription = false;
+    connect()
+      .then(() => User.findOne({ email }, 'password settings'))
+      .then((existingUser) => {
+        if (!existingUser) throw new Error(AUTH_ERRORS.INVALID_EMAIL);
+        user = existingUser;
+        return bcrypt.compare(password, user.password);
+      })
+      .then((passwordMatch) => {
+        if (!passwordMatch) throw new Error(AUTH_ERRORS.INVALID_PASSWORD);
+        console.log(user);
+        return moment(user.settings.endingDate).isSame(new Date(), 'day');
+      })
+      .then((subscriptionReset) => {
+        if (subscriptionReset) {
+          const { settings } = user;
+          settings.billingDate = null;
+          settings.endingDate = null;
+          settings.membershipType = '6233c60d59af3002b221b0ce';
+          needResubscription = true;
+          return user.save();
+        }
+        return Promise.resolve();
+      })
+      .then(() => {
+        const validatedUser = {
+          userId: user._id,
+          email,
+          token: null,
+          isOnline: false,
+        };
+        const token = jwt.sign(
+          { email: validatedUser.email },
+          JSONWebToken.Key,
+          {
+            expiresIn: JWT_TOKEN_EXPIRY_TIME,
+          },
+        );
+        validatedUser.token = token;
+        validatedUser.isOnline = true;
+        res.status(200).send({
+          status: 200,
+          message: SIGNIN_SUCCESS,
+          user: validatedUser,
+          needResubscription
+        });
+      })
+      .catch((err) => {
+        if (err.message === AUTH_ERRORS.INVALID_EMAIL || err.message === AUTH_ERRORS.INVALID_PASSWORD) {
+          res.status(400).send({
+            status: 400,
+            message: err.message,
           });
         } else {
+          console.error(err.message);
           res.status(500).send({
             status: 500,
-            message: 'Invalid Email!',
+            message: UNKNOWN_ERROR,
           });
         }
       });
   } else {
-    res.status(500).send({
-      status: 500,
-      message: 'Missing Email or Password!',
+    res.status(400).send({
+      status: 400,
+      message: MISSING_FIELDS,
     });
   }
 });

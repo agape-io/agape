@@ -1,7 +1,12 @@
 /**
  * Sign Up Screen
  */
-import React, { FC, useState } from 'react';
+import React, { 
+  FC,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
 import {
   View,
   Text,
@@ -36,26 +41,40 @@ const SignUp: FC<SignUpProps> = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [verifyPassword, setVerifyPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [error, isError] = useState(false);
+  const [error, isError] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const isMounted = useRef<any>(null);
+
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    }
+  }, []);
 
   const runSignUp = async (email: string, password: string, verifyPassword: string) => {
     axios.post(`${API_URL}/signup/email`, {
-        email,
-        password,
-        verifyPassword
-      })
-    .then(res => {
-      // check if there is a response
-      // Tell the user try signing in
-      isError(false);
-      if (res) navigation.navigate("SignIn");  
+      email,
+      password,
+      verifyPassword
     })
+      .then(res => {
+        // check if there is a response
+        // Tell the user try signing in
+        isError(false);
+        setLoading(false);
+        if (res) navigation.navigate("SignIn");
+      })
       .catch(e => {
-      // display errors to the UI
-      isError(true);
-      console.log(e.response.data.message);
-      setErrorMessage(e.response.data.message);
-    });
+        // display errors to the UI
+        isError(true);
+        console.log(e.message);
+        setErrorMessage(e.response.data.message);
+      })
+      .finally(() => {
+        if (isMounted.current) setLoading(false);
+      });
   }
 
   return (
@@ -97,6 +116,7 @@ const SignUp: FC<SignUpProps> = ({ navigation }) => {
             onChangeText={verifyPassword => setVerifyPassword(verifyPassword)}
           />
         </View>
+        {error && <Text style={styles.authError}>{errorMessage}</Text>}
         <TouchableOpacity
           style={{ width: '86%', marginTop: 20 }}
           onPress={() => runSignUp(email, password, verifyPassword)}
@@ -105,7 +125,6 @@ const SignUp: FC<SignUpProps> = ({ navigation }) => {
             <Text>Create Account</Text>
           </View>
         </TouchableOpacity>
-        {error && <Text style={styles.authError}>{errorMessage}</Text>}
         <View style={{ marginTop: 10 }}>
           <Text
             style={{ fontWeight: '200', fontSize: 20, textAlign: 'center' }}

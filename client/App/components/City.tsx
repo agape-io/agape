@@ -1,3 +1,6 @@
+/**
+ * City Component
+ */
 import React from "react";
 import { Text, TouchableOpacity } from "react-native";
 import { Icon } from './index';

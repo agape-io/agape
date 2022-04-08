@@ -1,20 +1,27 @@
 /**
  * Discover Screen
  */
-import React, { useState, FC, useEffect } from "react";
+import React, {
+    useState,
+    FC,
+    useCallback,
+    useRef
+} from "react";
 import {
     View,
     ImageBackground,
-    ActivityIndicator,
     Text,
 } from "react-native";
 import CardStack, { Card } from "react-native-card-stack-swiper";
-import { CompositeNavigationProp } from "@react-navigation/native";
+import {
+    CompositeNavigationProp,
+    useFocusEffect
+} from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-import { useAuth } from "../navigation";
+import { useAuth } from "../context";
 import {
-    HomeNavigatorParamList,
+    HomeTabNavigatorParamList,
     RootNavigatorParamsList
 } from "../types";
 import {
@@ -23,26 +30,36 @@ import {
     CardItem
 } from "../components";
 import styles from "../../assets/styles";
-import DEMO from "../../assets/data/demo";
 
 import { getMatches } from '../utils';
-import { Item } from "react-native-paper/lib/typescript/components/List/List";
 
 export interface DiscoverProps {
-    navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeNavigatorParamList, 'Discover'>,
+    navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Discover'>,
     NativeStackNavigationProp<RootNavigatorParamsList>>;
 }
 
 const Discover: FC<DiscoverProps> = ({ navigation }) => {
     const [swiper, setSwiper] = useState<CardStack | null>(null);
     //const [loading, setLoading] = useState<boolean>(true);
+    const [errorMessage, setErrorMessage] = useState<any>('');
     const [matches, setMatches] = useState<any>(null);
+    const isMounted = useRef<any>(null);
 
     const auth = useAuth();
 
-    const token = auth.authData.token,
-        userId = auth.authData.userId,
-        isOnline = auth.authData.isOnline;
+    const { token, userId } = auth.authData;
+    
+    const loadMatches = async () => {
+        // get the id's
+            getMatches(userId, token)
+                .then(res => {
+                    const { users } = res.data;
+                    setMatches(users);
+                }).catch(e => {
+                    setErrorMessage(e.response.data.message);
+                    //console.error(e.response.data.message);
+                });
+        };
 
     const NoMoreCards = () => {
         return (
@@ -55,25 +72,18 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
         )
     }
     
-    useEffect(() => {
-        const loadMatches = async () => {
-        // get the id's
-            getMatches(userId, token)
-                .then(res => {
-                    const { users } = res.data;
+    // Load matches
+    useFocusEffect(
+        useCallback(() => {
+            loadMatches();
+            isMounted.current = true;
 
-                    setMatches(users);
-                }).catch(e => {
-                    console.log(e.message);
-                });
-        };
-
-        loadMatches();
-
-        return () => {
-            setMatches(null);
-        }
-    }, []);
+            return () => {
+                setMatches(null);
+                isMounted.current = false;
+            }
+        }, [])
+    );
 
     return (
         <ImageBackground
@@ -85,16 +95,15 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                     {/* <City /> */}
                     {/* <Filters /> */} 
                 </View>
-                {matches && (
+                {matches ? (
                     <CardStack
                         verticalSwipe={false}
-                        // keep loop to true for now
-                        loop
                         renderNoMoreCards={() => <NoMoreCards />}
                         ref={newSwiper => setSwiper(newSwiper)}
                     >
                         {/** API Call made here */}
                         {matches.map((item: any, index: any) => {
+
                             return (
                                 <Card key={index}>
                                     <CardItem
@@ -106,6 +115,10 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                             )
                         })}
                     </CardStack>
+                ) : (
+                        <>
+                            <Text style={{textAlign: 'center', marginTop: 250}}>{errorMessage}</Text>
+                    </>
                 )}
             </View>
         </ImageBackground>
