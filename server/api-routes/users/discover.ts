@@ -1,7 +1,11 @@
 import { Router, Request, Response } from 'express';
 
-import { User } from '../../models/user';
 import connect from '../../config/db';
+import { USER_ERRORS, MISSING_FIELDS, UNKNOWN_ERROR } from '../../config/errorMessages';
+import { DISCOVER_MATCHES_FOUND, DISCOVER_NO_MATCHES_FOUND } from '../../config/statusMessages';
+
+import { User } from '../../models/user';
+
 import {
   getId, getProfile, getPreferences, generatePercentage, sortByPercentage, verifyUser,
 } from '../../util/match';
@@ -27,20 +31,28 @@ const router = Router();
  *
  * @apiVersion 0.1.0
  */
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', (req: Request, res: Response) => {
   const {
     userId, romantic = 'false', threshold = 0, sort = 'false', numUsers = 0,
   } = req.query;
   if (userId) {
-    await connect();
-    User.findOne({ _id: userId }, async (err, existingUser) => {
-      if (existingUser) {
-        if (verifyUser(existingUser)) {
-          const users = await User.find({});
+    let originalUser: any = {};
+    connect()
+      .then(() => User.findOne({ _id: userId })
+        .then((existingUser: any) => {
+          if (!existingUser) throw new Error(USER_ERRORS.INVALID_ID);
+          originalUser = existingUser;
+          return verifyUser(originalUser);
+        })
+        .then((validUser: boolean) => {
+          if (!validUser) throw new Error(USER_ERRORS.INCOMPLETE_USER);
+          return User.find({ _id: { $ne: userId } });
+        })
+        .then((users: any[]) => {
           let similarUsers = [];
           users.forEach((user) => {
             if (verifyUser(user)) {
-              const percentage = generatePercentage(existingUser, user, romantic);
+              const percentage = generatePercentage(originalUser, user, romantic as string);
               if (percentage > parseFloat(threshold as string)) {
                 similarUsers.push({
                   userId: getId(user),
@@ -61,31 +73,34 @@ router.get('/', async (req: Request, res: Response) => {
             res.status(200).send({
               status: 200,
               users: similarUsers,
+              message: DISCOVER_MATCHES_FOUND,
             });
           } else {
-            res.status(500).send({
-              status: 500,
+            res.status(200).send({
+              status: 200,
               users: [],
-              message: 'No matches found!',
+              message: DISCOVER_NO_MATCHES_FOUND,
             });
           }
-        } else {
-          res.status(400).send({
-            status: 400,
-            message: 'User has not completed their profile or preferences!',
-          });
-        }
-      } else {
-        res.status(500).send({
-          status: 500,
-          message: 'Cannot find current user!',
-        });
-      }
-    });
+        })
+        .catch((err: any) => {
+          if (err.message === USER_ERRORS.INVALID_ID || err.message === USER_ERRORS.INCOMPLETE_USER) {
+            res.status(400).send({
+              status: 400,
+              message: err.message,
+            });
+          } else {
+            console.error(err.message);
+            res.status(500).send({
+              status: 500,
+              message: UNKNOWN_ERROR,
+            });
+          }
+        }));
   } else {
-    res.status(500).send({
-      status: 500,
-      message: 'Missing User Id!',
+    res.status(400).send({
+      status: 400,
+      message: MISSING_FIELDS,
     });
   }
 });
@@ -105,21 +120,24 @@ router.get('/', async (req: Request, res: Response) => {
  *
  * @apiVersion 0.1.0
  */
-router.get('/likes', async (req: Request, res: Response) => {
+router.get('/myLikes', (req: Request, res: Response) => {
   const { userId } = req.query;
   if (userId) {
-    await connect();
-    await User.findOne({
-      _id: userId,
-    })
-      .populate('swipedRight', 'profile')
-      .then((user) => {
-        res.status(200).send(user.swipedRight);
+    connect()
+      .then(() => User.findOne({ _id: userId }))
+      .then((user: any) => user.populate('swipedRight', 'profile'))
+      .then((completeUser: any) => res.status(200).send(completeUser.swipedRight))
+      .catch((err: any) => {
+        console.error(err.message);
+        res.status(500).send({
+          status: 500,
+          message: UNKNOWN_ERROR,
+        });
       });
   } else {
-    res.status(500).send({
-      status: 500,
-      message: 'Missing User Id!',
+    res.status(400).send({
+      status: 400,
+      message: MISSING_FIELDS,
     });
   }
 });
@@ -139,32 +157,39 @@ router.get('/likes', async (req: Request, res: Response) => {
  *
  * @apiVersion 0.1.0
  */
-router.get('/liked', async (req: Request, res: Response) => {
+router.get('/likesMe', async (req: Request, res: Response) => {
   const { userId } = req.query;
   if (userId) {
-    await connect();
-    await User.find({
-      swipedRight: { $elemMatch: { $eq: userId } },
-    }, 'profile')
-      .then(async (results) => {
-        const user = await User.findOne({
-          _id: userId,
-        }, 'swipedLeft swipedRight');
-        const swiped = user.swipedLeft.concat(user.swipedRight);
+    let allUsers: any[];
+    connect()
+      .then(() => User.find({ swipedRight: { $elemMatch: { $eq: userId } } }))
+      .then((users: any[]) => {
+        allUsers = users;
+        return User.findOne({ _id: userId }, 'swipedLeft swipedRight');
+      })
+      .then((originalUser: any) => {
+        const swiped = originalUser.swipedLeft.concat(originalUser.swipedRight);
         const swipedIds = [];
-        swiped.forEach((swipe) => {
+        swiped.forEach((swipe: any) => {
           swipedIds.push(swipe._id.toString());
         });
         const liked = [];
-        results.forEach((user) => {
-          if (!swipedIds.includes(user._id.toString())) liked.push(user);
+        allUsers.forEach((user) => {
+          if (!swipedIds.includes(user._id.toString())) liked.push(user.profile);
         });
         res.status(200).send(liked);
+      })
+      .catch((err: any) => {
+        console.error(err.message);
+        res.status(500).send({
+          status: 500,
+          message: UNKNOWN_ERROR,
+        });
       });
   } else {
-    res.status(500).send({
-      status: 500,
-      message: 'Missing User Id!',
+    res.status(400).send({
+      status: 400,
+      message: MISSING_FIELDS,
     });
   }
 });

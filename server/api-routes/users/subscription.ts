@@ -1,9 +1,13 @@
 import { Router, Request, Response } from 'express';
 import moment from 'moment';
 
+import { DATE_FORMAT } from '../../config/constants';
+import connect from '../../config/db';
+import { MISSING_FIELDS, UNKNOWN_ERROR } from '../../config/errorMessages';
+import { SUBSCRIPTION_GET_PLAN_SUCCESS, SUBSCRIPTION_GET_PLANS_SUCCESS, USER_PLAN_CANCELLATION, USER_PLAN_SUBSCRIPTION } from '../../config/statusMessages';
+
 import { User } from '../../models/user';
 import { Plan } from '../../models/plan';
-import connect from '../../config/db';
 
 const router = Router();
 
@@ -19,20 +23,21 @@ const router = Router();
  *
  * @apiVersion 0.1.0
  */
-router.get('/', async (req: Request, res: Response) => {
-  try {
-    await connect();
-    const plans = await Plan.find({}, '-createdAt -updatedAt -__v');
-    res.status(200).send({
+router.get('/', (req: Request, res: Response) => {
+  connect()
+    .then(() => Plan.find({}, '-createdAt -updatedAt -__v'))
+    .then((plans: any[]) => res.status(200).send({
       status: 200,
       plans,
-    });
-  } catch {
-    res.status(500).send({
-      status: 500,
-      message: 'Error fetching plans!',
-    });
-  }
+      message: SUBSCRIPTION_GET_PLANS_SUCCESS
+    }))
+    .catch((err: any) => {
+      console.error(err);
+      res.status(500).send({
+        status: 500,
+        message: UNKNOWN_ERROR,
+      });
+    })
 });
 
 /**
@@ -50,38 +55,44 @@ router.get('/', async (req: Request, res: Response) => {
  *
  * @apiVersion 0.1.0
  */
-router.get('/myPlan', async (req: Request, res: Response) => {
-  const { userId } = req.body;
+router.get('/myPlan', (req: Request, res: Response) => {
+  const { userId } = req.query;
   if (userId) {
-    await connect();
-    await User.findOne({
+    connect()
+    .then(() => User.findOne({
       _id: userId,
-    })
-      .populate('settings.membershipType', '-createdAt -updatedAt -__v')
-      .then((user) => {
-        const { settings } = user;
-        let endingDate = null;
-        if (settings.endingDate != null) endingDate = moment(settings.endingDate).format('MM/DD/YYYY');
-        res.status(200).send({
-          status: 200,
-          message: 'Subscription found!',
-          subscription: settings.membershipType,
-          endingDate,
-        });
+    }).populate('settings.membershipType', '-createdAt -updatedAt -__v'))
+    .then((user: any) => {
+      const { settings } = user;
+      let endingDate = null;
+      if (settings.endingDate != null) endingDate = moment(settings.endingDate).format(DATE_FORMAT);
+      res.status(200).send({
+        status: 200,
+        message: SUBSCRIPTION_GET_PLAN_SUCCESS,
+        subscription: settings.membershipType,
+        endingDate,
       });
+    })
+    .catch((err: any) => {
+      console.error(err);
+      res.status(500).send({
+        status: 500,
+        message: UNKNOWN_ERROR,
+      });
+    })
   } else {
-    res.status(500).send({
-      status: 500,
-      message: 'Missing User Id!',
+    res.status(400).send({
+      status: 400,
+      message: MISSING_FIELDS,
     });
   }
 });
 
 /**
  * @api {post} /subscribe
- * @apiName Subscribe to a plan
+ * @apiName Subscribe User to Plan
  * @apiGroup Users
- * @apiDescription POST User's subscription
+ * @apiDescription Subscribe user to a plan
  *
  * @apiSuccess (200)
  *
@@ -92,50 +103,48 @@ router.get('/myPlan', async (req: Request, res: Response) => {
  *
  * @apiVersion 0.1.0
  */
-router.post('/subscribe', async (req: Request, res: Response) => {
+router.post('/subscribe', (req: Request, res: Response) => {
   const { userId, planId } = req.body;
   if (userId && planId) {
-    await connect();
-    const date = new Date();
-    // const nextMonthDate = date.setMonth(date.getMonth() + 1);
-    const nextMonthDate = date.setSeconds(date.getSeconds() + 1);
-    const settings = {
-      membershipType: planId,
-      endingDate: nextMonthDate,
-      billingDate: nextMonthDate,
-    };
-    await User.findByIdAndUpdate(
-      { _id: userId },
-      {
-        $set: {
-          settings,
-        },
-      },
-      (err, doc) => {
-        if (err) {
-          res.status(500).send({
-            status: 500,
-            message: `Error updating subscription! ${err}`,
-          });
-        } else {
-          res.status(201).send({
-            status: 201,
-            message: 'Subscription updated!',
-          });
+    connect()
+    .then(() => {
+      const date = new Date();
+      const nextMonthDate = date.setMonth(date.getMonth() + 1);
+      const settings = {
+        membershipType: planId,
+        endingDate: nextMonthDate,
+        billingDate: nextMonthDate,
+      };
+      return User.findByIdAndUpdate(
+        { _id: userId },
+        {
+          $set: {
+            settings,
+          },
         }
-      },
-    );
+    )})
+    .then(() => res.status(200).send({
+      status: 200,
+      message: USER_PLAN_SUBSCRIPTION
+    }))
+    .catch((err: any) => {
+      console.error(err);
+      res.status(500).send({
+        status: 500,
+        message: UNKNOWN_ERROR,
+      });
+    })
   } else {
-    res.status(500).send({
-      status: 500,
-      message: 'Missing User Id or Subscription Plan Id!',
+    res.status(400).send({
+      status: 400,
+      message: MISSING_FIELDS,
     });
   }
 });
 
 /**
  * @api {post} /cancel
- * @apiName Cancel user's subscription plan
+ * @apiName Cancel User Subscription
  * @apiGroup Users
  * @apiDescription Cancel user's subscription plan
  *
@@ -148,26 +157,33 @@ router.post('/subscribe', async (req: Request, res: Response) => {
  *
  * @apiVersion 0.1.0
  */
-router.post('/cancel', async (req: Request, res: Response) => {
+router.post('/cancel', (req: Request, res: Response) => {
   const { userId } = req.body;
   if (userId) {
-    await connect();
-    await User.findById({
+    connect()
+    .then(() => User.findById({
       _id: userId,
+    }))
+    .then((user: any) => {
+      const { settings } = user;
+      settings.billingDate = null;
+      return user.save();
     })
-      .then((user) => {
-        const { settings } = user;
-        settings.billingDate = null;
-        user.save();
-        res.status(201).send({
-          status: 201,
-          message: 'Subscription canceled! User will not be billed at the end of the month!',
-        });
+    .then(() => res.status(201).send({
+      status: 201,
+      message: USER_PLAN_CANCELLATION,
+    }))
+    .catch((err: any) => {
+      console.error(err);
+      res.status(500).send({
+        status: 500,
+        message: UNKNOWN_ERROR,
       });
+    })
   } else {
-    res.status(500).send({
-      status: 500,
-      message: 'Missing User Id!',
+    res.status(400).send({
+      status: 400,
+      message: MISSING_FIELDS,
     });
   }
 });
