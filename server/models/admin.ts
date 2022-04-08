@@ -3,8 +3,8 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const AdminModel = new Schema({
-  email: { type: String },
-  password: { type: String },
+  email: { type: String, required: true },
+  password: { type: String, required: true },
 }, {
   timestamps: true,
 });
