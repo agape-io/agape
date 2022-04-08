@@ -28,7 +28,9 @@ const UserModel = new Schema({
   },
   settings: {
     pushNotifications: { type: Boolean, default: false },
-    membershipType: { type: mongoose.Schema.Types.ObjectId, default: MEMBERSHIP_TYPES.BASIC, enum: MEMBERSHIP_TYPES },
+    membershipType: { type: mongoose.Schema.Types.ObjectId, ref: 'Plan', default: MEMBERSHIP_TYPES.BASIC, enum: MEMBERSHIP_TYPES },
+    endingDate: { type: Date, default: null },
+    billingDate: { type: Date, default: null },
   },
   swipedLeft: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   swipedRight: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],

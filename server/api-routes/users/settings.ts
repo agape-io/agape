@@ -27,7 +27,8 @@ router.get('/', (req: Request, res: Response) => {
   const { userId } = req.query;
   if (userId) {
     connect()
-      .then(() => User.findOne({ _id: userId }, 'settings'))
+      .then(() => User.findOne({ _id: userId }, 'settings')
+        .populate('settings.membershipType', '-createdAt -updatedAt -__v'))
       .then((user: any) => {
         if (!user) throw new Error(USER_ERRORS.INVALID_ID);
         res.status(200).send({
