@@ -23,6 +23,7 @@ import { notFound, errorHandler } from './middleware/error';
 
 const app = express();
 const { ENDPOINT, PORT } = env;
+const api_version = "/api/v1";
 
 // CORS Middleware
 app.use(cors());
@@ -31,24 +32,24 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // auth routers
-app.use('/signin', signinRouter);
-app.use('/signup', signupRouter);
-app.use('/signout', signoutRouter);
+app.use(`${api_version}/signin`, signinRouter);
+app.use(`${api_version}/signup`, signupRouter);
+app.use(`${api_version}/signout`, signoutRouter);
 
 // chat routes
-app.use('/chats', authenticateToken, chatRouter);
-app.use('/messages', authenticateToken, messageRouter);
+app.use(`${api_version}/chats`, authenticateToken, chatRouter);
+app.use(`${api_version}/messages`, authenticateToken, messageRouter);
 
 // user routes
-app.use('/discover', authenticateToken, discoverRouter);
-app.use('/preferences', authenticateToken, preferencesRouter);
-app.use('/profile', authenticateToken, profileRouter);
-app.use('/settings', authenticateToken, settingsRouter);
-app.use('/swipe', authenticateToken, swipeRouter);
-app.use('/subscription', authenticateToken, subscriptionRouter);
+app.use(`${api_version}/discover`, authenticateToken, discoverRouter);
+app.use(`${api_version}/preferences`, authenticateToken, preferencesRouter);
+app.use(`${api_version}/profile`, authenticateToken, profileRouter);
+app.use(`${api_version}/settings`, authenticateToken, settingsRouter);
+app.use(`${api_version}/swipe`, authenticateToken, swipeRouter);
+app.use(`${api_version}/subscription`, authenticateToken, subscriptionRouter);
 
 // admin subscription routes
-app.use('/admin/subscription', authenticateAdmin, adminSubscriptionRouter);
+app.use(`${api_version}/admin/subscription`, authenticateAdmin, adminSubscriptionRouter);
 
 // error handlers
 app.use(notFound);
