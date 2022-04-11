@@ -1,21 +1,11 @@
-import * as React from 'react'
-import { TextStyle } from 'react-native'
-import styled from 'styled-components/native'
+/**
+ * Section Component
+ */
+import React from 'react';
+import styled from 'styled-components/native';
 
-import { Row, RowData } from './Row'
-
-export interface SectionData {
-    type: 'SECTION'
-    key?: string
-    header?: string
-    footer?: string | (() => React.ReactElement<any>)
-    rows: RowData[]
-}
-
-export interface SectionProps {
-    section: SectionData
-    globalTextStyle?: TextStyle
-}
+import { Row } from './Row';
+import { SectionProps } from '../types';
 
 export const Section = ({ section, globalTextStyle }: SectionProps) => {
     let elements: React.ReactElement<any>[] = []
@@ -79,15 +69,15 @@ const SectionHeader = styled.Text`
   margin-bottom: 8;
   color: #999;
   font-size: 14;
-`
+`;
 
 const SectionFooter = styled.Text`
   margin-top: 8;
   font-size: 15;
   color: #999;
   margin-horizontal: 15;
-`
+`;
 
 const RenderedSectionFooterContainer = styled.View`
   align-self: stretch;
-`
+`;

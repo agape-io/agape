@@ -67,34 +67,6 @@ const SingleMessage = ({ route, userData }: any) => {
       });
   };
 
-  // socket-io initialization
-  useEffect(() => {
-    socket = io(API_URL);
-    socket.emit('setup', userId);
-    socket.on('connection', () => isSocketConnected(true));
-  }, []);
-
-  // fetch messages
-  useEffect(() => {
-    fetchMessages();
-
-    // cleanup
-    return () => {
-      setMessages([]);
-    }
-  }, []);
-
-  // Check messages recieved
-  useEffect(() => {
-    socket.on('message recieved', (newMessageRecieved: any) => {
-      if (chatId !== newMessageRecieved.chat._id) {
-        // give notification
-      } else {
-        setMessages([...messages, newMessageRecieved]);
-      }
-    })
-  });
-
    // calls set mesasges
   const onSend = useCallback((messages = []) => {
     let content = messages[0].text;
@@ -128,6 +100,34 @@ const SingleMessage = ({ route, userData }: any) => {
         console.error(e.response.data.message);
       });
   }, []);
+
+  // socket-io initialization
+  useEffect(() => {
+    socket = io(API_URL);
+    socket.emit('setup', userId);
+    socket.on('connection', () => isSocketConnected(true));
+  }, []);
+
+  // fetch messages
+  useEffect(() => {
+    fetchMessages();
+
+    // cleanup
+    return () => {
+      setMessages([]);
+    }
+  }, []);
+
+  // Check messages recieved
+  useEffect(() => {
+    socket.on('message recieved', (newMessageRecieved: any) => {
+      if (chatId !== newMessageRecieved.chat._id) {
+        // give notification
+      } else {
+        setMessages([...messages, newMessageRecieved]);
+      }
+    })
+  });
 
   return (
     <>

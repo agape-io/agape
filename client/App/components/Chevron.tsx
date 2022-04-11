@@ -1,9 +1,12 @@
-import * as React from 'react'
-import { StyleSheet, Image, ImageStyle } from 'react-native'
-
-interface ChevronProps {
-    style?: ImageStyle
-}
+/**
+ * Chevron Component
+ */
+import React from 'react'
+import {
+    StyleSheet,
+    Image
+} from 'react-native';
+import { ChevronProps } from '../types';
 
 const Chevron = ({ style }: ChevronProps) => (
     <Image
