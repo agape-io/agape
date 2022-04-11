@@ -120,6 +120,19 @@ interface RowProps extends RowData {
   children?: any
 }
 
+interface SectionData {
+  type: 'SECTION'
+  key?: string
+  header?: string
+  footer?: string | (() => React.ReactElement<any>)
+  rows: RowData[]
+}
+
+interface SectionProps {
+  section: SectionData
+  globalTextStyle?: TextStyle
+}
+
 export {
   HomeTabNavigatorParamList,
   RootNavigatorParamsList,
@@ -137,5 +150,7 @@ export {
   ContainerProps,
   TopBorderContainerProps,
   RowData,
-  RowProps
+  RowProps,
+  SectionData,
+  SectionProps
 }
