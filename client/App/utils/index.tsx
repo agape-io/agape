@@ -330,6 +330,73 @@ const getMessages = async (chatId: string, token: string) => {
   });
 }
 
+/**
+ * Get Subscription Plans
+ * 
+ * @param token User's token
+ */
+const getSubscriptionPlans = async (token: string) => {
+  return axios.get(`${API_URL}/subscription`, {
+    headers: {
+      "x-access-token": token,
+      "content-type": "application/json"
+    }
+  });
+}
+
+/**
+ * Update User's Subscription
+ * 
+ * @param userId User's Id
+ * @param planId Plan's Id
+ * @param token User's token
+ */
+ const UpdateUserSubscription = async (
+   userId: string, planId: string, token: string) => {
+  return axios.get(`${API_URL}/subscription/subscribe`, {
+    headers: {
+      "x-access-token": token,
+      "content-type": "application/json"
+    },
+    params: {
+      userId,
+      planId
+    }
+  });
+}
+
+/**
+ * Get User's Plans
+ * 
+ * @param token User's token
+ */
+ const getUserPlans = async (token: string) => {
+  return axios.get(`${API_URL}/subscription/myPlan`, {
+    headers: {
+      "x-access-token": token,
+      "content-type": "application/json"
+    }
+  });
+}
+
+/**
+ * Cancel User's Subcription
+ * 
+ * @param userId User's Id
+ * @param token User's token
+ */
+ const cancelUserSubscription = async (userId: string, token: string) => {
+  return axios.get(`${API_URL}/subscription/myPlan`, {
+    headers: {
+      "x-access-token": token,
+      "content-type": "application/json"
+    },
+    params: {
+      userId
+    }
+  });
+}
+
 export {
   logOut,
   signUp,
@@ -343,5 +410,9 @@ export {
   getUserChats,
   createChat,
   getMessages,
-  postMessage
+  postMessage,
+  getSubscriptionPlans,
+  UpdateUserSubscription,
+  getUserPlans,
+  cancelUserSubscription,
 }
