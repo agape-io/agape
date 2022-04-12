@@ -156,7 +156,7 @@ const updateProfile = async (
   photo: string,
 ) => {
   // call axios to the API
-  return axios.put(`${API_URL+ apiVersion}/profile/update`, {
+  return axios.put(`${API_URL + apiVersion}/profile/update`, {
     userId,
     token,
     name,
