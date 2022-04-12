@@ -86,7 +86,9 @@ router.post('/create', (req: Request, res: Response) => {
         { _id: userId },
         {
           $set: {
-            settings,
+            settings: {
+              pushNotifications: settings.pushNotifications,
+            },
           },
         },
         { upsert: true },
@@ -139,7 +141,9 @@ router.put('/update', (req: Request, res: Response) => {
         { _id: userId },
         {
           $set: {
-            settings,
+            settings: {
+              pushNotifications: settings.pushNotifications,
+            },
           },
         },
         { upsert: true },
