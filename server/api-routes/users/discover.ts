@@ -46,7 +46,7 @@ router.get('/', (req: Request, res: Response) => {
         })
         .then((validUser: boolean) => {
           if (!validUser) throw new Error(USER_ERRORS.INCOMPLETE_USER);
-          return User.find({ _id: { $ne: userId } });
+          return User.find({ _id: { $ne: userId } }, 'profile preferences');
         })
         .then((users: any[]) => {
           let similarUsers = [];
@@ -162,7 +162,7 @@ router.get('/likesMe', async (req: Request, res: Response) => {
   if (userId) {
     let allUsers: any[];
     connect()
-      .then(() => User.find({ swipedRight: { $elemMatch: { $eq: userId } } }))
+      .then(() => User.find({ swipedRight: { $elemMatch: { $eq: userId } } }, 'profile'))
       .then((users: any[]) => {
         allUsers = users;
         return User.findOne({ _id: userId }, 'swipedLeft swipedRight');
