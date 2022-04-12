@@ -9,7 +9,10 @@ import ProfileItem from './ProfileItem';
 import SubscriptionModal from './SubscriptionModal';
 import ProfileModal from './ProfileModal';
 import Chevron from './Chevron';
-import { SettingsScreen, SettingsData } from 'react-native-settings-screen';
+import {
+  SettingsScreen,
+  SettingsData
+} from 'react-native-settings-screen';
 import RecentMessage from './RecentMessage';
 import AllChats from './AllChats';
 import ThreadRow from './ThreadRow';

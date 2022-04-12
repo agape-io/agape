@@ -13,9 +13,7 @@ import Icon from "./Icon";
 import { CardItemT } from "../types";
 import styles, {
   DISLIKE_ACTIONS,
-  FLASH_ACTIONS,
   LIKE_ACTIONS,
-  STAR_ACTIONS,
   WHITE,
   GRAY
 } from "../../assets/styles";
@@ -71,7 +69,6 @@ const CardItem = ({
           borderBottomColor: GRAY,
           borderBottomWidth: 1,
           alignSelf: "stretch",
-          // paddingVertical: 5,
           marginBottom: 5,
         }}
       />
@@ -88,8 +85,6 @@ const CardItem = ({
       {/* AGE */}
       <Text style={styles.descriptionCardItem}>{data.profile.age}</Text>
 
-      {/* HOBBIES - use a map to iterate for each hobby */}
-
       {/* STATUS */}
       {!data.aboutMe && (
         <View style={styles.status}>
@@ -103,10 +98,6 @@ const CardItem = ({
       {/* ACTIONS */}
       {hasActions && (
         <View style={styles.actionsCardItem}>
-          {/* <TouchableOpacity style={styles.miniButton}>
-            <Icon name="star" color={STAR_ACTIONS} size={14} />
-          </TouchableOpacity> */}
-
           <TouchableOpacity style={styles.button}>
             <Icon name="close" color={DISLIKE_ACTIONS} size={25} />
           </TouchableOpacity>
@@ -114,10 +105,6 @@ const CardItem = ({
           <TouchableOpacity style={styles.button}>
             <Icon name="heart" color={LIKE_ACTIONS} size={25} />
           </TouchableOpacity>
-
-          {/* <TouchableOpacity style={styles.miniButton}>
-            <Icon name="flash" color={FLASH_ACTIONS} size={14} />
-          </TouchableOpacity> */}
         </View>
       )}
     </View>
