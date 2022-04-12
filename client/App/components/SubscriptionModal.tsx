@@ -3,6 +3,7 @@ import React, {
   useState,
   useLayoutEffect,
   useEffect,
+  useRef
 } from 'react';
 import {
   Text,
@@ -15,37 +16,72 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { ProfileModalProps } from '../types';
 import { useAuth } from '../context';
 
+// API's
+import {
+  getSubscription,
+  createSubscription,
+  updateSubscription,
+  subscribeSubscription,
+  getPlans,
+  cancelSubscription,
+} from '../utils';
+import { CLOUDINARY_API_URL } from '@env';
+
 // Styles
 import styles, { 
   PRIMARY_COLOR, 
-  SECONDARY_COLOR, 
-  GRAY, 
-  WHITE
+  SECONDARY_COLOR
 } from '../../assets/styles';
+
+ // Cancel Button for header
+ const CancelButton = ({ onPress }:any) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <MaterialCommunityIcons name="arrow-left" size={26} color="black" />
+    </TouchableOpacity>
+  );
+}
 
 const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
   const auth = useAuth();
-  const [checked, setChecked] = React.useState('silver');
+
+  const [checked, setChecked] = React.useState('basic');
+  const [plans, hasPlans] = useState<any>([""]);
+  // const isMounted = useRef<any>(null);
   const data = [
     {
+      name: 'Supporter',
+      color: 'pink',
+      value: 'basic'
+    },
+    {
+      name: 'Storge',
       color: 'silver',
+      value: 'premium'
     },
     {
-      value: 'gold',
-    },
-    {
-      value: 'unlimited'
+      name: 'Phillia',
+      color: 'gold',
+      value: 'elite'
     },
   ];
 
-  // Cancel Button for header
-  const CancelButton = ({ onPress }:any) => {
-    return (
-      <TouchableOpacity onPress={onPress}>
-        <MaterialCommunityIcons name="arrow-left" size={26} color="black" />
-      </TouchableOpacity>
-    );
+  const { userId, token } = auth.authData;
+
+  const getSubscriptionPlans = () => {
+    getSubscription(token)
+      .then((res: any) => {
+        const { plans } = res.data;
+
+        //check if plans exists
+        hasPlans(plans);
+        console.log("plans: " + plans);
+      })
+      .catch((e: any) => {
+        console.error(e.response.data.message);
+      });
   }
+
 
   // Header button initialization
   useLayoutEffect(() => {
@@ -65,41 +101,41 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
           <Text style={styles.textTitles}>Select the plan that fits you:</Text>
 
           <View style={styles.subscriptionOptions}>
-            <Text style={styles.textTitles}>Agape Silver</Text>
+            <Text style={styles.textTitles}>Supporter</Text>
             <Text style={styles.textDescription}>- Get 15 more Likes per day.</Text>
             <Text style={styles.textDescription}>- Profile booster.</Text>
             <Text style={styles.textDescription}>- Customize location.</Text>
             <RadioButton
-              value="silver"
+              value="basic"
               color={PRIMARY_COLOR}
-              status={ checked === 'silver' ? 'checked' : 'unchecked' }
-              onPress={() => setChecked('silver')}
+              status={ checked === 'basic' ? 'checked' : 'unchecked' }
+              onPress={() => setChecked('basic')}
             />
           </View>
 
           <View style={styles.subscriptionOptions}>
-            <Text style={styles.textTitles}>Agape Gold</Text>
+            <Text style={styles.textTitles}>Storge</Text>
             <Text style={styles.textDescription}>- Get 30 more Likes per day.</Text>
             <Text style={styles.textDescription}>- Customize location and others.</Text>
             <Text style={styles.textDescription}>- 50% less Ads.</Text>
             <RadioButton 
-              value="gold"
+              value="premium"
               color={PRIMARY_COLOR}
-              status={ checked === 'gold' ? 'checked' : 'unchecked' }
-              onPress={() => setChecked('gold')}
+              status={ checked === 'premium' ? 'checked' : 'unchecked' }
+              onPress={() => setChecked('premium')}
             />
           </View>
         
           <View style={styles.subscriptionOptions}>
-            <Text style={styles.textTitles}></Text>
+            <Text style={styles.textTitles}>Phillia</Text>
             <Text style={styles.textDescription}>- Send as many Likes as you want.</Text>
             <Text style={styles.textDescription}>- Customize all the features.</Text>
             <Text style={styles.textDescription}>- Turn off Ads.</Text>
             <RadioButton 
-              value="unlimited"
+              value="elite"
               color={PRIMARY_COLOR}
-              status={ checked === 'unlimited' ? 'checked' : 'unchecked' }
-              onPress={() => setChecked('unlimited')}
+              status={ checked === 'elite' ? 'checked' : 'unchecked' }
+              onPress={() => setChecked('elite')}
             />
           </View>
         </View>
@@ -107,6 +143,7 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
         <View style={styles.addSubscriptionButtonContainer}>
           <TouchableOpacity
             style={[styles.addSubscriptionButton, { backgroundColor: SECONDARY_COLOR }]}
+            // onPress={() => handleSubscription()}>
           >
             <Text>Subscribe</Text>
           </TouchableOpacity>

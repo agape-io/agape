@@ -330,13 +330,80 @@ const getMessages = async (chatId: string, token: string) => {
   });
 }
 
+////////////////////
+// SUBSCRIPTION APIs
+////////////////////
 /**
  * Get Subscription Plans
  * 
  * @param token User's token
  */
-const getSubscriptionPlans = async (token: string) => {
+const getSubscription = async (token: string) => {
   return axios.get(`${API_URL}/subscription`, {
+    headers: {
+      "x-access-token": token,
+      "content-type": "application/json"
+    }
+  });
+}
+
+/**
+ * Creates user Subscription
+ * 
+ * @param userId 
+ * @param token
+ * @param name 
+ * @param price
+ */
+ const createSubscription = async (
+  userId: string,
+  token: string,
+  name: string,
+  price: string
+) => {
+  // call axios to the API
+  return axios.post(`${API_URL}/subscription/create`, {
+    userId,
+    token,
+    name,
+    price
+  });
+}
+
+/**
+ * Updates user Subscription
+ * 
+  * @param userId 
+ * @param token
+ * @param name 
+ * @param price
+ * @param planId
+ * 
+ */
+ const updateSubscription = async (
+  userId: string,
+  token: string,
+  name: string,
+  price: string,
+  planId: string,
+) => {
+  // call axios to the API
+  return axios.put(`${API_URL}/subscription/update`, {
+    userId,
+    token,
+    name,
+    price,
+    planId
+  });
+}
+
+/**
+ * Get User's Plans
+ * 
+ * @param token User's token
+ */
+ const getPlans = async (token: string) => {
+  return axios.get(`${API_URL}/subscription/myPlan`, {
     headers: {
       "x-access-token": token,
       "content-type": "application/json"
@@ -351,32 +418,18 @@ const getSubscriptionPlans = async (token: string) => {
  * @param planId Plan's Id
  * @param token User's token
  */
- const UpdateUserSubscription = async (
-   userId: string, planId: string, token: string) => {
-  return axios.get(`${API_URL}/subscription/subscribe`, {
-    headers: {
-      "x-access-token": token,
-      "content-type": "application/json"
-    },
-    params: {
-      userId,
-      planId
-    }
-  });
-}
-
-/**
- * Get User's Plans
- * 
- * @param token User's token
- */
- const getUserPlans = async (token: string) => {
-  return axios.get(`${API_URL}/subscription/myPlan`, {
-    headers: {
-      "x-access-token": token,
-      "content-type": "application/json"
-    }
-  });
+ const subscribeSubscription = async (
+  userId: string, planId: string, token: string) => {
+ return axios.get(`${API_URL}/subscription/subscribe`, {
+   headers: {
+     "x-access-token": token,
+     "content-type": "application/json"
+   },
+   params: {
+     userId,
+     planId
+   }
+ });
 }
 
 /**
@@ -385,8 +438,8 @@ const getSubscriptionPlans = async (token: string) => {
  * @param userId User's Id
  * @param token User's token
  */
- const cancelUserSubscription = async (userId: string, token: string) => {
-  return axios.get(`${API_URL}/subscription/myPlan`, {
+ const cancelSubscription = async (userId: string, token: string) => {
+  return axios.get(`${API_URL}/subscription/cancel`, {
     headers: {
       "x-access-token": token,
       "content-type": "application/json"
@@ -411,8 +464,10 @@ export {
   createChat,
   getMessages,
   postMessage,
-  getSubscriptionPlans,
-  UpdateUserSubscription,
-  getUserPlans,
-  cancelUserSubscription,
+  getSubscription,
+  createSubscription,
+  updateSubscription,
+  subscribeSubscription,
+  getPlans,
+  cancelSubscription,
 }
