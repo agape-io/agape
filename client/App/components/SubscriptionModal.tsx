@@ -19,10 +19,8 @@ import { useAuth } from '../context';
 // API's
 import {
   getSubscription,
-  createSubscription,
   updateSubscription,
-  subscribeSubscription,
-  getPlans,
+  getmyPlan,
   cancelSubscription,
 } from '../utils';
 import { CLOUDINARY_API_URL } from '@env';
@@ -46,8 +44,9 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
   const auth = useAuth();
 
   const [checked, setChecked] = React.useState('basic');
-  const [plans, hasPlans] = useState<any>([""]);
-  // const isMounted = useRef<any>(null);
+  const [plans, hasPlan] = useState<any[]>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const isMounted = useRef<any>(null);
   const data = [
     {
       name: 'Supporter',
@@ -67,21 +66,41 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
   ];
 
   const { userId, token } = auth.authData;
-
+  
+  // Get subscription plans available
   const getSubscriptionPlans = () => {
     getSubscription(token)
       .then((res: any) => {
         const { plans } = res.data;
 
         //check if plans exists
-        hasPlans(plans);
-        console.log("plans: " + plans);
+        hasPlan(plans);
+        console.log("plans: " + plans.price);
       })
       .catch((e: any) => {
         console.error(e.response.data.message);
       });
   }
 
+  // Update user's subscription plan
+  const handleSubscription = async (
+    planId: string,
+    name: string,
+    price: string,
+  ) => {
+    return updateSubscription(
+      userId,
+      token,
+      name,
+      price,
+      planId)
+      .catch((e: any) => {
+        alert(e.response.data.message);
+      })
+      .finally(() => {
+        if (isMounted.current) setLoading(false);
+      });
+  }
 
   // Header button initialization
   useLayoutEffect(() => {
@@ -91,6 +110,23 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
       )
     })
   }, [navigation]);
+
+  useEffect(() => {
+    getSubscriptionPlans();
+
+    return () => {
+      // cleanup
+      hasPlan([null]);
+    }
+  }, []);
+
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    }
+  }, []);
 
 
   return (
