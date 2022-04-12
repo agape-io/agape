@@ -37,7 +37,7 @@ const AuthProvider:FC = ({ children }) => {
 
   const signIn = async (email: string, password: string) => {
     // call API, add to storage
-    return axios.post(`${API_URL}/signin/email`, {
+    return axios.post(`${API_URL}/api/v1/signin/email`, {
       email,
       password
     }).then((res: any) => {
