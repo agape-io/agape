@@ -8,6 +8,8 @@ import axios from 'axios';
 // API
 import { API_URL } from '@env';
 
+const apiVersion = "/api/v1";
+
 /**
  * Sign Up
  * 
@@ -16,7 +18,7 @@ import { API_URL } from '@env';
  * @param verifyPassword 
  */
 const signUp = async (email: string, password: string, verifyPassword: string) => {
-  return axios.post(`${API_URL}/signup/email`, {
+  return axios.post(`${API_URL + apiVersion}/signup/email`, {
       email,
       password,
       verifyPassword
@@ -29,7 +31,7 @@ const signUp = async (email: string, password: string, verifyPassword: string) =
  * @param userId 
  */
 const logOut = async (userId: string) => {
-  return axios.post(`${API_URL}/signout/email`, {
+  return axios.post(`${API_URL + apiVersion}/signout/email`, {
     userId
   });
 }
@@ -41,7 +43,7 @@ const logOut = async (userId: string) => {
  * @param token User token
  */
 const getMatches = async (userId: string, token: string) => {
-  return axios.get(`${API_URL}/discover/`, {
+  return axios.get(`${API_URL + apiVersion}/discover/`, {
     headers: {
       "x-access-token": token,
       "content-type": "application/json"
@@ -59,7 +61,7 @@ const getMatches = async (userId: string, token: string) => {
  * @param token User token
  */
 const getProfile = async (userId: string, token: string) => {
-  return axios.get(`${API_URL}/profile/`, {
+  return axios.get(`${API_URL + apiVersion}/profile/`, {
     headers: {
       "x-access-token": token,
       "content-type": "application/json"
@@ -104,7 +106,7 @@ const createProfile = async (
   photo: string,
 ) => {
   // call axios to the API
-  return axios.post(`${API_URL}/profile/create`, {
+  return axios.post(`${API_URL + apiVersion}/profile/create`, {
     userId,
     token,
     name,
@@ -154,7 +156,7 @@ const updateProfile = async (
   photo: string,
 ) => {
   // call axios to the API
-  return axios.put(`${API_URL}/profile/update`, {
+  return axios.put(`${API_URL + apiVersion}/profile/update`, {
     userId,
     token,
     name,
@@ -177,7 +179,7 @@ const updateProfile = async (
  * @param token User token
  */
 const getPreferences = async (userId: string, token: string) => {
-  return axios.get(`${API_URL}/preferences/`, {
+  return axios.get(`${API_URL + apiVersion}/preferences/`, {
     headers: {
       "x-access-token": token,
       "content-type": "application/json"
@@ -212,7 +214,7 @@ const createPreferences = async (
   religion: string,
 ) => {
   // call axios to the API
-  return axios.post(`${API_URL}/preferences/create`, {
+  return axios.post(`${API_URL + apiVersion}/preferences/create`, {
     userId,
     token,
     sexuality,
@@ -247,7 +249,7 @@ const updatePreferences = async (
   religion: string,
 ) => {
   // call axios to the API
-  return axios.put(`${API_URL}/preferences/update`, {
+  return axios.put(`${API_URL + apiVersion}/preferences/update`, {
     userId,
     token,
     sexuality,
@@ -265,7 +267,7 @@ const updatePreferences = async (
  * @param token Auth token
  */
 const getUserChats = async (userId: string, token: string) => {
-  return axios.get(`${API_URL}/chats`, {
+  return axios.get(`${API_URL + apiVersion}/chats`, {
     headers: {
       "x-access-token": token,
       "content-type": "application/json"
@@ -287,7 +289,7 @@ const createChat = async (userId: string, matchedUserId: string, token: string) 
   userIds.push(matchedUserId, userId);
   console.log(userIds);
   
-  return axios.post(`${API_URL}/chats`, { userIds, token });
+  return axios.post(`${API_URL + apiVersion}/chats`, { userIds, token });
 }
 
 /**
@@ -304,7 +306,7 @@ const postMessage = async (
   content: string,
   chatId: string
 ) => {
-  return axios.post(`${API_URL}/messages`, {
+  return axios.post(`${API_URL}/api/v1/messages`, {
     userId,
     token,
     content,
@@ -319,7 +321,7 @@ const postMessage = async (
  * @param token User's token
  */
 const getMessages = async (chatId: string, token: string) => {
-  return axios.get(`${API_URL}/messages`, {
+  return axios.get(`${API_URL + apiVersion}/messages`, {
     headers: {
       "x-access-token": token,
       "content-type": "application/json"

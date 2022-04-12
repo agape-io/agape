@@ -1,5 +1,15 @@
+/**
+ * All Defined Types and Interfaces
+ */
 import React from 'react';
-import { CompositeNavigationProp, NavigatorScreenParams } from "@react-navigation/native";
+import {
+  ImageStyle,
+  TextStyle
+} from 'react-native';
+import {
+  CompositeNavigationProp,
+  NavigatorScreenParams
+} from "@react-navigation/native";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type AuthNavigatorParamList = {
@@ -80,6 +90,48 @@ type ProfileModalProps = {
 type SettingsProps = {
   navigation: NativeStackNavigationProp<RootNavigatorParamsList, 'Settings'>;
 }
+interface ChevronProps {
+  style?: ImageStyle
+}
+
+interface ContainerProps {
+  height: number
+}
+
+interface TopBorderContainerProps {
+  isFirst: boolean
+}
+
+interface RowData {
+  title: string
+  titleStyle?: TextStyle
+  subtitle?: string
+  subtitleStyle?: TextStyle
+  onPress?: () => void
+  showDisclosureIndicator?: boolean
+  renderAccessory?: () => React.ReactElement<any>
+}
+
+interface RowProps extends RowData {
+  titleStyles?: (TextStyle | undefined)[]
+  subtitleStyles?: (TextStyle | undefined)[]
+  isFirst: boolean
+  isLast: boolean
+  children?: any
+}
+
+interface SectionData {
+  type: 'SECTION'
+  key?: string
+  header?: string
+  footer?: string | (() => React.ReactElement<any>)
+  rows: RowData[]
+}
+
+interface SectionProps {
+  section: SectionData
+  globalTextStyle?: TextStyle
+}
 
 export {
   HomeTabNavigatorParamList,
@@ -93,5 +145,12 @@ export {
   SettingsScreenT,
   MessageT,
   ProfileModalProps,
-  SettingsProps
+  SettingsProps,
+  ChevronProps,
+  ContainerProps,
+  TopBorderContainerProps,
+  RowData,
+  RowProps,
+  SectionData,
+  SectionProps
 }

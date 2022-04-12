@@ -18,6 +18,7 @@ const AuthProvider:FC = ({ children }) => {
   const [authData, setAuthData] = useState<any>();
   const [loading, setLoading] = useState<any>(true);
   const [notification, setNotification] = useState<any>();
+  const apiVersion = "/api/v1";
 
   useEffect(() => {
     loadStorageData();
@@ -37,7 +38,7 @@ const AuthProvider:FC = ({ children }) => {
 
   const signIn = async (email: string, password: string) => {
     // call API, add to storage
-    return axios.post(`${API_URL}/signin/email`, {
+    return axios.post(`${API_URL + apiVersion}/signin/email`, {
       email,
       password
     }).then((res: any) => {
