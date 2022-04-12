@@ -23,7 +23,7 @@ import { notFound, errorHandler } from './middleware/error';
 
 const app = express();
 const { ENDPOINT, PORT } = env;
-const api_version = "/api/v1";
+const apiVersion = "/api/v1";
 
 // CORS Middleware
 app.use(cors());
@@ -32,24 +32,24 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // auth routers
-app.use(`${api_version}/signin`, signinRouter);
-app.use(`${api_version}/signup`, signupRouter);
-app.use(`${api_version}/signout`, signoutRouter);
+app.use(`${apiVersion}/signin`, signinRouter);
+app.use(`${apiVersion}/signup`, signupRouter);
+app.use(`${apiVersion}/signout`, signoutRouter);
 
 // chat routes
-app.use(`${api_version}/chats`, authenticateToken, chatRouter);
-app.use(`${api_version}/messages`, authenticateToken, messageRouter);
+app.use(`${apiVersion}/chats`, authenticateToken, chatRouter);
+app.use(`${apiVersion}/messages`, authenticateToken, messageRouter);
 
 // user routes
-app.use(`${api_version}/discover`, authenticateToken, discoverRouter);
-app.use(`${api_version}/preferences`, authenticateToken, preferencesRouter);
-app.use(`${api_version}/profile`, authenticateToken, profileRouter);
-app.use(`${api_version}/settings`, authenticateToken, settingsRouter);
-app.use(`${api_version}/swipe`, authenticateToken, swipeRouter);
-app.use(`${api_version}/subscription`, authenticateToken, subscriptionRouter);
+app.use(`${apiVersion}/discover`, authenticateToken, discoverRouter);
+app.use(`${apiVersion}/preferences`, authenticateToken, preferencesRouter);
+app.use(`${apiVersion}/profile`, authenticateToken, profileRouter);
+app.use(`${apiVersion}/settings`, authenticateToken, settingsRouter);
+app.use(`${apiVersion}/swipe`, authenticateToken, swipeRouter);
+app.use(`${apiVersion}/subscription`, authenticateToken, subscriptionRouter);
 
 // admin subscription routes
-app.use(`${api_version}/admin/subscription`, authenticateAdmin, adminSubscriptionRouter);
+app.use(`${apiVersion}/admin/subscription`, authenticateAdmin, adminSubscriptionRouter);
 
 // error handlers
 app.use(notFound);
