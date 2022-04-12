@@ -81,7 +81,6 @@ const matchReligion = (user1: any, user2: any) => {
 };
 
 const validateUsers = (user1: any, user2: any, romantic: string) => {
-  if (getId(user1) === getId(user2)) return false;
   if (romantic === 'true') {
     if (!matchSexuality(user1, user2)) return false;
   }
