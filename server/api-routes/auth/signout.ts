@@ -34,7 +34,10 @@ router.post('/email', (req: Request, res: Response) => {
             isOnline: false,
           },
         },
-        { upsert: true },
+        {
+          new: true,
+          upsert: true,
+        },
       ))
       .then((user: any) => {
         res.status(201).send({

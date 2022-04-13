@@ -28,7 +28,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
   return next();
 };
 
-export const authenticateAdmin = async (req: Request, res: Response, next: NextFunction) => {
+export const authenticateAdmin = (req: Request, res: Response, next: NextFunction) => {
   const token: string = req.body.token || req.query.token || req.headers['x-access-token'];
 
   if (!token) {

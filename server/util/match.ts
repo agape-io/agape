@@ -1,3 +1,5 @@
+import { GENDER, SEXUALITY } from '../config/constants';
+
 const commonElements = (array1: any[], array2: any[]) => array1.filter((item) => array2.includes(item));
 
 export const getProfile = (user: any) => JSON.parse(JSON.stringify(user)).profile;
@@ -25,29 +27,29 @@ const matchSexuality = (user1: any, user2: any) => {
   const user1Sexuality = getPreferences(user1).sexuality.toLowerCase();
   const user2Gender = getProfile(user2).gender.toLowerCase();
   const user2Sexuality = getPreferences(user2).sexuality.toLowerCase();
-  if (user1Gender === 'male' && (user1Sexuality === 'bisexual' || user1Sexuality === 'gay')) {
-    if (user2Gender === 'male' && (user2Sexuality === 'bisexual' || user2Sexuality === 'gay')) {
+  if (user1Gender === GENDER.MALE && (user1Sexuality === SEXUALITY.BISEXUAL || user1Sexuality === SEXUALITY.GAY)) {
+    if (user2Gender === GENDER.MALE && (user2Sexuality === SEXUALITY.BISEXUAL || user2Sexuality === SEXUALITY.GAY)) {
       return true;
     }
-    if (user2Gender === 'female' && (user2Sexuality === 'bisexual' || user2Sexuality === 'straight')) {
-      return true;
-    }
-  }
-  if (user1Gender === 'male' && user1Sexuality === 'straight') {
-    if (user2Gender === 'female' && (user2Sexuality === 'bisexual' || user2Sexuality === 'straight')) {
+    if (user2Gender === GENDER.FEMALE && (user2Sexuality === SEXUALITY.BISEXUAL || user2Sexuality === SEXUALITY.STRAIGHT)) {
       return true;
     }
   }
-  if (user1Gender === 'female' && (user1Sexuality === 'bisexual' || user1Sexuality === 'lesbian')) {
-    if (user2Gender === 'female' && (user2Sexuality === 'bisexual' || user2Sexuality === 'lesbian')) {
-      return true;
-    }
-    if (user2Gender === 'male' && (user2Sexuality === 'bisexual' || user2Sexuality === 'straight')) {
+  if (user1Gender === GENDER.MALE && user1Sexuality === SEXUALITY.STRAIGHT) {
+    if (user2Gender === GENDER.FEMALE && (user2Sexuality === SEXUALITY.BISEXUAL || user2Sexuality === SEXUALITY.STRAIGHT)) {
       return true;
     }
   }
-  if (user1Gender === 'female' && user1Sexuality === 'straight') {
-    if (user2Gender === 'male' && (user2Sexuality === 'bisexual' || user2Sexuality === 'straight')) {
+  if (user1Gender === GENDER.FEMALE && (user1Sexuality === SEXUALITY.BISEXUAL || user1Sexuality === SEXUALITY.LESBIAN)) {
+    if (user2Gender === GENDER.FEMALE && (user2Sexuality === SEXUALITY.BISEXUAL || user2Sexuality === SEXUALITY.LESBIAN)) {
+      return true;
+    }
+    if (user2Gender === GENDER.MALE && (user2Sexuality === SEXUALITY.BISEXUAL || user2Sexuality === SEXUALITY.STRAIGHT)) {
+      return true;
+    }
+  }
+  if (user1Gender === GENDER.FEMALE && user1Sexuality === SEXUALITY.STRAIGHT) {
+    if (user2Gender === GENDER.MALE && (user2Sexuality === SEXUALITY.BISEXUAL || user2Sexuality === SEXUALITY.STRAIGHT)) {
       return true;
     }
   }
@@ -81,7 +83,6 @@ const matchReligion = (user1: any, user2: any) => {
 };
 
 const validateUsers = (user1: any, user2: any, romantic: string) => {
-  if (getId(user1) === getId(user2)) return false;
   if (romantic === 'true') {
     if (!matchSexuality(user1, user2)) return false;
   }

@@ -33,4 +33,5 @@ export enum SEXUALITY {
   STRAIGHT = 'straight',
   GAY ='gay',
   LESBIAN = 'lesbian',
+  BISEXUAL = 'bisexual',
 }

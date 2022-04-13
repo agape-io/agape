@@ -82,7 +82,7 @@ router.post('/create', (req: Request, res: Response) => {
   const { userId, sexuality } = req.body;
   if (userId && sexuality) {
     const {
-      maxDist, minAge, maxAge, religion, userId,
+      maxDist, minAge, maxAge, religion,
     } = req.body;
     const preferences = {
       sexuality,
@@ -143,17 +143,16 @@ router.post('/create', (req: Request, res: Response) => {
  * @apiVersion 0.1.0
  */
 router.put('/update', (req: Request, res: Response) => {
-  const { userId, sexuality } = req.body;
-  if (userId && sexuality) {
-    const {
-      maxDist, minAge, maxAge, religion, userId,
-    } = req.body;
+  const {
+    userId, sexuality, maxDist, minAge, maxAge, religion,
+  } = req.body;
+  if (userId && sexuality && maxDist && minAge && maxAge && religion) {
     const preferences = {
       sexuality,
-      maxDist: maxDist || '',
-      minAge: minAge || '',
-      maxAge: maxAge || '',
-      religion: religion || '',
+      maxDist,
+      minAge,
+      maxAge,
+      religion,
     };
     connect()
       .then(() => User.findOneAndUpdate(

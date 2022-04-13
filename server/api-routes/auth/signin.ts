@@ -36,7 +36,7 @@ router.post('/email', (req: Request, res: Response) => {
     let user: any = {};
     let needResubscription = false;
     connect()
-      .then(() => User.findOne({ email }, 'password settings'))
+      .then(() => User.findOne({ email }, 'password settings isOnline'))
       .then((existingUser: any) => {
         if (!existingUser) throw new Error(AUTH_ERRORS.INVALID_EMAIL);
         user = existingUser;
@@ -47,22 +47,22 @@ router.post('/email', (req: Request, res: Response) => {
         return moment(user.settings.endingDate).isSame(new Date(), 'day');
       })
       .then((subscriptionReset: boolean) => {
+        user.isOnline = true;
         if (subscriptionReset) {
           const { settings } = user;
           settings.billingDate = null;
           settings.endingDate = null;
           settings.membershipType = MEMBERSHIP_TYPES.BASIC;
           needResubscription = true;
-          return user.save();
         }
-        return Promise.resolve();
+        return user.save();
       })
       .then(() => {
         const validatedUser = {
           userId: user._id,
           email,
           token: null,
-          isOnline: false,
+          isOnline: true,
         };
         const token = jwt.sign(
           { email: validatedUser.email },
@@ -72,7 +72,6 @@ router.post('/email', (req: Request, res: Response) => {
           },
         );
         validatedUser.token = token;
-        validatedUser.isOnline = true;
         res.status(200).send({
           status: 200,
           message: SIGNIN_SUCCESS,
