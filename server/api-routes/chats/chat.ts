@@ -30,7 +30,7 @@ router.get('/', (req: Request, res: Response) => {
     connect()
       .then(() => Chat.find({
         users: { $elemMatch: { $eq: userId } },
-      }).populate('users', 'profile preferences email isOnline')
+      }).populate('users', 'profile preferences.sexuality email isOnline')
         .populate('latestMessage')
         .sort({ updatedAt: -1 }))
       .then((results: any) => User.populate(results, {
@@ -77,7 +77,7 @@ router.post('/', (req: Request, res: Response) => {
           { users: { $elemMatch: { $eq: userIds[0] } } },
           { users: { $elemMatch: { $eq: userIds[1] } } },
         ],
-      }).populate('users', 'profile preferences email isOnline')
+      }).populate('users', 'profile preferences.sexuality email isOnline')
         .populate('latestMessage'))
       .then((chat: any) => User.populate(chat, {
         path: 'latestMessage.sender',
@@ -95,7 +95,7 @@ router.post('/', (req: Request, res: Response) => {
         return Chat.create(newChat);
       })
       .then((createdChat: any) => {
-        if (createdChat) return Chat.findOne({ _id: createdChat._id }).populate('users', 'profile preferences email isOnline');
+        if (createdChat) return Chat.findOne({ _id: createdChat._id }).populate('users', 'profile preferences.sexuality email isOnline');
       })
       .then((fullChat: any) => res.status(200).send(fullChat))
       .catch((err: any) => {

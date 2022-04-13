@@ -23,7 +23,7 @@ import { notFound, errorHandler } from './middleware/error';
 
 const app = express();
 const { ENDPOINT, PORT } = env;
-const apiVersion = "/api/v1";
+const apiVersion = '/api/v1';
 
 // CORS Middleware
 app.use(cors());
