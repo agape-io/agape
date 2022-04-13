@@ -459,12 +459,12 @@ export default StyleSheet.create({
     */
     subscriptionContainer: {
         flex: 1,
-        justifyContent: "space-between",
+        justifyContent: "center",
         backgroundColor: WHITE,
         padding: 40,
-        margin: 65,
+        margin: 45,
         borderRadius:10,
-        height: 560,
+        height: 600,
         width: 360,
         shadowOpacity: 0.10,
         shadowRadius: 10,
@@ -481,8 +481,12 @@ export default StyleSheet.create({
         margin: 10,
         alignItems: "center",
     },
-    textTitles : {
-        fontSize: 20,
+    textTitles: {
+        fontSize: 22,
+        paddingLeft: 79
+    },
+    textPlanTitles: {
+        fontSize: 22
     },
     textDescription: {
         fontSize: 15,
@@ -497,7 +501,7 @@ export default StyleSheet.create({
         justifyContent: 'center',
         alignContent: 'space-between',
         height: 40,
-        marginTop: 10,
+        marginTop: 0,
         marginBottom: 80,
         borderRadius: 10,
         flexBasis: '50%',

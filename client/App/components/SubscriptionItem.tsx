@@ -17,23 +17,20 @@ import styles, {
 } from "../../assets/styles";
 
 const SubscriptionItem = ({ data }: SubscriptionItemT) => {
-  const [checked, setChecked] = useState<any>("");
+  const [checked, setChecked] = useState<any>("basic");
 
   return (
-    <View style={styles.subscriptionContainer}>
-      <Text style={styles.textTitles}>Subscription</Text>
+    <View style={styles.subscriptionOptions}>
       {data ? (
         <>
-          <View style={styles.subscriptionOptions}>
-            <Text style={styles.textTitles}>{data.name}</Text>
+            <Text style={styles.textPlanTitles}>{data.name}</Text>
             <Text style={styles.textDescription}>Price: {data.price}</Text>
             <RadioButton
-              value="basic"
-              color={PRIMARY_COLOR}
-              status={checked === "basic" ? "checked" : "unchecked"}
-              onPress={() => setChecked(data.name)}
+            value="basic"
+            color={PRIMARY_COLOR}
+            status={checked === "basic" ? "checked" : "unchecked"}
+            onPress={() => setChecked(data.name)}
             />
-          </View>
         </>
       ) : (
         <>

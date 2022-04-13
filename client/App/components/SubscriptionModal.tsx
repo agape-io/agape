@@ -49,6 +49,7 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
 
   const [checked, setChecked] = useState<any>('basic');
   const [loadPlans, setLoadPlans] = useState<any>([]);
+  const [errorMessage, setErrorMessage] = useState<any>('');
   const [selectedPlan, setSelectedPlan] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
   const isMounted = useRef<any>(null);
@@ -128,24 +129,54 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
 
 
   return (
-      <ScrollView contentContainerStyle={styles.modalContainer}>
-
+    <ScrollView contentContainerStyle={styles.modalContainer}>
+    <View style={styles.subscriptionContainer}>
+      <Text style={styles.textTitles}>Subscription</Text>
         {loadPlans ? (
           <>
-
+          {/* API Call made here */}
           {loadPlans.map((item: any, index: any) => {
-            <SubscriptionItem data={loadPlans} key={index} />
+            return (       
+                <SubscriptionItem
+                  key={index}
+                  data={item}
+                />
+            )
             })
           }
+
+          {/* * API Call made here data={loadPlans} key={index}
+          {matches.map((item: any, index: any) => {
+
+          return (
+            <Card key={index}>
+              <CardItem
+                key={index}
+                data={item}
+                hasActions
+              />
+            </Card>
+          )
+          })} */}
             
           </>
         ):(
           <>
-          <View><Text> No data!</Text></View>
-          {/* <SubscriptionItem data={loadPlans}/> */}
+          {/* if no data */}
+          <Text style={{textAlign: 'center', marginTop: 250}}>{errorMessage}</Text>
           </>
         )}
 
+      </View>
+
+      {/* Subscription button */}
+      <View style={styles.addSubscriptionButtonContainer}>
+          <TouchableOpacity
+            style={[styles.addSubscriptionButton, { backgroundColor: SECONDARY_COLOR }]}
+          >
+            <Text>Subscribe</Text>
+          </TouchableOpacity>
+      </View>
       </ScrollView>
   );
 }
