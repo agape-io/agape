@@ -1,10 +1,14 @@
+/**
+ * Card Item Component
+ */
 import React from "react";
 import {
   Text,
   View,
   Image,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  Alert
 } from "react-native";
 import Icon from "./Icon";
 import { CardItemT } from "../types";
@@ -20,7 +24,7 @@ import styles, {
 // API's
 import { updateSwipedLeft, updateSwipedRight } from '../utils';
 
-import { useAuth } from '../navigation';
+import { useAuth } from '../context';
 
 const CardItem = ({
   data,
@@ -33,10 +37,19 @@ const CardItem = ({
   const { userId, token } = auth.authData;
 
   const handleMatch = () => {
-    alert("You matched with" + data.profile.name + "!");
+    Alert.alert(
+      "Alert Title",
+      "My Alert Msg",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "OK", onPress: () => console.log("OK Pressed") }
+      ]
+    );
     console.log("handleMatch called");
-
-
   }
 
   // Update swipedLeft

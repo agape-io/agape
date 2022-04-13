@@ -337,10 +337,10 @@ export default StyleSheet.create({
         alignItems: "center",
         marginLeft: 10,
         marginRight: 10,
-        height: 50,
+        height: 40,
         borderRadius: 25,
         backgroundColor: SECONDARY_COLOR,
-        paddingHorizontal: 20
+        paddingHorizontal: 20,
     },
 
     // MENU
@@ -405,11 +405,13 @@ export default StyleSheet.create({
     authError: {
         color: ERROR_MESSAGE,
         fontSize: 20,
+        paddingTop: 10
     },
     /**
      * Profile Modal
      */
     modalContainer: {
+        margin: 10,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -451,5 +453,108 @@ export default StyleSheet.create({
         marginBottom: 80,
         borderRadius: 10,
         flexBasis: '40%',
+    },
+    /**
+    * Subscription Modal
+    */
+    subscriptionContainer: {
+        flex: 1,
+        justifyContent: "space-between",
+        backgroundColor: WHITE,
+        padding: 40,
+        margin: 65,
+        borderRadius:10,
+        height: 560,
+        width: 360,
+        shadowOpacity: 0.10,
+        shadowRadius: 10,
+        shadowColor: BLACK,
+    },
+    subscriptionOptions: {
+        flex: 1,
+        backgroundColor: SECONDARY_COLOR,
+        paddingTop: 4,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        borderBottomRightRadius: 20,
+        borderBottomLeftRadius: 20,
+        margin: 10,
+        alignItems: "center",
+    },
+    textTitles : {
+        fontSize: 20,
+    },
+    textDescription: {
+        fontSize: 15,
+        margin: 1
+    },
+    addRadioButton: {
+        backgroundColor: PRIMARY_COLOR
+    },
+    addSubscriptionButton: {
+        marginHorizontal: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignContent: 'space-between',
+        height: 40,
+        marginTop: 10,
+        marginBottom: 80,
+        borderRadius: 10,
+        flexBasis: '50%',
+    },
+    addSubscriptionButtonContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    /* 
+    * Settings Styles
+    */
+    settingsContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+    settingsButton: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2
+    },
+    buttonOpen: {
+        backgroundColor: "#F194FF",
+    },
+    buttonClose: {
+        backgroundColor: "#2196F3",
+    },
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center"
     }
 });

@@ -1,9 +1,13 @@
 import { Router, Request, Response } from 'express';
 
-import { User } from '../../models/user';
 import connect from '../../config/db';
+import { USER_ERRORS, MISSING_FIELDS, UNKNOWN_ERROR } from '../../config/errorMessages';
+import { DISCOVER_MATCHES_FOUND, DISCOVER_NO_MATCHES_FOUND } from '../../config/statusMessages';
+
+import { User } from '../../models/user';
+
 import {
-  getId, getProfile, getPreferences, generatePercentage, sortByPercentage
+  getId, getProfile, getPreferences, generatePercentage, sortByPercentage, verifyUser,
 } from '../../util/match';
 
 const router = Router();
@@ -24,57 +28,168 @@ const router = Router();
  * threshold: int
  * sort: string
  * numUsers: int
- * 
+ *
  * @apiVersion 0.1.0
  */
-router.get('/', async (req: Request, res: Response) => {
-  const { userId, romantic = 'false', threshold = 0, sort = 'false', numUsers = 0 } = req.query;
+router.get('/', (req: Request, res: Response) => {
+  const {
+    userId, romantic = 'false', threshold = 0, sort = 'false', numUsers = 0,
+  } = req.query;
   if (userId) {
-    await connect();
-    User.findOne({ _id: userId }, async (err, existingUser) => {
-      if (existingUser) {
-        const users = await User.find({});
-        let similarUsers = [];
-        users.forEach((user) => {
-          const percentage = generatePercentage(existingUser, user, romantic);
-          if (percentage > parseFloat(threshold as string)) {
-            similarUsers.push({
-              userId: getId(user),
-              profile: getProfile(user),
-              preferences: {
-                sexuality: getPreferences(user).sexuality,
-              },
-              percentage,
+    let originalUser: any = {};
+    connect()
+      .then(() => User.findOne({ _id: userId })
+        .then((existingUser: any) => {
+          if (!existingUser) throw new Error(USER_ERRORS.INVALID_ID);
+          originalUser = existingUser;
+          return verifyUser(originalUser);
+        })
+        .then((validUser: boolean) => {
+          if (!validUser) throw new Error(USER_ERRORS.INCOMPLETE_USER);
+          return User.find({ _id: { $ne: userId } }, 'profile preferences');
+        })
+        .then((users: any[]) => {
+          let similarUsers = [];
+          users.forEach((user) => {
+            if (verifyUser(user)) {
+              const percentage = generatePercentage(originalUser, user, romantic as string);
+              if (percentage > parseFloat(threshold as string)) {
+                similarUsers.push({
+                  userId: getId(user),
+                  profile: getProfile(user),
+                  preferences: {
+                    sexuality: getPreferences(user).sexuality,
+                  },
+                  percentage,
+                });
+              }
+            }
+          });
+          if (similarUsers.length > 0) {
+            if (numUsers > 0 || sort === 'true') {
+              similarUsers = sortByPercentage(similarUsers);
+              if (numUsers > 0) similarUsers = similarUsers.slice(0, parseInt(numUsers as string));
+            }
+            res.status(200).send({
+              status: 200,
+              users: similarUsers,
+              message: DISCOVER_MATCHES_FOUND,
+            });
+          } else {
+            res.status(200).send({
+              status: 200,
+              users: [],
+              message: DISCOVER_NO_MATCHES_FOUND,
             });
           }
-        });
-        if (similarUsers.length > 0) {
-          if (numUsers > 0 || sort === 'true') {
-            similarUsers = sortByPercentage(similarUsers);
-            if (numUsers > 0) similarUsers = similarUsers.slice(0, parseInt(numUsers as string));
+        })
+        .catch((err: any) => {
+          if (err.message === USER_ERRORS.INVALID_ID || err.message === USER_ERRORS.INCOMPLETE_USER) {
+            res.status(400).send({
+              status: 400,
+              message: err.message,
+            });
+          } else {
+            console.error(err.message);
+            res.status(500).send({
+              status: 500,
+              message: UNKNOWN_ERROR,
+            });
           }
-          res.status(200).send({
-            status: 200,
-            users: similarUsers,
-          });
-        } else {
-          res.status(500).send({
-            status: 500,
-            users: [],
-            message: 'No matches found!',
-          });
-        }
-      } else {
+        }));
+  } else {
+    res.status(400).send({
+      status: 400,
+      message: MISSING_FIELDS,
+    });
+  }
+});
+
+/**
+ * @api {get} /
+ * @apiName Users likes
+ * @apiGroup Users
+ * @apiDescription Fetch user's likes' profiles
+ *
+ * @apiSuccess (200)
+ *
+ * @apiSampleRequest GET /
+ *
+ * @query
+ * userId: string
+ *
+ * @apiVersion 0.1.0
+ */
+router.get('/myLikes', (req: Request, res: Response) => {
+  const { userId } = req.query;
+  if (userId) {
+    connect()
+      .then(() => User.findOne({ _id: userId }))
+      .then((user: any) => user.populate('swipedRight', 'profile'))
+      .then((completeUser: any) => res.status(200).send(completeUser.swipedRight))
+      .catch((err: any) => {
+        console.error(err.message);
         res.status(500).send({
           status: 500,
-          message: 'Cannot find current user!',
+          message: UNKNOWN_ERROR,
         });
-      }
-    });
+      });
   } else {
-    res.status(500).send({
-      status: 500,
-      message: 'Missing User Id!',
+    res.status(400).send({
+      status: 400,
+      message: MISSING_FIELDS,
+    });
+  }
+});
+
+/**
+ * @api {get} /
+ * @apiName User's liked profiles
+ * @apiGroup Users
+ * @apiDescription Fetch profiles who liked current user
+ *
+ * @apiSuccess (200)
+ *
+ * @apiSampleRequest GET /
+ *
+ * @query
+ * userId: string
+ *
+ * @apiVersion 0.1.0
+ */
+router.get('/likesMe', async (req: Request, res: Response) => {
+  const { userId } = req.query;
+  if (userId) {
+    let allUsers: any[];
+    connect()
+      .then(() => User.find({ swipedRight: { $elemMatch: { $eq: userId } } }, 'profile'))
+      .then((users: any[]) => {
+        allUsers = users;
+        return User.findOne({ _id: userId }, 'swipedLeft swipedRight');
+      })
+      .then((originalUser: any) => {
+        const swiped = originalUser.swipedLeft.concat(originalUser.swipedRight);
+        const swipedIds = [];
+        swiped.forEach((swipe: any) => {
+          swipedIds.push(swipe._id.toString());
+        });
+        const liked = [];
+        allUsers.forEach((user) => {
+          if (!swipedIds.includes(user._id.toString())) liked.push(user.profile);
+        });
+        res.status(200).send(liked);
+      })
+      .catch((err: any) => {
+        console.error(err.message);
+        res.status(500).send({
+          status: 500,
+          message: UNKNOWN_ERROR,
+        });
+      });
+  } else {
+    res.status(400).send({
+      status: 400,
+      message: MISSING_FIELDS,
     });
   }
 });

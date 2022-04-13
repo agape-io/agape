@@ -1,8 +1,7 @@
 /**
- * Main Handler for Routes
+ * Routes Handler
  */
 import React, { FC } from 'react';
-import { Image, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -13,11 +12,11 @@ import {
   AuthNavigatorParamList,
   RootNavigatorParamsList,
   HomeTabNavigatorParamList,
-  MessageNavigatorParamList
+  MessageStackParamList
 } from '../types';
 
 // Stacks
-import { useAuth } from "../navigation";
+import { useAuth } from "../context";
 
 // Screens
 import {
@@ -28,15 +27,19 @@ import {
   Discover,
   Profile,
   Chat,
-  Message
+  Message,
+  Settings
 } from '../pages';
+import {
+  ProfileModal,
+  SubscriptionModal
+} from '../components';
 
 // Styles
 import {
   SECONDARY_COLOR,
   PRIMARY_COLOR
 } from '../../assets/styles';
-import { ProfileModal } from '../components';
 
 interface State {
   loading?: boolean;
@@ -46,7 +49,7 @@ interface State {
 const RootStack = createNativeStackNavigator<RootNavigatorParamsList>();
 const HomeTabStack = createMaterialBottomTabNavigator<HomeTabNavigatorParamList>();
 const AuthStack = createNativeStackNavigator<AuthNavigatorParamList>();
-const MessageStack = createNativeStackNavigator<MessageNavigatorParamList>();
+const MessageStack = createNativeStackNavigator<MessageStackParamList>();
 
 const Messaging: FC = () => {
   const { Navigator, Screen } = MessageStack;
@@ -62,7 +65,7 @@ const Messaging: FC = () => {
       <Screen
         name="Message"
         component={Message}
-        //options={({ route }) => ({ title: route.params.user })}
+        options={({ route }) => ({ title: route.params?.name || "Message"})}
       />
     </Navigator>
   )
@@ -77,7 +80,7 @@ const HomeTabs: FC = () => {
       activeColor={SECONDARY_COLOR}
       barStyle={{ backgroundColor: PRIMARY_COLOR }}
     >
-      <Screen
+      {/* <Screen
         name="Test"
         component={TestPage}
         options={{
@@ -86,7 +89,7 @@ const HomeTabs: FC = () => {
             <MaterialCommunityIcons name="test-tube-empty" color={color} size={26} />
           )
         }}
-      />
+      /> */}
        <Screen
         name="Chat"
         component={Messaging}
@@ -117,11 +120,6 @@ const HomeTabs: FC = () => {
           )
         }}
       />
-     
-      {/* <Screen
-        name="Message"
-        component={Message}
-      /> */}
     </Navigator>
   )
 }
@@ -135,8 +133,6 @@ const Auth: FC = () => {
       <Screen name="SignUp" component={SignUp} />
       <Screen name="SignIn" component={SignIn} />
       <Screen name="Landing" component={Landing} />
-      {/* <Screen name="Message" component={Message} /> */}
-
     </Navigator>
   )
 }
@@ -154,18 +150,26 @@ const Routes: FC<State> = () => {
     <NavigationContainer>
       <Navigator>
         {authData ? (
-          <>
+          <Group>
             <Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
+            <Screen name="Settings" component={Settings} options={{ headerShown: true }} />
             <Group screenOptions={{ presentation: 'modal' }}>
               <Screen
                 name="ProfileModal"
                 component={ProfileModal}
                 options={{ headerTransparent: true, headerTitle: '' }}
               />
+              <Screen
+                name="SubscriptionModal"
+                component={SubscriptionModal}
+                options={{ headerTransparent: true, headerTitle: '' }}
+              />
             </Group>
-          </>
+          </Group>
         ) : (
-          <Screen name="Auth" component={Auth} options={{ headerShown: false }} />
+            <Group screenOptions={{ headerShown: false }}>
+              <Screen name="Auth" component={Auth} />
+            </Group>
         )}
       </Navigator>
     </NavigationContainer>

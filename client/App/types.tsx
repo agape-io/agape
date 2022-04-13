@@ -1,5 +1,16 @@
+/**
+ * All Defined Types and Interfaces
+ */
 import React from 'react';
-import { NavigatorScreenParams } from "@react-navigation/native";
+import {
+  ImageStyle,
+  TextStyle
+} from 'react-native';
+import {
+  CompositeNavigationProp,
+  NavigatorScreenParams
+} from "@react-navigation/native";
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type AuthNavigatorParamList = {
   SignIn: undefined;
@@ -8,8 +19,14 @@ type AuthNavigatorParamList = {
 }
 
 type MessageStackParamList = {
-  Message: undefined;
-  Messages: undefined;
+  Message: {
+    name?: any;
+    chatId: any;
+  };
+  Messages: {
+    thread?: string;
+    id?: any;
+  };
 }
 
 type HomeTabNavigatorParamList = {
@@ -23,22 +40,19 @@ type RootNavigatorParamsList = {
   Auth: NavigatorScreenParams<AuthNavigatorParamList>
   Home: NavigatorScreenParams<HomeTabNavigatorParamList>
   ProfileModal: undefined;
+  SubscriptionModal: undefined;
   Chat: NavigatorScreenParams<MessageStackParamList>;
+  Settings: undefined;
 }
 
 type AuthContextData = {
-  authData: AuthData;
+  authData: any;
   loading: boolean;
-  signIn(email: string, password: string): Promise<void>;
-  signOut(): Promise<void>;
+  signIn(email: string, password: string): any;
+  signOut(): any;
   children?: React.ReactNode;
-}
-
-type AuthData = {
-  token: string,
-  email: string,
-  userId: string,
-  isOnline: boolean,
+  notification: any;
+  setNotification: any;
 }
 
 type CardItemT = {
@@ -58,11 +72,66 @@ type ProfileItemT = {
   data: any;
 };
 
-export type MessageT = {
+type SettingsScreenT = {
+  data: any;
+};
+
+type MessageT = {
   image: any;
   lastMessage: string;
   name: string;
 };
+
+type ProfileModalProps = {
+  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Profile'>,
+  NativeStackNavigationProp<RootNavigatorParamsList>>;
+}
+
+type SettingsProps = {
+  navigation: NativeStackNavigationProp<RootNavigatorParamsList, 'Settings'>;
+}
+interface ChevronProps {
+  style?: ImageStyle
+}
+
+interface ContainerProps {
+  height: number
+}
+
+interface TopBorderContainerProps {
+  isFirst: boolean
+}
+
+interface RowData {
+  title: string
+  titleStyle?: TextStyle
+  subtitle?: string
+  subtitleStyle?: TextStyle
+  onPress?: () => void
+  showDisclosureIndicator?: boolean
+  renderAccessory?: () => React.ReactElement<any>
+}
+
+interface RowProps extends RowData {
+  titleStyles?: (TextStyle | undefined)[]
+  subtitleStyles?: (TextStyle | undefined)[]
+  isFirst: boolean
+  isLast: boolean
+  children?: any
+}
+
+interface SectionData {
+  type: 'SECTION'
+  key?: string
+  header?: string
+  footer?: string | (() => React.ReactElement<any>)
+  rows: RowData[]
+}
+
+interface SectionProps {
+  section: SectionData
+  globalTextStyle?: TextStyle
+}
 
 export {
   HomeTabNavigatorParamList,
@@ -70,8 +139,18 @@ export {
   MessageStackParamList,
   AuthNavigatorParamList,
   AuthContextData,
-  AuthData,
   CardItemT,
   IconT,
-  ProfileItemT
+  ProfileItemT,
+  SettingsScreenT,
+  MessageT,
+  ProfileModalProps,
+  SettingsProps,
+  ChevronProps,
+  ContainerProps,
+  TopBorderContainerProps,
+  RowData,
+  RowProps,
+  SectionData,
+  SectionProps
 }

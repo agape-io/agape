@@ -1,5 +1,11 @@
+/**
+ * Filters Component
+ */
 import React from "react";
-import { Text, TouchableOpacity } from "react-native";
+import {
+  Text,
+  TouchableOpacity
+} from "react-native";
 import { Icon } from './index';
 import styles, { DARK_GRAY } from "../../assets/styles";
 

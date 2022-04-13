@@ -21,7 +21,7 @@ import {
 } from '../types';
 
 // API
-import { useAuth } from '../navigation';
+import { useAuth } from '../context';
 
 // Styles
 import styles from "../../assets/styles";
@@ -58,9 +58,8 @@ const SignIn: FC<SignInProps> = ({ navigation }) => {
         isError(false);
         setLoading(false);
       })
-      .catch(e => {
-        //navigation.navigate("Auth", { screen: "SignIn" });
-        console.log(e.response.data.message);
+      .catch((e: any) => {
+        // sign in fails
         setErrorMessage(e.response.data.message);
         isError(true);
       })
@@ -98,6 +97,7 @@ const SignIn: FC<SignInProps> = ({ navigation }) => {
             onChangeText={password => setPassword(password)}
           />
         </View>
+        {error && <Text style={styles.authError}>{errorMessage}</Text>}
         <TouchableOpacity
           style={{ width: '86%', marginTop: 20 }}
           onPress={() => signIn(email, password)}
@@ -106,7 +106,6 @@ const SignIn: FC<SignInProps> = ({ navigation }) => {
             <Text>Sign In</Text>
           </View>
         </TouchableOpacity>
-        {error && <Text style={styles.authError}>{errorMessage}</Text>}
         <View style={{ marginTop: 10 }}>
           <Text
             style={{ fontWeight: '200', fontSize: 20, textAlign: 'center' }}

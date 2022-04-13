@@ -1,18 +1,25 @@
 /**
  * Discover Screen
  */
-import React, { useState, FC, useEffect } from "react";
+import React, {
+    useState,
+    FC,
+    useCallback,
+    useRef
+} from "react";
 import {
     View,
     ImageBackground,
-    ActivityIndicator,
     Text,
 } from "react-native";
 import CardStack, { Card } from "react-native-card-stack-swiper";
-import { CompositeNavigationProp } from "@react-navigation/native";
+import {
+    CompositeNavigationProp,
+    useFocusEffect
+} from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-import { useAuth } from "../navigation";
+import { useAuth } from "../context";
 import {
     HomeTabNavigatorParamList,
     RootNavigatorParamsList
@@ -23,10 +30,8 @@ import {
     CardItem
 } from "../components";
 import styles from "../../assets/styles";
-import DEMO from "../../assets/data/demo";
 
 import { getMatches } from '../utils';
-import { Item } from "react-native-paper/lib/typescript/components/List/List";
 
 export interface DiscoverProps {
     navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Discover'>,
@@ -46,7 +51,10 @@ const onPass = () => { //swipe left or pass button
 
 const Discover: FC<DiscoverProps> = ({ navigation }) => {
     const [swiper, setSwiper] = useState<CardStack | null>(null);
+    //const [loading, setLoading] = useState<boolean>(true);
+    const [errorMessage, setErrorMessage] = useState<any>('');
     const [matches, setMatches] = useState<any>(null);
+    const isMounted = useRef<any>(null);
 
     const auth = useAuth();
 
@@ -57,10 +65,9 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
         getMatches(userId, token)
             .then(res => {
                 const { users } = res.data;
-                console.log(users);
                 setMatches(users);
             }).catch(e => {
-                console.log(e.message);
+                setErrorMessage(e.response.data.message);
             });
     };
 
@@ -75,13 +82,18 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
         )
     }
 
-    useEffect(() => {
-        loadMatches();
+    // Load matches
+    useFocusEffect(
+        useCallback(() => {
+            loadMatches();
+            isMounted.current = true;
 
-        return () => {
-            setMatches(null);
-        }
-    }, []);
+            return () => {
+                setMatches(null);
+                isMounted.current = false;
+            }
+        }, [])
+    );
 
     return (
         <ImageBackground
@@ -93,11 +105,9 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                     {/* <City /> */}
                     {/* <Filters /> */}
                 </View>
-                {matches && (
+                {matches ? (
                     <CardStack
                         verticalSwipe={false}
-                        // keep loop to true for now
-                        // loop
                         renderNoMoreCards={() => <NoMoreCards />}
                         ref={newSwiper => setSwiper(newSwiper)}
                         onSwipedLeft={() => onPass()}
@@ -117,6 +127,10 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                             )
                         })}
                     </CardStack>
+                ) : (
+                    <>
+                        <Text style={{ textAlign: 'center', marginTop: 250 }}>{errorMessage}</Text>
+                    </>
                 )}
             </View>
         </ImageBackground>

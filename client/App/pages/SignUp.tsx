@@ -10,7 +10,6 @@ import React, {
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
   SafeAreaView,
   Image,
@@ -24,7 +23,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthNavigatorParamList } from '../types';
 
 // API
-import { API_URL } from '@env';
+import { signUp } from '../utils';
 
 // Styles
 import styles from "../../assets/styles";
@@ -54,11 +53,7 @@ const SignUp: FC<SignUpProps> = ({ navigation }) => {
   }, []);
 
   const runSignUp = async (email: string, password: string, verifyPassword: string) => {
-    axios.post(`${API_URL}/signup/email`, {
-      email,
-      password,
-      verifyPassword
-    })
+    signUp(email, password, verifyPassword)
       .then(res => {
         // check if there is a response
         // Tell the user try signing in
@@ -69,7 +64,6 @@ const SignUp: FC<SignUpProps> = ({ navigation }) => {
       .catch(e => {
         // display errors to the UI
         isError(true);
-        console.log(e.response.data.message);
         setErrorMessage(e.response.data.message);
       })
       .finally(() => {
@@ -116,6 +110,7 @@ const SignUp: FC<SignUpProps> = ({ navigation }) => {
             onChangeText={verifyPassword => setVerifyPassword(verifyPassword)}
           />
         </View>
+        {error && <Text style={styles.authError}>{errorMessage}</Text>}
         <TouchableOpacity
           style={{ width: '86%', marginTop: 20 }}
           onPress={() => runSignUp(email, password, verifyPassword)}
@@ -124,7 +119,6 @@ const SignUp: FC<SignUpProps> = ({ navigation }) => {
             <Text>Create Account</Text>
           </View>
         </TouchableOpacity>
-        {error && <Text style={styles.authError}>{errorMessage}</Text>}
         <View style={{ marginTop: 10 }}>
           <Text
             style={{ fontWeight: '200', fontSize: 20, textAlign: 'center' }}

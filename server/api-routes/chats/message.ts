@@ -1,5 +1,7 @@
 import { Router, Request, Response } from 'express';
+
 import connect from '../../config/db';
+import { MISSING_FIELDS, UNKNOWN_ERROR } from '../../config/errorMessages';
 
 import { Chat } from '../../models/chat';
 import { Message } from '../../models/message';
@@ -21,33 +23,44 @@ const router = Router();
  * userId: string
  * content: string
  * chatId: string
- * 
+ *
  * @apiVersion 0.1.0
  */
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', (req: Request, res: Response) => {
   const { userId, content, chatId } = req.body;
   if (userId && content && chatId) {
-    await connect();
-    const newMessage = {
-      sender: userId,
-      content,
-      chat: chatId,
-    };
-    let message = await Message.create(newMessage);
-    message = await message.populate('sender', 'profile.photo profile.name');
-    message = await message.populate('chat');
-    message = await User.populate(message, {
-      path: 'chat.users',
-      select: 'profile.name profile.pic email',
-    });
-    await Chat.findByIdAndUpdate(chatId, {
-      latestMessage: message,
-    });
-    res.status(201).send(message);
+    connect()
+      .then(() => {
+        const newMessage = {
+          sender: userId,
+          content,
+          chat: chatId,
+        };
+        return Message.create(newMessage);
+      })
+      .then((message: any) => message.populate('sender', 'profile.photo profile.name'))
+      .then((messageWithSender: any) => messageWithSender.populate('chat'))
+      .then((messageWithChat: any) => User.populate(messageWithChat, {
+        path: 'chat.users',
+        select: 'profile.name profile.photo email',
+      }))
+      .then((completeMessage: any) => {
+        res.status(201).send(completeMessage);
+        return Chat.findByIdAndUpdate(chatId, {
+          latestMessage: completeMessage,
+        });
+      })
+      .catch((err: any) => {
+        console.error(err);
+        res.status(500).send({
+          status: 500,
+          message: UNKNOWN_ERROR,
+        });
+      });
   } else {
-    res.status(500).send({
-      status: 500,
-      message: 'Missing User Id or Content or ChatId!',
+    res.status(400).send({
+      status: 400,
+      message: MISSING_FIELDS,
     });
   }
 });
@@ -64,23 +77,31 @@ router.post('/', async (req: Request, res: Response) => {
  *
  * @query
  * chatId: string
- * 
+ *
  * @apiVersion 0.1.0
  */
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', (req: Request, res: Response) => {
   const { chatId } = req.query;
   if (chatId) {
-    await connect();
-    const messages = await Message.find({
-      chat: chatId,
-    })
-      .populate('sender', 'profile.name profile.photo email')
-      .populate('chat');
-    res.status(200).send(messages);
+    connect()
+      .then(() => Message.find({
+        chat: chatId,
+      }).populate('sender', 'profile.name profile.photo email')
+        .populate('chat'))
+      .then((messages: any) => {
+        res.status(200).send(messages);
+      })
+      .catch((err: any) => {
+        console.error(err);
+        res.status(500).send({
+          status: 500,
+          message: UNKNOWN_ERROR,
+        });
+      });
   } else {
-    res.status(500).send({
-      status: 500,
-      message: 'Missing Chat Id!',
+    res.status(400).send({
+      status: 400,
+      message: MISSING_FIELDS,
     });
   }
 });
