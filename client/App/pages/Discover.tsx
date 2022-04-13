@@ -30,29 +30,39 @@ import { Item } from "react-native-paper/lib/typescript/components/List/List";
 
 export interface DiscoverProps {
     navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Discover'>,
-    NativeStackNavigationProp<RootNavigatorParamsList>>;
+        NativeStackNavigationProp<RootNavigatorParamsList>>;
+}
+
+export const onLiked = () => { //swipe right or like button
+    //pass String "right" to card item
+    console.log('onSwipedRight');
+
+}
+
+const onPass = () => { //swipe left or pass button
+    //pass left to carditem
+    console.log('onSwipedLeft')
 }
 
 const Discover: FC<DiscoverProps> = ({ navigation }) => {
     const [swiper, setSwiper] = useState<CardStack | null>(null);
-    //const [loading, setLoading] = useState<boolean>(true);
     const [matches, setMatches] = useState<any>(null);
 
     const auth = useAuth();
 
     const { token, userId } = auth.authData;
-    
+
     const loadMatches = async () => {
         // get the id's
-            getMatches(userId, token)
-                .then(res => {
-                    const { users } = res.data;
-                    console.log(users);
-                    setMatches(users);
-                }).catch(e => {
-                    console.log(e.message);
-                });
-        };
+        getMatches(userId, token)
+            .then(res => {
+                const { users } = res.data;
+                console.log(users);
+                setMatches(users);
+            }).catch(e => {
+                console.log(e.message);
+            });
+    };
 
     const NoMoreCards = () => {
         return (
@@ -64,7 +74,7 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
             </Text>
         )
     }
-    
+
     useEffect(() => {
         loadMatches();
 
@@ -81,15 +91,17 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
             <View style={styles.containerHome}>
                 <View style={styles.top}>
                     {/* <City /> */}
-                    {/* <Filters /> */} 
+                    {/* <Filters /> */}
                 </View>
                 {matches && (
                     <CardStack
                         verticalSwipe={false}
                         // keep loop to true for now
-                        loop
+                        // loop
                         renderNoMoreCards={() => <NoMoreCards />}
                         ref={newSwiper => setSwiper(newSwiper)}
+                        onSwipedLeft={() => onPass()}
+                        onSwipedRight={() => onLiked()}
                     >
                         {/** API Call made here */}
                         {matches.map((item: any, index: any) => {

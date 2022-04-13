@@ -150,9 +150,59 @@ const updateProfile = async (
   });
 }
 
+/**
+ * Updates users the logged in user has swipedLeft
+ * 
+ * @param userId 
+ * @param token 
+ * @param matchUserId
+ * 
+ * When calling this function, use a then() and a 
+ * catch() to get the response.
+ */
+
+const updateSwipedLeft = async (
+  userId: string,
+  token: string,
+  matchUserId: string
+) => {
+  // call axios to the API
+  return axios.put(`${API_URL}/swipe/left`, {
+    userId,
+    token,
+    matchUserId,
+  });
+}
+
+/**
+ * Updates users the logged in user has swipedRight
+ * 
+ * @param userId 
+ * @param token 
+ * @param matchUserId
+ * 
+ * When calling this function, use a then() and a 
+ * catch() to get the response.
+ */
+
+const updateSwipedRight = async (
+  userId: string,
+  token: string,
+  matchUserId: string
+) => {
+  // call axios to the API
+  return axios.put(`${API_URL}/swipe/right`, {
+    userId,
+    token,
+    matchUserId,
+  });
+}
+
 export {
   getProfile,
   updateProfile,
   createProfile,
-  getMatches
+  getMatches,
+  updateSwipedLeft,
+  updateSwipedRight
 }

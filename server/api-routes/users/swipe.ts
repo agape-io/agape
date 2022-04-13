@@ -94,7 +94,7 @@ router.put('/right', async (req: Request, res: Response) => {
         }
       },
     );
-    User.findOne({ userId: matchUserId }, (err, user) => {
+    User.findById({ _id: matchUserId }, (err, user) => {
       if (err) {
         res.status(500).send({
           status: 500,

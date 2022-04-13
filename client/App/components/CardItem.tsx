@@ -17,11 +17,67 @@ import styles, {
   GRAY
 } from "../../assets/styles";
 
+// API's
+import { updateSwipedLeft, updateSwipedRight } from '../utils';
+
+import { useAuth } from '../navigation';
+
 const CardItem = ({
   data,
   hasActions,
   hasVariant,
+
 }: CardItemT) => {
+  const auth = useAuth();
+
+  const { userId, token } = auth.authData;
+
+  const handleMatch = () => {
+    alert("You matched with" + data.profile.name + "!");
+    console.log("handleMatch called");
+
+
+  }
+
+  // Update swipedLeft
+  const handleUpdateSwipedLeft = async (
+    matchUserId: string
+  ) => {
+    return updateSwipedLeft(
+      userId,
+      token,
+      matchUserId)
+      .then((res: any) => {
+        console.log(res.data);
+        // alert('swipedLeft Updated!');
+        //TODO: make card swipe
+      }).catch((e: any) => {
+        console.log(e);
+        alert(e.message);
+      })
+  }
+
+  // Update swipedRight
+  const handleUpdateSwipedRight = async (
+    matchUserId: string
+  ) => {
+    return updateSwipedRight(
+      userId,
+      token,
+      matchUserId)
+      .then((res: any) => {
+        console.log(res.data);
+        console.log(res.data.match);
+        handleMatch()
+        // alert('swipedRight Updated!');
+        //TODO: make card swipe
+      }).catch((e: any) => {
+        console.log(e);
+        alert(e.message);
+      })
+  }
+
+
   // Custom styling
   const fullWidth = Dimensions.get("window").width;
 
@@ -46,7 +102,7 @@ const CardItem = ({
   return (
     <View style={styles.containerCardItem}>
       {/* IMAGE */}
-      {data.image ? <Image source={data.image} style={imageStyle} /> : <Image source={{ uri: data.profile.photo }} style={imageStyle}/>}
+      {data.image ? <Image source={data.image} style={imageStyle} /> : <Image source={{ uri: data.profile.photo }} style={imageStyle} />}
 
       {/* MATCHES */}
       {!data.matches && (
@@ -59,7 +115,7 @@ const CardItem = ({
 
       {/* NAME */}
       <Text style={nameStyle}>{data.profile.name}</Text>
-      
+
       {/* ABOUT ME */}
       {data.aboutMe && <Text style={styles.descriptionCardItem}>{data.profile.aboutMe}</Text>}
 
@@ -104,11 +160,11 @@ const CardItem = ({
             <Icon name="star" color={STAR_ACTIONS} size={14} />
           </TouchableOpacity> */}
 
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={() => handleUpdateSwipedLeft(data.userId)}>
             <Icon name="close" color={DISLIKE_ACTIONS} size={25} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={() => handleUpdateSwipedRight(data.userId)}>
             <Icon name="heart" color={LIKE_ACTIONS} size={25} />
           </TouchableOpacity>
 
