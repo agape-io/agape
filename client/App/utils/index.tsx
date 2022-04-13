@@ -306,11 +306,11 @@ const postMessage = async (
   content: string,
   chatId: string
 ) => {
-  return axios.post(`${API_URL}/api/v1/messages`, {
+  return axios.post(`${API_URL + apiVersion}/messages`, {
     userId,
     token,
     content,
-    chatId
+    chatId,
   });
 }
 
@@ -341,7 +341,7 @@ const getMessages = async (chatId: string, token: string) => {
  * @param token User's token
  */
 const getSubscription = async (token: string) => {
-  return axios.get(`${API_URL}/subscription`, {
+  return axios.get(`${API_URL + apiVersion}/subscription`, {
     headers: {
       "x-access-token": token,
       "content-type": "application/json"
@@ -352,26 +352,20 @@ const getSubscription = async (token: string) => {
 /**
  * Updates user Subscription
  * 
-  * @param userId 
+ * @param userId 
  * @param token
- * @param name 
- * @param price
  * @param planId
  * 
  */
  const updateSubscription = async (
   userId: string,
   token: string,
-  name: string,
-  price: string,
   planId: string,
 ) => {
   // call axios to the API
-  return axios.put(`${API_URL}/subscription/subscribe`, {
+  return axios.put(`${API_URL + apiVersion}/subscription/subscribe`, {
     userId,
     token,
-    name,
-    price,
     planId
   });
 }
@@ -382,7 +376,7 @@ const getSubscription = async (token: string) => {
  * @param token User's token
  */
  const getmyPlan = async (token: string) => {
-  return axios.get(`${API_URL}/subscription/myPlan`, {
+  return axios.get(`${API_URL + apiVersion}/subscription/myPlan`, {
     headers: {
       "x-access-token": token,
       "content-type": "application/json"
@@ -397,7 +391,7 @@ const getSubscription = async (token: string) => {
  * @param token User's token
  */
  const cancelSubscription = async (userId: string, token: string) => {
-  return axios.get(`${API_URL}/subscription/cancel`, {
+  return axios.get(`${API_URL + apiVersion}/subscription/cancel`, {
     headers: {
       "x-access-token": token,
       "content-type": "application/json"

@@ -16,6 +16,8 @@ import {
 } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import { SubscriptionItem } from './index';
 import { ProfileModalProps } from '../types';
 import { useAuth } from '../context';
 
@@ -26,7 +28,6 @@ import {
   getmyPlan,
   cancelSubscription,
 } from '../utils';
-import { CLOUDINARY_API_URL } from '@env';
 
 // Styles
 import styles, { 
@@ -46,27 +47,11 @@ import styles, {
 const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
   const auth = useAuth();
 
-  const [checked, setChecked] = React.useState('basic');
-  const [plans, hasPlan] = useState<any[]>();
+  const [checked, setChecked] = useState<any>('basic');
+  const [loadPlans, setLoadPlans] = useState<any>([]);
+  const [selectedPlan, setSelectedPlan] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
   const isMounted = useRef<any>(null);
-  const data = [
-    {
-      name: 'Supporter',
-      color: 'pink',
-      value: 'basic'
-    },
-    {
-      name: 'Storge',
-      color: 'silver',
-      value: 'premium'
-    },
-    {
-      name: 'Phillia',
-      color: 'gold',
-      value: 'elite'
-    },
-  ];
 
   const { userId, token } = auth.authData;
   
@@ -75,10 +60,8 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
     getSubscription(token)
       .then((res: any) => {
         const { plans } = res.data;
-
-        //check if plans exists
-        hasPlan(plans);
-        console.log("plans: " + plans.price);
+        setLoadPlans(plans);
+        console.log(loadPlans);
       })
       .catch((e: any) => {
         console.error(e.response.data.message);
@@ -86,24 +69,37 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
   }
 
   // Update user's subscription plan
-  const handleSubscription = async (
-    planId: string,
-    name: string,
-    price: string,
-  ) => {
-    return updateSubscription(
-      userId,
-      token,
-      name,
-      price,
-      planId)
-      .catch((e: any) => {
-        alert(e.response.data.message);
-      })
-      .finally(() => {
-        if (isMounted.current) setLoading(false);
-      });
-  }
+  // const handleUpdateSubscription = async (
+  //   planId: string
+  // ) => {
+  //   return updateSubscription(
+  //     userId,
+  //     token,
+  //     planId)
+  //     .catch((e: any) => {
+  //       alert(e.response.data.message);
+  //     })
+  //     .finally(() => {
+  //       if (isMounted.current) setLoading(false);
+  //     });
+  // }
+
+  //current plan
+  // const getmycurrentPlan = () => {
+  //   getmyPlan(token)
+  //     .then((res: any) => {
+  //       const { settings } = res.data;
+
+  //       console.log(settings);
+  //     })
+  //     .catch((e: any) => {
+  //       console.error(e.response.data.message);
+  //     });
+  // }
+
+  //cancel plan
+
+
 
   // Header button initialization
   useLayoutEffect(() => {
@@ -116,78 +112,40 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
 
   useEffect(() => {
     getSubscriptionPlans();
-
+    
     return () => {
-      // cleanup
-      hasPlan([null]);
+    // make the states null again after I use the useEffect
     }
   }, []);
 
-  useEffect(() => {
-    isMounted.current = true;
+  // useEffect(() => {
+  //   isMounted.current = true;
 
-    return () => {
-      isMounted.current = false;
-    }
-  }, []);
+  //   return () => {
+  //     isMounted.current = false;
+  //   }
+  // }, []);
 
 
   return (
       <ScrollView contentContainerStyle={styles.modalContainer}>
-     
-        <View style={styles.subscriptionContainer}>
 
-          <Text style={styles.textTitles}>Select the plan that fits you:</Text>
+        {loadPlans ? (
+          <>
 
-          <View style={styles.subscriptionOptions}>
-            <Text style={styles.textTitles}>Supporter</Text>
-            <Text style={styles.textDescription}>- Get 15 more Likes per day.</Text>
-            <Text style={styles.textDescription}>- Profile booster.</Text>
-            <Text style={styles.textDescription}>- Customize location.</Text>
-            <RadioButton
-              value="basic"
-              color={PRIMARY_COLOR}
-              status={ checked === 'basic' ? 'checked' : 'unchecked' }
-              onPress={() => setChecked('basic')}
-            />
-          </View>
+          {loadPlans.map((item: any, index: any) => {
+            <SubscriptionItem data={loadPlans} key={index} />
+            })
+          }
+            
+          </>
+        ):(
+          <>
+          <View><Text> No data!</Text></View>
+          {/* <SubscriptionItem data={loadPlans}/> */}
+          </>
+        )}
 
-          <View style={styles.subscriptionOptions}>
-            <Text style={styles.textTitles}>Storge</Text>
-            <Text style={styles.textDescription}>- Get 30 more Likes per day.</Text>
-            <Text style={styles.textDescription}>- Customize location and others.</Text>
-            <Text style={styles.textDescription}>- 50% less Ads.</Text>
-            <RadioButton 
-              value="premium"
-              color={PRIMARY_COLOR}
-              status={ checked === 'premium' ? 'checked' : 'unchecked' }
-              onPress={() => setChecked('premium')}
-            />
-          </View>
-        
-          <View style={styles.subscriptionOptions}>
-            <Text style={styles.textTitles}>Phillia</Text>
-            <Text style={styles.textDescription}>- Send as many Likes as you want.</Text>
-            <Text style={styles.textDescription}>- Customize all the features.</Text>
-            <Text style={styles.textDescription}>- Turn off Ads.</Text>
-            <RadioButton 
-              value="elite"
-              color={PRIMARY_COLOR}
-              status={ checked === 'elite' ? 'checked' : 'unchecked' }
-              onPress={() => setChecked('elite')}
-            />
-          </View>
-        </View>
-
-        <View style={styles.addSubscriptionButtonContainer}>
-          <TouchableOpacity
-            style={[styles.addSubscriptionButton, { backgroundColor: SECONDARY_COLOR }]}
-            // onPress={() => handleSubscription()}>
-          >
-            <Text>Subscribe</Text>
-          </TouchableOpacity>
-        </View>
-        
       </ScrollView>
   );
 }

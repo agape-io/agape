@@ -72,6 +72,10 @@ type ProfileItemT = {
   data: any;
 };
 
+type SubscriptionItemT = {
+  data: any;
+}
+
 type SettingsScreenT = {
   data: any;
 };
@@ -142,6 +146,7 @@ export {
   CardItemT,
   IconT,
   ProfileItemT,
+  SubscriptionItemT,
   SettingsScreenT,
   MessageT,
   ProfileModalProps,
