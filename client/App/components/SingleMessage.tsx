@@ -18,7 +18,8 @@ import { API_URL } from '@env';
 import { useAuth } from '../context';
 import {
   getMessages,
-  postMessage
+  postMessage,
+  getUserChats
 } from '../utils';
 
 let socket: any;
@@ -67,7 +68,48 @@ const SingleMessage = ({ route, userData }: any) => {
       });
   };
 
-   // calls set mesasges
+  //send system message for new match
+  const systemMessageMatch = async () => {
+    let text = "You have a new match!";
+
+    getUserChats(userId, token)
+      .then((res: any) => {
+        console.log(res.data);
+
+        let _chatId = res.data.map((chat: any, index: any) => {
+          // find the users that don't match with curr user
+          // let foundUser = chat.users.find((item: any) => item._id !== userId);
+          return chat._id;
+        });
+
+        postMessage(userId, token, text, _chatId)
+          .then((res: any) => {
+            const { createdAt, content } = res.data;
+
+            // formatted for giftedchat
+            let newMessage: any = {
+              _id: 1,
+              text: content,
+              createdAt: createdAt,
+              system: true,
+            };
+
+            // send to socket io
+            socket.emit('new message', res.data);
+
+            // GiftedChat Data is appended
+            setMessages((previousMessages: any) => GiftedChat.append(previousMessages, newMessage));
+            setLoading(false);
+          })
+          .catch((e: any) => {
+            console.error(e.response.data.message);
+          });
+      }).catch(e => {
+        console.error(e.response.data.message);
+      });
+  };
+
+  // calls set mesasges
   const onSend = useCallback((messages = []) => {
     let content = messages[0].text;
     setLoading(true);
@@ -99,6 +141,11 @@ const SingleMessage = ({ route, userData }: any) => {
       .catch((e: any) => {
         console.error(e.response.data.message);
       });
+  }, []);
+
+  // send system message if there is a new match or if chat contents are empty
+  useEffect(() => {
+    systemMessageMatch();
   }, []);
 
   // socket-io initialization

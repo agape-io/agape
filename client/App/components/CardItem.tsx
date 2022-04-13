@@ -22,7 +22,7 @@ import styles, {
 } from "../../assets/styles";
 
 // API's
-import { updateSwipedLeft, updateSwipedRight } from '../utils';
+import { updateSwipedLeft, updateSwipedRight, createChat } from '../utils';
 
 import { useAuth } from '../context';
 
@@ -37,19 +37,37 @@ const CardItem = ({
   const { userId, token } = auth.authData;
 
   const handleMatch = () => {
+    handleMatchCreateChat(data.userId)
+
     Alert.alert(
-      "Alert Title",
-      "My Alert Msg",
+      "Match!",
+      "You matched with " + data.profile.name,
       [
         {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel"
+          text: "Continue Swiping",
+          onPress: () => console.log("Continue Swiping Pressed"),
+          // style: "cancel"
         },
-        { text: "OK", onPress: () => console.log("OK Pressed") }
+        { text: "Chat", onPress: () => console.log("Chat Pressed") } //TODO: navigate to chat screen
       ]
     );
     console.log("handleMatch called");
+  }
+
+  //Create chat
+  const handleMatchCreateChat = async (
+    matchedUserId: string,
+  ) => {
+    return createChat(
+      userId,
+      matchedUserId,
+      token)
+      .then((res: any) => {
+        console.log(res.data);
+      })
+      .catch((e: any) => {
+        console.error(e.response.data.message);
+      })
   }
 
   // Update swipedLeft
@@ -58,15 +76,15 @@ const CardItem = ({
   ) => {
     return updateSwipedLeft(
       userId,
-      token,
-      matchUserId)
+      matchUserId,
+      token)
       .then((res: any) => {
-        console.log(res.data);
+        // console.log(res.data);
         // alert('swipedLeft Updated!');
         //TODO: make card swipe
       }).catch((e: any) => {
-        console.log(e);
-        alert(e.message);
+        console.error(e.response.data.message);
+        // alert(e.message);
       })
   }
 
@@ -79,14 +97,16 @@ const CardItem = ({
       token,
       matchUserId)
       .then((res: any) => {
-        console.log(res.data);
-        console.log(res.data.match);
-        handleMatch()
+        // console.log(res.data);
+        // console.log(res.data.match);
+        //if its true
+        if (res.data.)
+          handleMatch()
         // alert('swipedRight Updated!');
         //TODO: make card swipe
       }).catch((e: any) => {
-        console.log(e);
-        alert(e.message);
+        console.error(e.response.data.message);
+        // alert(e.message);
       })
   }
 
