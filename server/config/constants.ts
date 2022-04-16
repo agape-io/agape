@@ -35,3 +35,63 @@ export enum SEXUALITY {
   LESBIAN = 'lesbian',
   BISEXUAL = 'bisexual',
 }
+
+// types
+export type ADMIN = {
+  _id: string,
+  email: string,
+  password: string,
+}
+
+export type CHAT = {
+  _id: string,
+  chatName: string,
+  users: USER[] | string[],
+  latestMessage?: MESSAGE,
+}
+
+export type MESSAGE = {
+  _id: string,
+  sender: USER | string,
+  content: string,
+  chat: CHAT | string,
+}
+
+export type PLAN = {
+  _id: string,
+  name: string,
+  price: string,
+}
+
+export type USER = {
+  _id: string,
+  email: string,
+  password: string,
+  isOnline?: boolean,
+  profile?: {
+    name: string
+    age: string,
+    gender: string,
+    yearBorn: number,
+    aboutMe: string,
+    religion: string,
+    location: string,
+    hobbies: string[],
+    photo: string,
+  },
+  preferences?: {
+    sexuality: string,
+    maxDist?: number,
+    minAge?: number,
+    maxAge?: number,
+    religion?: string[],
+  },
+  settings?: {
+    pushNotifications: boolean,
+    membershipType: PLAN | string,
+    endingDate?: Date,
+    billingDate?: Date,
+  },
+  swipedLeft?: USER[] | string[],
+  swipedRight?: USER[] | string[],
+}
