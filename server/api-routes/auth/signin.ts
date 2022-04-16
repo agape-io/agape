@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import moment from 'moment';
 
-import { JWT_TOKEN_EXPIRY_TIME, MEMBERSHIP_TYPES } from '../../config/constants';
+import { JWT_TOKEN_EXPIRY_TIME, MEMBERSHIP_TYPES, USER } from '../../config/constants';
 import connect from '../../config/db';
 import { env } from '../../config/env';
 import { AUTH_ERRORS, MISSING_FIELDS, UNKNOWN_ERROR } from '../../config/errorMessages';
@@ -37,7 +37,7 @@ router.post('/email', (req: Request, res: Response) => {
     let needResubscription = false;
     connect()
       .then(() => User.findOne({ email }, 'password settings isOnline'))
-      .then((existingUser: any) => {
+      .then((existingUser: USER) => {
         if (!existingUser) throw new Error(AUTH_ERRORS.INVALID_EMAIL);
         user = existingUser;
         return bcrypt.compare(password, user.password);
@@ -79,7 +79,7 @@ router.post('/email', (req: Request, res: Response) => {
           needResubscription,
         });
       })
-      .catch((err: any) => {
+      .catch((err: Error) => {
         if (err.message === AUTH_ERRORS.INVALID_EMAIL || err.message === AUTH_ERRORS.INVALID_PASSWORD) {
           res.status(400).send({
             status: 400,

@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import moment from 'moment';
 
-import { DATE_FORMAT } from '../../config/constants';
+import { DATE_FORMAT, PLAN, USER } from '../../config/constants';
 import connect from '../../config/db';
 import { MISSING_FIELDS, UNKNOWN_ERROR } from '../../config/errorMessages';
 import {
@@ -28,12 +28,12 @@ const router = Router();
 router.get('/', (req: Request, res: Response) => {
   connect()
     .then(() => Plan.find({}, '-createdAt -updatedAt -__v'))
-    .then((plans: any[]) => res.status(200).send({
+    .then((plans: PLAN[]) => res.status(200).send({
       status: 200,
       plans,
       message: SUBSCRIPTION_GET_PLANS_SUCCESS,
     }))
-    .catch((err: any) => {
+    .catch((err: Error) => {
       console.error(err);
       res.status(500).send({
         status: 500,
@@ -64,7 +64,7 @@ router.get('/myPlan', (req: Request, res: Response) => {
       .then(() => User.findOne({
         _id: userId,
       }).populate('settings.membershipType', '-createdAt -updatedAt -__v'))
-      .then((user: any) => {
+      .then((user: USER) => {
         const { settings } = user;
         let endingDate = null;
         if (settings.endingDate != null) endingDate = moment(settings.endingDate).format(DATE_FORMAT);
@@ -75,7 +75,7 @@ router.get('/myPlan', (req: Request, res: Response) => {
           endingDate,
         });
       })
-      .catch((err: any) => {
+      .catch((err: Error) => {
         console.error(err);
         res.status(500).send({
           status: 500,
@@ -130,7 +130,7 @@ router.post('/subscribe', (req: Request, res: Response) => {
         status: 200,
         message: USER_PLAN_SUBSCRIPTION,
       }))
-      .catch((err: any) => {
+      .catch((err: Error) => {
         console.error(err);
         res.status(500).send({
           status: 500,
@@ -176,7 +176,7 @@ router.post('/cancel', (req: Request, res: Response) => {
         status: 201,
         message: USER_PLAN_CANCELLATION,
       }))
-      .catch((err: any) => {
+      .catch((err: Error) => {
         console.error(err);
         res.status(500).send({
           status: 500,
