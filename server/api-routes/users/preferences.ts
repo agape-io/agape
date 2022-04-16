@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 
+import { USER } from '../../config/constants';
 import connect from '../../config/db';
 import { MISSING_FIELDS, UNKNOWN_ERROR, USER_ERRORS } from '../../config/errorMessages';
 import { CREATE_PREFERENCES_SUCCESS, GET_PREFERENCES_SUCCESS, UPDATE_PREFERENCES_SUCCESS } from '../../config/statusMessages';
@@ -28,7 +29,7 @@ router.get('/', (req: Request, res: Response) => {
   if (userId) {
     connect()
       .then(() => User.findOne({ _id: userId }, 'preferences'))
-      .then((user: any) => {
+      .then((user: USER) => {
         if (!user) throw new Error(USER_ERRORS.INVALID_ID);
         res.status(200).send({
           status: 200,
@@ -36,7 +37,7 @@ router.get('/', (req: Request, res: Response) => {
           preferences: user.preferences,
         });
       })
-      .catch((err: any) => {
+      .catch((err: Error) => {
         if (err.message === USER_ERRORS.INVALID_ID) {
           res.status(400).send({
             status: 400,
@@ -107,7 +108,7 @@ router.post('/create', (req: Request, res: Response) => {
           message: CREATE_PREFERENCES_SUCCESS,
         });
       })
-      .catch((err: any) => {
+      .catch((err: Error) => {
         console.error(err.message);
         res.status(500).send({
           status: 500,
@@ -170,7 +171,7 @@ router.put('/update', (req: Request, res: Response) => {
           message: UPDATE_PREFERENCES_SUCCESS,
         });
       })
-      .catch((err: any) => {
+      .catch((err: Error) => {
         console.error(err.message);
         res.status(500).send({
           status: 500,

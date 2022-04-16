@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 
 import connect from '../../config/db';
-import { DEFAULT_CHAT_NAME } from '../../config/constants';
+import { CHAT, DEFAULT_CHAT_NAME } from '../../config/constants';
 import { MISSING_FIELDS, UNKNOWN_ERROR } from '../../config/errorMessages';
 
 import { Chat } from '../../models/chat';
@@ -33,12 +33,12 @@ router.get('/', (req: Request, res: Response) => {
       }).populate('users', 'profile preferences.sexuality email isOnline')
         .populate('latestMessage')
         .sort({ updatedAt: -1 }))
-      .then((results: any) => User.populate(results, {
+      .then((results: CHAT[]) => User.populate(results, {
         path: 'latestMessage.sender',
         select: 'profile.name profile.photo email',
       }))
-      .then((chats: any) => res.status(200).send(chats))
-      .catch((err: any) => {
+      .then((chats: CHAT[]) => res.status(200).send(chats))
+      .catch((err: Error) => {
         console.error(err);
         res.status(500).send({
           status: 500,
@@ -79,11 +79,11 @@ router.post('/', (req: Request, res: Response) => {
         ],
       }).populate('users', 'profile preferences.sexuality email isOnline')
         .populate('latestMessage'))
-      .then((chat: any) => User.populate(chat, {
+      .then((chat: CHAT[]) => User.populate(chat, {
         path: 'latestMessage.sender',
         select: 'profile.name profile.photo email',
       }))
-      .then((chats: any) => {
+      .then((chats: CHAT[]) => {
         if (chats.length > 0) {
           res.send(chats[0]);
           return null;
@@ -94,11 +94,11 @@ router.post('/', (req: Request, res: Response) => {
         };
         return Chat.create(newChat);
       })
-      .then((createdChat: any) => {
+      .then((createdChat: CHAT) => {
         if (createdChat) return Chat.findOne({ _id: createdChat._id }).populate('users', 'profile preferences.sexuality email isOnline');
       })
-      .then((fullChat: any) => res.status(200).send(fullChat))
-      .catch((err: any) => {
+      .then((fullChat: CHAT) => res.status(200).send(fullChat))
+      .catch((err: Error) => {
         console.error(err);
         res.status(500).send({
           status: 500,

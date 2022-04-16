@@ -13,7 +13,7 @@ export default async function connect() {
       .then(() => {
         console.log('MongoDB is connected');
       })
-      .catch((err: any) => {
+      .catch((err: Error) => {
         console.error(`MongoDB connection unsuccessful: ${err}`);
       });
   }
