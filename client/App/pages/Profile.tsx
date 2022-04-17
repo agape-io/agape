@@ -1,6 +1,7 @@
 /**
  * Profile Screen
  */
+// Libraries
 import React, {
   FC,
   useCallback,
@@ -13,28 +14,23 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from "react-native";
-import {
-  CompositeNavigationProp,
-  useFocusEffect
-} from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useFocusEffect } from "@react-navigation/native";
 
+// Components
 import {
   Icon,
   ProfileItem
 } from "../components";
+
+// Styles
 import styles, { WHITE } from "../../assets/styles";
+
+// Utils
 import { useAuth } from "../context";
-import {
-  HomeTabNavigatorParamList,
-  RootNavigatorParamsList
-} from "../types";
 import { getProfile } from '../utils';
 
-export interface ProfileProps {
-  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Profile'>,
-    NativeStackNavigationProp<RootNavigatorParamsList>>;
-}
+// Types
+import { ProfileProps } from "../types";
 
 const Profile: FC<ProfileProps> = ({ navigation }) => {
   const [profile, setProfile] = useState<any>();

@@ -12,7 +12,8 @@ import {
   AuthNavigatorParamList,
   RootNavigatorParamsList,
   HomeTabNavigatorParamList,
-  MessageStackParamList
+  MessageStackParamList,
+  State
 } from '../types';
 
 // Stacks
@@ -41,17 +42,12 @@ import {
   PRIMARY_COLOR
 } from '../../assets/styles';
 
-interface State {
-  loading?: boolean;
-  initializing?: boolean;
-}
-
 const RootStack = createNativeStackNavigator<RootNavigatorParamsList>();
 const HomeTabStack = createMaterialBottomTabNavigator<HomeTabNavigatorParamList>();
 const AuthStack = createNativeStackNavigator<AuthNavigatorParamList>();
 const MessageStack = createNativeStackNavigator<MessageStackParamList>();
 
-const Messaging: FC = () => {
+const Messaging = () => {
   const { Navigator, Screen } = MessageStack;
 
   return (
@@ -71,7 +67,7 @@ const Messaging: FC = () => {
   )
 }
 
-const HomeTabs: FC = () => {
+const HomeTabs = () => {
   const { Navigator, Screen } = HomeTabStack;
 
   return (
@@ -125,7 +121,7 @@ const HomeTabs: FC = () => {
 }
 
 
-const Auth: FC = () => {
+const Auth = () => {
   const { Navigator, Screen } = AuthStack;
 
   return (
@@ -137,7 +133,7 @@ const Auth: FC = () => {
   )
 }
 
-const Routes: FC<State> = () => {
+const Routes:FC<State> = () => {
   const { authData, loading } = useAuth();
   const { Screen, Navigator, Group } = RootStack;
 

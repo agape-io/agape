@@ -1,6 +1,7 @@
 /**
  * Discover Screen
  */
+// Libraries
 import React, {
     useState,
     FC,
@@ -13,32 +14,22 @@ import {
     Text,
 } from "react-native";
 import CardStack, { Card } from "react-native-card-stack-swiper";
-import {
-    CompositeNavigationProp,
-    useFocusEffect
-} from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useFocusEffect } from "@react-navigation/native";
 
+// Utils
 import { useAuth } from "../context";
-import {
-    HomeTabNavigatorParamList,
-    RootNavigatorParamsList
-} from "../types";
-import {
-    City,
-    Filters,
-    CardItem
-} from "../components";
-import styles from "../../assets/styles";
-
 import { getMatches } from '../utils';
 
-export interface DiscoverProps {
-    navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Discover'>,
-    NativeStackNavigationProp<RootNavigatorParamsList>>;
-}
+// Types
+import { DiscoverProps } from "../types";
 
-const Discover: FC<DiscoverProps> = ({ navigation }) => {
+// Components
+import { CardItem } from "../components";
+
+// Styles
+import styles from "../../assets/styles";
+
+const Discover:FC<DiscoverProps> = ({ navigation }) => {
     const [swiper, setSwiper] = useState<CardStack | null>(null);
     //const [loading, setLoading] = useState<boolean>(true);
     const [errorMessage, setErrorMessage] = useState<any>('');

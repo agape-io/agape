@@ -8,7 +8,8 @@ import {
 } from 'react-native';
 import {
   CompositeNavigationProp,
-  NavigatorScreenParams
+  NavigatorScreenParams,
+  RouteProp
 } from "@react-navigation/native";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -133,6 +134,55 @@ interface SectionProps {
   globalTextStyle?: TextStyle
 }
 
+interface State {
+  loading?: boolean;
+  initializing?: boolean;
+}
+
+interface DiscoverProps {
+    navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Discover'>,
+    NativeStackNavigationProp<RootNavigatorParamsList>>;
+}
+
+interface ChatProps {
+  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Chat'>,
+    NativeStackNavigationProp<RootNavigatorParamsList>>;
+}
+
+interface LandingProps {
+  navigation?: NativeStackNavigationProp<AuthNavigatorParamList, 'Landing'>;
+}
+
+interface MessageProps {
+  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Chat'>,
+      NativeStackNavigationProp<RootNavigatorParamsList>>;
+  route: RouteProp<MessageStackParamList>;
+};
+
+interface ProfileProps {
+  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Profile'>,
+    NativeStackNavigationProp<RootNavigatorParamsList>>;
+}
+
+interface SignInProps {
+  navigation: CompositeNavigationProp<NativeStackNavigationProp<AuthNavigatorParamList, 'SignIn'>,
+    NativeStackNavigationProp<RootNavigatorParamsList>>;
+  email: string;
+  password: string;
+}
+
+interface SignUpProps {
+  navigation: NativeStackNavigationProp<AuthNavigatorParamList, 'SignUp'>;
+  email: string;
+  password: string;
+  verifyPassword: string;
+};
+
+interface TestPageProps {
+  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Test'>,
+    NativeStackNavigationProp<RootNavigatorParamsList>>;
+}
+
 export {
   HomeTabNavigatorParamList,
   RootNavigatorParamsList,
@@ -152,5 +202,14 @@ export {
   RowData,
   RowProps,
   SectionData,
-  SectionProps
+  SectionProps,
+  State,
+  DiscoverProps,
+  ChatProps,
+  LandingProps,
+  MessageProps,
+  ProfileProps,
+  SignInProps,
+  SignUpProps,
+  TestPageProps
 }
