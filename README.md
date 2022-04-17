@@ -1,5 +1,5 @@
 # agape
-Agape is a mobile application powered by React Native and Node.js that emphasizes on relationships and fellowships with a Christian foundation. Connect with others and learn to grow in community!
+Agape is a mobile application powered by React Native and Node.js, compatible for iOS and Android devices, that emphasizes in relationships and creating fellowships based on a Christian foundation. Find Christ-centered relationships and be transformed in community through fellowship!
 
 ## Requirements to Run the Application
 * [Expo CLI](https://docs.expo.dev/get-started/installation/)
