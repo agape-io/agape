@@ -18,6 +18,7 @@ import subscriptionRouter from './api-routes/users/subscription';
 
 import { env } from './config/env';
 
+import { CHAT, MESSAGE, USER } from './config/constants';
 import { authenticateToken, authenticateAdmin } from './middleware/auth';
 import { notFound, errorHandler } from './middleware/error';
 
@@ -79,11 +80,11 @@ io.on('connection', (socket: any) => {
     console.log(`User joined chat: ${room}`);
   });
 
-  socket.on('new message', (newMessageRecieved: any) => {
+  socket.on('new message', (newMessageRecieved: MESSAGE) => {
     const { chat } = newMessageRecieved;
-    if (!chat.users) return console.log('chat.users not defined');
-    chat.users.forEach((user) => {
-      if (user._id == newMessageRecieved.sender._id) return;
+    if (!(chat as CHAT).users) return console.log('chat.users not defined');
+    (chat as CHAT).users.forEach((user) => {
+      if (user._id == (newMessageRecieved.sender as USER)._id) return;
       socket.in(user._id).emit('message recieved', newMessageRecieved);
     });
   });

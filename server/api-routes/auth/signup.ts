@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 
+import { USER } from '../../config/constants';
 import connect from '../../config/db';
 import { AUTH_ERRORS, MISSING_FIELDS, UNKNOWN_ERROR } from '../../config/errorMessages';
 import { SIGNUP_SUCCESS } from '../../config/statusMessages';
@@ -43,7 +44,7 @@ router.post('/email', (req: Request, res: Response) => {
           return connect();
         })
         .then(() => User.findOne({ email }))
-        .then((existingUser: any) => {
+        .then((existingUser: USER) => {
           if (existingUser) throw new Error(AUTH_ERRORS.EXISTING_EMAIL);
         })
         .then(() => {
@@ -53,7 +54,7 @@ router.post('/email', (req: Request, res: Response) => {
           });
           return user.save();
         })
-        .then((user: any) => {
+        .then((user: USER) => {
           res.status(200).send({
             status: 200,
             message: SIGNUP_SUCCESS,
@@ -64,7 +65,7 @@ router.post('/email', (req: Request, res: Response) => {
             },
           });
         })
-        .catch((err: any) => {
+        .catch((err: Error) => {
           if (err.message === AUTH_ERRORS.EXISTING_EMAIL) {
             res.status(400).send({
               status: 400,
