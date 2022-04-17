@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "react-native-radio-buttons": "^1.0.0",
+    "react-native-simple-radio-button": "^2.7.4"
+  }
+}

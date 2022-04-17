@@ -12,7 +12,8 @@ import {
   Text,
   View,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  Alert
 } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -24,16 +25,18 @@ import { useAuth } from '../context';
 // API's
 import {
   getSubscription,
-  updateSubscription,
   getmyPlan,
+  updateSubscription,
   cancelSubscription,
 } from '../utils';
 
 // Styles
 import styles, { 
   PRIMARY_COLOR, 
-  SECONDARY_COLOR
+  SECONDARY_COLOR,
+  WHITE
 } from '../../assets/styles';
+import data from '../../assets/data/demo';
 
  // Cancel Button for header
  const CancelButton = ({ onPress }:any) => {
@@ -46,61 +49,79 @@ import styles, {
 
 const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
   const auth = useAuth();
+  const { userId, token } = auth.authData;
 
   const [checked, setChecked] = useState<any>('basic');
   const [loadPlans, setLoadPlans] = useState<any>([]);
+  const [loadCurrentPlan, setCurrentPlan] = useState<any>();
   const [errorMessage, setErrorMessage] = useState<any>('');
   const [selectedPlan, setSelectedPlan] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
   const isMounted = useRef<any>(null);
-
-  const { userId, token } = auth.authData;
   
   // Get subscription plans available
-  const getSubscriptionPlans = () => {
+  const getSubscriptionPlans  = async () => {
     getSubscription(token)
       .then((res: any) => {
         const { plans } = res.data;
         setLoadPlans(plans);
-        console.log(loadPlans);
       })
       .catch((e: any) => {
         console.error(e.response.data.message);
       });
   }
 
-  // Update user's subscription plan
-  // const handleUpdateSubscription = async (
-  //   planId: string
-  // ) => {
-  //   return updateSubscription(
-  //     userId,
-  //     token,
-  //     planId)
-  //     .catch((e: any) => {
-  //       alert(e.response.data.message);
-  //     })
-  //     .finally(() => {
-  //       if (isMounted.current) setLoading(false);
-  //     });
-  // }
+   //API for Current Plan
+  const getMyCurrentPlan = async () => {
+    getmyPlan(userId, token)
+      .then((res: any) => {
+        setCurrentPlan(res.data);
+      })
+      .catch((e: any) => {
+        console.error(e.response.data.message);
+      });
+  }
 
-  //current plan
-  // const getmycurrentPlan = () => {
-  //   getmyPlan(token)
-  //     .then((res: any) => {
-  //       const { settings } = res.data;
+  const currentPlanAlert = () =>{
+    if (loadCurrentPlan){
+      Alert.alert(
+        `Current Plan`,
+        `Plan: ${loadCurrentPlan.subscription.name}\n` +
+        `Price: $${loadCurrentPlan.subscription.price}`
+      )
+    } else {
+      Alert.alert(
+        `No Plan! :(`
+      )
+    }
+  }
 
-  //       console.log(settings);
-  //     })
-  //     .catch((e: any) => {
-  //       console.error(e.response.data.message);
-  //     });
-  // }
+    // Update user's subscription plan
+    // const handleUpdateSubscription = async (
+    //   userId: string,
+    //   token: string,
+    //   _id: string,
+    // ) => {
+    //   return updateSubscription(
+    //     userId,
+    //     token,
+    //     _id)
+    //     .then((res: any) => {
+
+    //       //Go back to Profile Screen
+    //       setLoading(false);
+    //       alert('Subscription Updated!');
+    //       navigation.navigate('Profile');
+    //     })
+    //     .catch((e: any) => {
+    //       alert(e.response.data.message);
+    //     })
+    //     .finally(() => {
+    //       if (isMounted.current) setLoading(false);
+    //     });
+    // }
 
   //cancel plan
-
-
 
   // Header button initialization
   useLayoutEffect(() => {
@@ -113,19 +134,22 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
 
   useEffect(() => {
     getSubscriptionPlans();
+    getMyCurrentPlan();
     
     return () => {
-    // make the states null again after I use the useEffect
+      // make the states null again to clean userEffect
+      setLoadPlans(null);
+      setCurrentPlan(null);
     }
   }, []);
 
-  // useEffect(() => {
-  //   isMounted.current = true;
+  useEffect(() => {
+    isMounted.current = true;
 
-  //   return () => {
-  //     isMounted.current = false;
-  //   }
-  // }, []);
+    return () => {
+      isMounted.current = false;
+    }
+  }, []);
 
 
   return (
@@ -134,6 +158,24 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
       <Text style={styles.textTitles}>Subscription</Text>
         {loadPlans ? (
           <>
+      <RadioButton
+        value='basic'
+        color={PRIMARY_COLOR}
+        status={checked === 'basic' ? "checked" : "unchecked"}
+        onPress={() => setChecked('basic')}
+      />      
+      <RadioButton
+        value='premium'
+        color={PRIMARY_COLOR}
+        status={checked === 'premium' ? "checked" : "unchecked"}
+        onPress={() => setChecked('premium')}
+      />
+      <RadioButton
+        value='elite'
+        color={PRIMARY_COLOR}
+        status={checked === 'elite' ? "checked" : "unchecked"}
+        onPress={() => setChecked('elite')}
+      />
           {/* API Call made here */}
           {loadPlans.map((item: any, index: any) => {
             return (       
@@ -144,21 +186,6 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
             )
             })
           }
-
-          {/* * API Call made here data={loadPlans} key={index}
-          {matches.map((item: any, index: any) => {
-
-          return (
-            <Card key={index}>
-              <CardItem
-                key={index}
-                data={item}
-                hasActions
-              />
-            </Card>
-          )
-          })} */}
-            
           </>
         ):(
           <>
@@ -169,14 +196,23 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
 
       </View>
 
-      {/* Subscription button */}
       <View style={styles.addSubscriptionButtonContainer}>
+          {/* Subscription button */}
           <TouchableOpacity
             style={[styles.addSubscriptionButton, { backgroundColor: SECONDARY_COLOR }]}
-          >
+            // onPress={handleUpdateSubscription(userId, token, _id)}
+            >
             <Text>Subscribe</Text>
           </TouchableOpacity>
+          {/* Current Plan button */}
+          <TouchableOpacity
+            style={[styles.addSubscriptionButton, { backgroundColor: SECONDARY_COLOR }]}
+            onPress={currentPlanAlert}
+          >
+            <Text>Current Plan</Text>
+          </TouchableOpacity>
       </View>
+      
       </ScrollView>
   );
 }
