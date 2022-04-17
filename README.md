@@ -10,16 +10,16 @@ Agape is a mobile application powered by React Native and Node.js that emphasize
 In your Terminal or Command Prompt, go to the `client` and `server` directories and follow the installation process from the corresponding README.
 
 ## Agape's UI
-**Authentication**
+####**Authentication**
 ![Authentication Reference](/assets/Auth.png)
 
-**Home**
+####**Home**
 ![Home Reference](/assets/Discover.png)
 
-**Profile** 
+####**Profile** 
 ![Profile Reference](/assets/Profile.png)
 
-**Chats**
+####**Chats**
 ![Chats Reference](/assets/Messages.png)
 
 ## Meet the Team
