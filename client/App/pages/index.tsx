@@ -11,7 +11,6 @@ import Chat from './Chat';
 import Message from './Message';
 import Settings from './Settings';
 
-
 export {
   SignUp,
   SignIn,

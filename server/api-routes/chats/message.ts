@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 
+import { MESSAGE } from '../../config/constants';
 import connect from '../../config/db';
 import { MISSING_FIELDS, UNKNOWN_ERROR } from '../../config/errorMessages';
 
@@ -40,17 +41,17 @@ router.post('/', (req: Request, res: Response) => {
       })
       .then((message: any) => message.populate('sender', 'profile.photo profile.name'))
       .then((messageWithSender: any) => messageWithSender.populate('chat'))
-      .then((messageWithChat: any) => User.populate(messageWithChat, {
+      .then((messageWithChat: MESSAGE) => User.populate(messageWithChat, {
         path: 'chat.users',
         select: 'profile.name profile.photo email',
       }))
-      .then((completeMessage: any) => {
+      .then((completeMessage: MESSAGE) => {
         res.status(201).send(completeMessage);
         return Chat.findByIdAndUpdate(chatId, {
           latestMessage: completeMessage,
         });
       })
-      .catch((err: any) => {
+      .catch((err: Error) => {
         console.error(err);
         res.status(500).send({
           status: 500,
@@ -88,10 +89,10 @@ router.get('/', (req: Request, res: Response) => {
         chat: chatId,
       }).populate('sender', 'profile.name profile.photo email')
         .populate('chat'))
-      .then((messages: any) => {
+      .then((messages: MESSAGE[]) => {
         res.status(200).send(messages);
       })
-      .catch((err: any) => {
+      .catch((err: Error) => {
         console.error(err);
         res.status(500).send({
           status: 500,

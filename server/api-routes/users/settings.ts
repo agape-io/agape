@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 
+import { USER } from '../../config/constants';
 import connect from '../../config/db';
 import { MISSING_FIELDS, UNKNOWN_ERROR, USER_ERRORS } from '../../config/errorMessages';
 import { CREATE_SETTINGS_SUCCESS, GET_SETTINGS_SUCCESS, UPDATE_SETTINGS_SUCCESS } from '../../config/statusMessages';
@@ -29,7 +30,7 @@ router.get('/', (req: Request, res: Response) => {
     connect()
       .then(() => User.findOne({ _id: userId }, 'settings')
         .populate('settings.membershipType', '-createdAt -updatedAt -__v'))
-      .then((user: any) => {
+      .then((user: USER) => {
         if (!user) throw new Error(USER_ERRORS.INVALID_ID);
         res.status(200).send({
           status: 200,
@@ -37,7 +38,7 @@ router.get('/', (req: Request, res: Response) => {
           settings: user.settings,
         });
       })
-      .catch((err: any) => {
+      .catch((err: Error) => {
         if (err.message === USER_ERRORS.INVALID_ID) {
           res.status(400).send({
             status: 400,
@@ -99,7 +100,7 @@ router.post('/create', (req: Request, res: Response) => {
           message: CREATE_SETTINGS_SUCCESS,
         });
       })
-      .catch((err: any) => {
+      .catch((err: Error) => {
         console.error(err.message);
         res.status(500).send({
           status: 500,
@@ -154,7 +155,7 @@ router.put('/update', (req: Request, res: Response) => {
           message: UPDATE_SETTINGS_SUCCESS,
         });
       })
-      .catch((err: any) => {
+      .catch((err: Error) => {
         console.error(err.message);
         res.status(500).send({
           status: 500,

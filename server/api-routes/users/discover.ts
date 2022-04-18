@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 
+import { USER } from '../../config/constants';
 import connect from '../../config/db';
 import { USER_ERRORS, MISSING_FIELDS, UNKNOWN_ERROR } from '../../config/errorMessages';
 import { DISCOVER_MATCHES_FOUND, DISCOVER_NO_MATCHES_FOUND } from '../../config/statusMessages';
@@ -36,10 +37,14 @@ router.get('/', (req: Request, res: Response) => {
     userId, romantic = 'false', threshold = 0, sort = 'false', numUsers = 0,
   } = req.query;
   if (userId) {
-    let originalUser: any = {};
+    let originalUser: USER = {
+      _id: '',
+      email: '',
+      password: '',
+    };
     connect()
       .then(() => User.findOne({ _id: userId })
-        .then((existingUser: any) => {
+        .then((existingUser: USER) => {
           if (!existingUser) throw new Error(USER_ERRORS.INVALID_ID);
           originalUser = existingUser;
           return verifyUser(originalUser);
@@ -48,8 +53,8 @@ router.get('/', (req: Request, res: Response) => {
           if (!validUser) throw new Error(USER_ERRORS.INCOMPLETE_USER);
           return User.find({ _id: { $ne: userId } }, 'profile preferences');
         })
-        .then((users: any[]) => {
-          let similarUsers = [];
+        .then((users: USER[]) => {
+          let similarUsers: any[] = [];
           users.forEach((user) => {
             if (verifyUser(user)) {
               const percentage = generatePercentage(originalUser, user, romantic as string);
@@ -83,7 +88,7 @@ router.get('/', (req: Request, res: Response) => {
             });
           }
         })
-        .catch((err: any) => {
+        .catch((err: Error) => {
           if (err.message === USER_ERRORS.INVALID_ID || err.message === USER_ERRORS.INCOMPLETE_USER) {
             res.status(400).send({
               status: 400,
@@ -126,8 +131,8 @@ router.get('/myLikes', (req: Request, res: Response) => {
     connect()
       .then(() => User.findOne({ _id: userId }))
       .then((user: any) => user.populate('swipedRight', 'profile'))
-      .then((completeUser: any) => res.status(200).send(completeUser.swipedRight))
-      .catch((err: any) => {
+      .then((completeUser: USER) => res.status(200).send(completeUser.swipedRight))
+      .catch((err: Error) => {
         console.error(err.message);
         res.status(500).send({
           status: 500,
@@ -163,12 +168,12 @@ router.get('/likesMe', async (req: Request, res: Response) => {
     let allUsers: any[];
     connect()
       .then(() => User.find({ swipedRight: { $elemMatch: { $eq: userId } } }, 'profile'))
-      .then((users: any[]) => {
+      .then((users: USER[]) => {
         allUsers = users;
         return User.findOne({ _id: userId }, 'swipedLeft swipedRight');
       })
-      .then((originalUser: any) => {
-        const swiped = originalUser.swipedLeft.concat(originalUser.swipedRight);
+      .then((originalUser: USER) => {
+        const swiped = (originalUser.swipedLeft as string[]).concat(originalUser.swipedRight as string[]);
         const swipedIds = [];
         swiped.forEach((swipe: any) => {
           swipedIds.push(swipe._id.toString());
@@ -179,7 +184,7 @@ router.get('/likesMe', async (req: Request, res: Response) => {
         });
         res.status(200).send(liked);
       })
-      .catch((err: any) => {
+      .catch((err: Error) => {
         console.error(err.message);
         res.status(500).send({
           status: 500,

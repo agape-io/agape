@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 
+import { USER } from '../../config/constants';
 import connect from '../../config/db';
 import { MISSING_FIELDS, UNKNOWN_ERROR, USER_ERRORS } from '../../config/errorMessages';
 import { SWIPE_LEFT_SUCCESS, SWIPE_RIGHT_MATCH_SUCCESS, SWIPE_RIGHT_NO_MATCH_SUCCESS } from '../../config/statusMessages';
@@ -43,7 +44,7 @@ router.put('/left', (req: Request, res: Response) => {
           message: SWIPE_LEFT_SUCCESS,
         });
       })
-      .catch((err: any) => {
+      .catch((err: Error) => {
         console.error(err.message);
         res.status(500).send({
           status: 500,
@@ -77,10 +78,14 @@ router.put('/left', (req: Request, res: Response) => {
 router.put('/right', (req: Request, res: Response) => {
   const { userId, matchUserId } = req.body;
   if (userId && matchUserId) {
-    let potentialMatch: any = {};
+    let potentialMatch: USER = {
+      _id: '',
+      email: '',
+      password: '',
+    };
     connect()
       .then(() => User.findOne({ _id: matchUserId }))
-      .then((user: any) => {
+      .then((user: USER) => {
         if (!user) throw new Error(USER_ERRORS.INVALID_MATCH_ID);
         potentialMatch = user;
         return User.findByIdAndUpdate(
@@ -109,7 +114,7 @@ router.put('/right', (req: Request, res: Response) => {
           });
         }
       })
-      .catch((err: any) => {
+      .catch((err: Error) => {
         if (err.message === USER_ERRORS.INVALID_MATCH_ID) {
           res.status(400).send({
             status: 400,
