@@ -1,8 +1,8 @@
 /**
  * Landing Screen
  */
+// Libraries
 import React, { FC } from 'react';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
   ActivityIndicator,
   View,
@@ -12,25 +12,9 @@ import {
 } from 'react-native';
 
 // Types
-import { AuthNavigatorParamList } from '../types';
+import { LandingProps } from '../types';
 
-export interface LandingProps {
-  navigation?: NativeStackNavigationProp<AuthNavigatorParamList, 'Landing'>;
-}
-
-const Landing:FC<LandingProps> = ({ navigation }) => {
-  return (
-    <View style={styles.container}>
-      <ActivityIndicator style={styles.indicator} size="large" color="#F0ABC1" />
-      <TouchableOpacity style={{ width: '86%', marginTop: 20 }} onPress={() => navigation?.navigate('SignIn')}>
-        <Text>
-          Go Back?
-        </Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
-
+// Component-owned styles
 const styles = StyleSheet.create({
   container: {
     flex: 3,
@@ -47,5 +31,19 @@ const styles = StyleSheet.create({
     padding: 10
   }
 });
+
+const Landing:FC<LandingProps> = ({ navigation }) => {
+  return (
+    <View style={styles.container}>
+      <ActivityIndicator style={styles.indicator} size="large" color="#F0ABC1" />
+      <TouchableOpacity style={{ width: '86%', marginTop: 20 }} onPress={() => navigation?.navigate('SignIn')}>
+        <Text>
+          Go Back?
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
   
 export default Landing;

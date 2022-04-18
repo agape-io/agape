@@ -1,7 +1,13 @@
 /**
  * Sign In Screen
  */
-import React, { useState, FC, useRef, useEffect } from 'react';
+// Libraries
+import React, {
+  useState,
+  FC,
+  useRef,
+  useEffect
+} from 'react';
 import {
   View,
   Text,
@@ -10,28 +16,16 @@ import {
   Image,
   KeyboardAvoidingView,
 } from 'react-native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { CompositeNavigationProp } from '@react-navigation/native';
 import { TextInput } from 'react-native-gesture-handler';
 
 // Types
-import {
-  AuthNavigatorParamList,
-  RootNavigatorParamsList
-} from '../types';
+import { SignInProps } from '../types';
 
-// API
+// Utils
 import { useAuth } from '../context';
 
 // Styles
 import styles from "../../assets/styles";
-
-export interface SignInProps {
-  navigation: CompositeNavigationProp<NativeStackNavigationProp<AuthNavigatorParamList, 'SignIn'>,
-    NativeStackNavigationProp<RootNavigatorParamsList>>;
-  email: string;
-  password: string;
-}
 
 const SignIn: FC<SignInProps> = ({ navigation }) => {
   const [email, setEmail] = useState<string>('');
@@ -42,14 +36,6 @@ const SignIn: FC<SignInProps> = ({ navigation }) => {
   const isMounted = useRef<any>(null);
 
   const auth = useAuth();
-
-  useEffect(() => {
-    isMounted.current = true;
-
-    return () => {
-      isMounted.current = false;
-    }
-  }, []);
 
   const signIn = async (email: string, password: string) => {
     auth.signIn(email, password)
@@ -67,6 +53,14 @@ const SignIn: FC<SignInProps> = ({ navigation }) => {
         if (isMounted.current) setLoading(false);
       });
   }
+
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    }
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>

@@ -1,6 +1,7 @@
 /**
  * Sign Up Screen
  */
+// Libraries
 import React, { 
   FC,
   useEffect,
@@ -15,25 +16,16 @@ import {
   Image,
   KeyboardAvoidingView
 } from 'react-native';
-import axios from 'axios';
 import { TextInput } from 'react-native-gesture-handler';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 // Types
-import { AuthNavigatorParamList } from '../types';
+import { SignUpProps } from '../types';
 
-// API
+// Utils
 import { signUp } from '../utils';
 
 // Styles
 import styles from "../../assets/styles";
-
-export interface SignUpProps {
-  navigation: NativeStackNavigationProp<AuthNavigatorParamList, 'SignUp'>;
-  email: string;
-  password: string;
-  verifyPassword: string;
-};
 
 const SignUp: FC<SignUpProps> = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -43,14 +35,6 @@ const SignUp: FC<SignUpProps> = ({ navigation }) => {
   const [error, isError] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const isMounted = useRef<any>(null);
-
-  useEffect(() => {
-    isMounted.current = true;
-
-    return () => {
-      isMounted.current = false;
-    }
-  }, []);
 
   const runSignUp = async (email: string, password: string, verifyPassword: string) => {
     signUp(email, password, verifyPassword)
@@ -70,6 +54,14 @@ const SignUp: FC<SignUpProps> = ({ navigation }) => {
         if (isMounted.current) setLoading(false);
       });
   }
+
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    }
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
