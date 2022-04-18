@@ -359,14 +359,14 @@ const getSubscription = async (token: string) => {
  */
  const updateSubscription = async (
   userId: string,
+  planId: string,
   token: string,
-  _id: string,
 ) => {
   // call axios to the API
-  return axios.put(`${API_URL + apiVersion}/subscription/subscribe`, {
+  return axios.post(`${API_URL + apiVersion}/subscription/subscribe`, {
     userId,
+    planId,
     token,
-    _id
   });
 }
 
@@ -374,7 +374,7 @@ const getSubscription = async (token: string) => {
  * Get User's Plans
  * 
  * @param token User's token
- * @param userId 
+ * @param userId
  */
  const getmyPlan = async (userId: string, token: string) => {
   return axios.get(`${API_URL + apiVersion}/subscription/myPlan`, {

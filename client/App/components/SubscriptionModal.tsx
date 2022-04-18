@@ -51,11 +51,14 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
   const auth = useAuth();
   const { userId, token } = auth.authData;
 
-  const [checked, setChecked] = useState<any>('basic');
+  //load all plans available
   const [loadPlans, setLoadPlans] = useState<any>([]);
+  // load current user's plan
   const [loadCurrentPlan, setCurrentPlan] = useState<any>();
+  // update user's subscription plan
+  const [updateSubs, setSubscription] = useState<any>();
+
   const [errorMessage, setErrorMessage] = useState<any>('');
-  const [selectedPlan, setSelectedPlan] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
   const isMounted = useRef<any>(null);
   
@@ -76,6 +79,10 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
     getmyPlan(userId, token)
       .then((res: any) => {
         setCurrentPlan(res.data);
+        const { settings } = res.data.subscription;
+        setSubscription(settings);
+        console.log(res.data);
+
       })
       .catch((e: any) => {
         console.error(e.response.data.message);
@@ -87,41 +94,17 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
       Alert.alert(
         `Current Plan`,
         `Plan: ${loadCurrentPlan.subscription.name}\n` +
-        `Price: $${loadCurrentPlan.subscription.price}`
+        `Price: $${loadCurrentPlan.subscription.price}\n` +
+        `Expires: ${loadCurrentPlan.endingDate}`
       )
     } else {
       Alert.alert(
-        `No Plan! :(`
+        `No plan found! :(`
       )
     }
   }
 
-    // Update user's subscription plan
-    // const handleUpdateSubscription = async (
-    //   userId: string,
-    //   token: string,
-    //   _id: string,
-    // ) => {
-    //   return updateSubscription(
-    //     userId,
-    //     token,
-    //     _id)
-    //     .then((res: any) => {
-
-    //       //Go back to Profile Screen
-    //       setLoading(false);
-    //       alert('Subscription Updated!');
-    //       navigation.navigate('Profile');
-    //     })
-    //     .catch((e: any) => {
-    //       alert(e.response.data.message);
-    //     })
-    //     .finally(() => {
-    //       if (isMounted.current) setLoading(false);
-    //     });
-    // }
-
-  //cancel plan
+  //cancel plan TODO
 
   // Header button initialization
   useLayoutEffect(() => {
@@ -158,31 +141,15 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
       <Text style={styles.textTitles}>Subscription</Text>
         {loadPlans ? (
           <>
-      <RadioButton
-        value='basic'
-        color={PRIMARY_COLOR}
-        status={checked === 'basic' ? "checked" : "unchecked"}
-        onPress={() => setChecked('basic')}
-      />      
-      <RadioButton
-        value='premium'
-        color={PRIMARY_COLOR}
-        status={checked === 'premium' ? "checked" : "unchecked"}
-        onPress={() => setChecked('premium')}
-      />
-      <RadioButton
-        value='elite'
-        color={PRIMARY_COLOR}
-        status={checked === 'elite' ? "checked" : "unchecked"}
-        onPress={() => setChecked('elite')}
-      />
           {/* API Call made here */}
           {loadPlans.map((item: any, index: any) => {
             return (       
                 <SubscriptionItem
                   key={index}
                   data={item}
+                  navigation
                 />
+                
             )
             })
           }
@@ -193,16 +160,15 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
           <Text style={{textAlign: 'center', marginTop: 250}}>{errorMessage}</Text>
           </>
         )}
-
       </View>
 
       <View style={styles.addSubscriptionButtonContainer}>
           {/* Subscription button */}
           <TouchableOpacity
             style={[styles.addSubscriptionButton, { backgroundColor: SECONDARY_COLOR }]}
-            // onPress={handleUpdateSubscription(userId, token, _id)}
+            // onPress={() => handleUpdateSubscription(planId)}
             >
-            <Text>Subscribe</Text>
+            <Text>Cancel Subscription</Text>
           </TouchableOpacity>
           {/* Current Plan button */}
           <TouchableOpacity
