@@ -26,7 +26,6 @@ import { useAuth } from '../context';
 import {
   getSubscription,
   getmyPlan,
-  updateSubscription,
   cancelSubscription,
 } from '../utils';
 
@@ -36,7 +35,6 @@ import styles, {
   SECONDARY_COLOR,
   WHITE
 } from '../../assets/styles';
-import data from '../../assets/data/demo';
 
  // Cancel Button for header
  const CancelButton = ({ onPress }:any) => {
@@ -49,18 +47,13 @@ import data from '../../assets/data/demo';
 
 const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
   const auth = useAuth();
-  const { userId, token } = auth.authData;
 
-  //load all plans available
   const [loadPlans, setLoadPlans] = useState<any>([]);
-  // load current user's plan
   const [loadCurrentPlan, setCurrentPlan] = useState<any>();
-  // update user's subscription plan
-  const [updateSubs, setSubscription] = useState<any>();
-
   const [errorMessage, setErrorMessage] = useState<any>('');
-  const [loading, setLoading] = useState<boolean>(false);
   const isMounted = useRef<any>(null);
+
+  const { userId, token } = auth.authData;
   
   // Get subscription plans available
   const getSubscriptionPlans  = async () => {
@@ -74,15 +67,10 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
       });
   }
 
-   //API for Current Plan
   const getMyCurrentPlan = async () => {
     getmyPlan(userId, token)
       .then((res: any) => {
         setCurrentPlan(res.data);
-        const { settings } = res.data.subscription;
-        setSubscription(settings);
-        console.log(res.data);
-
       })
       .catch((e: any) => {
         console.error(e.response.data.message);
@@ -104,7 +92,29 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
     }
   }
 
-  //cancel plan TODO
+  const cancelAlert = () =>{
+    if (loadCurrentPlan){
+      Alert.alert(
+        'Subscription Canceled!',
+        `Current plan will be changed to Basic at the end of the billing date.`,
+        [{text: "OK", onPress: () => navigation.navigate('Profile')}]
+      )
+    }
+  }
+
+  // Handler for Cancel Subscription
+  const handleCancelSubscription = async () => {
+    return cancelSubscription(
+      userId,
+      token)
+      .then((res: any) => {
+        // Go back to Profile Screen
+        cancelAlert();
+      })
+      .catch((e: any) => {
+        alert(e.response.data.message);
+      });
+  }
 
   // Header button initialization
   useLayoutEffect(() => {
@@ -134,7 +144,6 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
     }
   }, []);
 
-
   return (
     <ScrollView contentContainerStyle={styles.modalContainer}>
     <View style={styles.subscriptionContainer}>
@@ -147,9 +156,7 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
                 <SubscriptionItem
                   key={index}
                   data={item}
-                  navigation
                 />
-                
             )
             })
           }
@@ -166,19 +173,16 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
           {/* Subscription button */}
           <TouchableOpacity
             style={[styles.addSubscriptionButton, { backgroundColor: SECONDARY_COLOR }]}
-            // onPress={() => handleUpdateSubscription(planId)}
-            >
+            onPress={() => handleCancelSubscription()}>
             <Text>Cancel Subscription</Text>
           </TouchableOpacity>
           {/* Current Plan button */}
           <TouchableOpacity
             style={[styles.addSubscriptionButton, { backgroundColor: SECONDARY_COLOR }]}
-            onPress={currentPlanAlert}
-          >
+            onPress={currentPlanAlert}>
             <Text>Current Plan</Text>
           </TouchableOpacity>
       </View>
-      
       </ScrollView>
   );
 }

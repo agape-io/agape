@@ -395,14 +395,9 @@ const getSubscription = async (token: string) => {
  * @param token User's token
  */
  const cancelSubscription = async (userId: string, token: string) => {
-  return axios.get(`${API_URL + apiVersion}/subscription/cancel`, {
-    headers: {
-      "x-access-token": token,
-      "content-type": "application/json"
-    },
-    params: {
-      userId
-    }
+  return axios.post(`${API_URL + apiVersion}/subscription/cancel`, {
+      userId,
+      token
   });
 }
 

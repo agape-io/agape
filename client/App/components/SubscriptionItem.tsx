@@ -9,10 +9,7 @@ import { SubscriptionItemT } from "../types";
 import { useAuth } from '../context';
 
 // API's
-import {
-  updateSubscription,
-  cancelSubscription,
-} from '../utils';
+import { updateSubscription } from '../utils';
 
 
 //Styles
@@ -25,7 +22,7 @@ import styles, {
 } from "../../assets/styles";
 import { useNavigation } from "@react-navigation/native";
 
-const SubscriptionItem = ({ data}: SubscriptionItemT) => {
+const SubscriptionItem = ({ data }: SubscriptionItemT) => {
   const [checked, setChecked] = useState<any>("premium");
   const auth = useAuth();
   const navigation = useNavigation();
@@ -51,7 +48,7 @@ const SubscriptionItem = ({ data}: SubscriptionItemT) => {
         planId,
         token)
         .then((res: any) => {
-            console.log(res.data);
+            // console.log(res.data);
           //Go back to Profile Screen
           // setLoading(false);
           updatePlanAlert();
@@ -67,7 +64,7 @@ const SubscriptionItem = ({ data}: SubscriptionItemT) => {
         <>
             <Text style={styles.textPlanTitles}>{data.name.slice(0,1).toUpperCase() + data.name.slice(1)}</Text>
             <Text style={styles.textDescription}>${data.price}</Text>
-            <Text style={styles.textDescription}>${data._id}</Text>
+            {/* <Text style={styles.textDescription}>${data._id}</Text> */}
             {/* <Text style={styles.textDescription}>{data.name === 'premium' ? '- Get 15 more Likes per day' : ''}</Text>
             <Text style={styles.textDescription}>{data.name === 'elite' ? '- Get 30 more Likes per day' : ''}</Text> */}
             <Button
