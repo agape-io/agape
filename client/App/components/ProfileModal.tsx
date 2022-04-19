@@ -166,23 +166,24 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
       convertMaxDist = parseInt(maxDist),
       convertMinAge = parseInt(minAge),
       convertMaxAge = parseInt(maxAge);
+
     
     return updateProfile(
       userId,
       token,
       name,
-      gender,
+      gender.toLowerCase(),
       convertAge,
       convertYearBorn,
       aboutMe,
       religion,
       location,
       hobbies,
-      sexuality,
+      sexuality.toLowerCase(),
       photo)
       .then(() => {
         // Update preferences
-        updatePreferences(userId, token, sexuality, convertMaxDist, convertMinAge, convertMaxAge, religion)
+        updatePreferences(userId, token, sexuality.toLowerCase(), convertMaxDist, convertMinAge, convertMaxAge, religion)
           .then((res: any) => {
             // Go back to Profile Screen
             setLoading(false);
