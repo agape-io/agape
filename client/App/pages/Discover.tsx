@@ -1,10 +1,11 @@
 /**
  * Discover Screen
  */
+// Libraries
 import React, {
     useState,
     FC,
-    useEffect,
+    useCallback,
     useRef
 } from "react";
 import {
@@ -13,48 +14,57 @@ import {
     Text,
 } from "react-native";
 import CardStack, { Card } from "react-native-card-stack-swiper";
-import { CompositeNavigationProp } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useAuth } from "../context";
-import {
-    HomeTabNavigatorParamList,
-    RootNavigatorParamsList
-} from "../types";
-import {
-    City,
-    Filters,
-    CardItem
-} from "../components";
-import styles from "../../assets/styles";
+import { useFocusEffect } from "@react-navigation/native";
 
+// Utils
+import { useAuth } from "../context";
 import { getMatches } from '../utils';
 
-export interface DiscoverProps {
-    navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Discover'>,
-    NativeStackNavigationProp<RootNavigatorParamsList>>;
-}
+// Types
+import { DiscoverProps } from "../types";
+
+// Components
+import { CardItem } from "../components";
+
+// Styles
+import styles from "../../assets/styles";
 
 const Discover: FC<DiscoverProps> = ({ navigation }) => {
     const [swiper, setSwiper] = useState<CardStack | null>(null);
     //const [loading, setLoading] = useState<boolean>(true);
+    const [errorMessage, setErrorMessage] = useState<any>('');
     const [matches, setMatches] = useState<any>(null);
     const isMounted = useRef<any>(null);
+    let tempSwipe = "";
 
     const auth = useAuth();
 
     const { token, userId } = auth.authData;
-    
+
+    const onLiked = () => { //swipe right or like button
+        //pass String "right" to card item
+        tempSwipe = "right";
+        // console.log(tempSwipe);
+
+    }
+
+
+    const onPass = () => { //swipe left or pass button
+        //pass left to carditem
+        tempSwipe = "left";
+        // console.log(tempSwipe)
+    }
+
     const loadMatches = async () => {
         // get the id's
-            getMatches(userId, token)
-                .then(res => {
-                    const { users } = res.data;
-                    //console.log(token, userId);
-                    setMatches(users);
-                }).catch(e => {
-                    console.log(e.message);
-                });
-        };
+        getMatches(userId, token)
+            .then(res => {
+                const { users } = res.data;
+                setMatches(users);
+            }).catch(e => {
+                setErrorMessage(e.response.data.message);
+            });
+    };
 
     const NoMoreCards = () => {
         return (
@@ -66,17 +76,19 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
             </Text>
         )
     }
-    
-    // Load matches
-    useEffect(() => {
-        loadMatches();
-        isMounted.current = true;
 
-        return () => {
-            setMatches(null);
-            isMounted.current = false;
-        }
-    }, []);
+    // Load matches
+    useFocusEffect(
+        useCallback(() => {
+            loadMatches();
+            isMounted.current = true;
+
+            return () => {
+                setMatches(null);
+                isMounted.current = false;
+            }
+        }, [])
+    );
 
     return (
         <ImageBackground
@@ -86,14 +98,15 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
             <View style={styles.containerHome}>
                 <View style={styles.top}>
                     {/* <City /> */}
-                    {/* <Filters /> */} 
+                    {/* <Filters /> */}
                 </View>
-                {matches && (
+                {matches ? (
                     <CardStack
                         verticalSwipe={false}
-                        loop // keep loop to true for now
                         renderNoMoreCards={() => <NoMoreCards />}
                         ref={newSwiper => setSwiper(newSwiper)}
+                        onSwipedLeft={() => onPass()}
+                        onSwipedRight={() => onLiked()}
                     >
                         {/** API Call made here */}
                         {matches.map((item: any, index: any) => {
@@ -104,11 +117,16 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                                         key={index}
                                         data={item}
                                         hasActions
+                                        swipe={tempSwipe}
                                     />
                                 </Card>
                             )
                         })}
                     </CardStack>
+                ) : (
+                    <>
+                        <Text style={{ textAlign: 'center', marginTop: 250 }}>{errorMessage}</Text>
+                    </>
                 )}
             </View>
         </ImageBackground>

@@ -10,6 +10,7 @@ import { AuthContextData } from '../types';
 
 // API
 import { API_URL } from '@env';
+import { logOut } from '../utils';
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
@@ -17,31 +18,27 @@ const AuthProvider:FC = ({ children }) => {
   const [authData, setAuthData] = useState<any>();
   const [loading, setLoading] = useState<any>(true);
   const [notification, setNotification] = useState<any>();
-
-  useEffect(() => {
-    loadStorageData();
-  }, []);
+  const apiVersion = "/api/v1";
 
   const loadStorageData = async () => {
     AsyncStorage.getItem('@auth')
       .then((authDataSerialized:any) => {
         const _authData = JSON.parse(authDataSerialized);
         
-        console.log(_authData);
         setAuthData(_authData);
         setLoading(false);
       }).catch(e => { 
-        Promise.reject(e.message);
+        Promise.reject(e.response.data.message);
       })
   }
 
   const signIn = async (email: string, password: string) => {
     // call API, add to storage
-    return axios.post(`${API_URL}/signin/email`, {
+    return axios.post(`${API_URL + apiVersion}/signin/email`, {
       email,
       password
-    }).then(res => {
-      const _auth = res.data.user || {};
+    }).then((res: any) => {
+      const _auth = res.data.user;
       AsyncStorage.setItem('@auth', JSON.stringify(_auth));
 
       setAuthData(_auth);
@@ -50,12 +47,25 @@ const AuthProvider:FC = ({ children }) => {
   }
 
   const signOut = async () => {
-    // remove auth from async storage and state
-    setAuthData(undefined);
-    AsyncStorage.removeItem('@auth').then(() => {
-      Promise.resolve('User is signed out!');
-    });
+    logOut(authData.userId)
+      .then((res: any) => {
+        // remove auth from async storage and state
+        setAuthData(undefined);
+        AsyncStorage.removeItem('@auth').then(() => {
+          Promise.resolve('User is signed out!');
+        })
+        .catch((e: any) => {
+          Promise.reject(e.response.data.message);
+        });
+      })
+      .catch((e: any) => {
+        Promise.reject(e.response.data.message);
+      });  
   }
+
+  useEffect(() => {
+    loadStorageData();
+  }, []);
 
   return (
     <AuthContext.Provider

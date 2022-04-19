@@ -17,29 +17,30 @@ import {
   ScrollView,
 } from 'react-native';
 import axios from 'axios';
-import { MaterialCommunityIcons } from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as ImagePicker from 'expo-image-picker';
-import { CompositeNavigationProp } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import {
-  HomeTabNavigatorParamList,
-  RootNavigatorParamsList
-} from '../types';
+import { ProfileModalProps } from '../types';
 import { useAuth } from '../context';
 
 // API's
 import {
   updateProfile,
-  getProfile
+  getProfile,
+  getPreferences,
+  updatePreferences
 } from '../utils';
 import { CLOUDINARY_API_URL } from '@env';
 
 // Styles
 import styles, { PRIMARY_COLOR } from '../../assets/styles';
 
-export interface ProfileModalProps {
-  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Profile'>,
-  NativeStackNavigationProp<RootNavigatorParamsList>>;
+// Cancel Button for header
+const CancelButton = ({ onPress }:any) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <MaterialCommunityIcons name="arrow-left" size={26} color="black" />
+    </TouchableOpacity>
+  );
 }
 
 const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
@@ -47,10 +48,14 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
 
   // hide create profile button if profile is already available
   const [profile, hasProfile] = useState<any>();
+  const [preferences, hasPreferences] = useState<any>();
   const [photo, setPhoto] = useState<any>(null);
   const [cloudinary, getCloudinary] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [name, setName] = useState<string>('');
+  const [maxDist, setMaxDist] = useState<string>('');
+  const [minAge, setMinAge] = useState<string>('');
+  const [maxAge, setMaxAge] = useState<string>('');
   const [gender, setGender] = useState<string>('');
   const [aboutMe, setAboutMe] = useState<string>('');
   const [location, setLocation] = useState<string>('');
@@ -64,6 +69,33 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
   const isMounted = useRef<any>(null);
 
   const { userId, token } = auth.authData;
+
+  const getUserProfile = () => {
+    getProfile(userId, token)
+      .then((res: any) => {
+        const { profile } = res.data;
+          
+        setPhoto(profile.photo);
+
+        // check if profile exists
+        hasProfile(profile);
+      })
+      .catch((e: any) => {
+        console.error(e.response.data.message);
+      });
+  }
+
+  const getUserPreferences = () => {
+    getPreferences(userId, token)
+      .then((res: any) => {
+        const { preferences } = res.data;
+
+        hasPreferences(preferences);
+      })
+      .catch((e: any) => {
+        console.error(e.response.data.message);
+      });
+  }
 
   const uploadPhoto = async () => {
     setLoading(true);
@@ -108,17 +140,8 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
       .catch((e: any) => {
         setLoading(true);
 
-        alert(e.message);
+        alert(e.response.data.message);
       });
-  }
-
-  // Cancel Button for header
-  const CancelButton = ({ onPress }:any) => {
-    return (
-      <TouchableOpacity onPress={onPress}>
-        <MaterialCommunityIcons name="arrow-left" size={26} color="black"/>
-      </TouchableOpacity>
-    );
   }
 
   // Update Profile
@@ -130,37 +153,50 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
     aboutMe: string,
     religion: string,
     location: string,
+    maxDist: string,
+    minAge: string,
+    maxAge: string,
     hobbies: string[],
     sexuality: string,
     photo: string,
   ) => {
     // Convert strings to integers
     let convertAge = parseInt(age),
-      convertYearBorn = parseInt(yearBorn);
+      convertYearBorn = parseInt(yearBorn),
+      convertMaxDist = parseInt(maxDist),
+      convertMinAge = parseInt(minAge),
+      convertMaxAge = parseInt(maxAge);
+
     
     return updateProfile(
       userId,
       token,
       name,
-      gender,
+      gender.toLowerCase(),
       convertAge,
       convertYearBorn,
       aboutMe,
       religion,
       location,
       hobbies,
-      sexuality,
+      sexuality.toLowerCase(),
       photo)
-      .then((res: any) => {
-        // Go back to profile screen
-        setLoading(false);
-        console.log(res.data);
-        alert('Profile Updated!');
+      .then(() => {
+        // Update preferences
+        updatePreferences(userId, token, sexuality.toLowerCase(), convertMaxDist, convertMinAge, convertMaxAge, religion)
+          .then((res: any) => {
+            // Go back to Profile Screen
+            setLoading(false);
 
-        navigation.navigate('Profile');
-      }).catch((e: any) => {
-        console.log(e);
-        alert(e.message);
+            alert('Profile and Preferences Updated!');
+            navigation.navigate('Profile');
+          })
+          .catch((e: any) => {
+            console.error(e.response.data.message);
+          })
+      })
+      .catch((e: any) => {
+        alert(e.response.data.message);
       })
       .finally(() => {
         if (isMounted.current) setLoading(false);
@@ -178,26 +214,13 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
 
   // Persist profile data
   useEffect(() => {
-    const getUserProfile = () => {
-      getProfile(userId, token)
-        .then((res: any) => {
-          const { profile } = res.data;
-          
-          setPhoto(profile.photo);
-
-          // check if profile exists
-          hasProfile(profile);
-        })
-        .catch((e: any) => {
-          console.log(e.message);
-      })
-    };
-
     getUserProfile();
+    getUserPreferences();
 
     return () => {
       // cleanup
       hasProfile(null);
+      hasPreferences(null);
     }
   }, []);
 
@@ -322,6 +345,36 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
         />
         <TextInput
           style={styles.input}
+          placeholder="Max Distance from you"
+          placeholderTextColor="#b1b1b1"
+          returnKeyType="next"
+          keyboardType="numeric"
+          textContentType="none"
+          value={maxDist}
+          onChangeText={maxDist => setMaxDist(maxDist)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Minimum Age for Match"
+          placeholderTextColor="#b1b1b1"
+          returnKeyType="next"
+          keyboardType="numeric"
+          textContentType="none"
+          value={minAge}
+          onChangeText={minAge => setMinAge(minAge)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Maximum Age for Match"
+          placeholderTextColor="#b1b1b1"
+          returnKeyType="next"
+          keyboardType="numeric"
+          textContentType="none"
+          value={maxAge}
+          onChangeText={maxAge => setMaxAge(maxAge)}
+        />
+        <TextInput
+          style={styles.input}
           placeholder="Sexuality"
           placeholderTextColor="#b1b1b1"
           returnKeyType="next"
@@ -334,7 +387,20 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
       <View style={styles.addProfileButtonContainer}>
         <TouchableOpacity
           style={[styles.addProfileButton, { backgroundColor: PRIMARY_COLOR }]}
-          onPress={() => handleUpdateProfile(name, gender, userAge, yearBorn, aboutMe, religion, location, [firstHobby, secondHobby, thirdHobby], preference, cloudinary)}>
+          onPress={() => handleUpdateProfile(
+            name,
+            gender,
+            userAge,
+            yearBorn,
+            aboutMe,
+            religion,
+            location,
+            maxDist,
+            minAge,
+            maxAge,
+            [firstHobby, secondHobby, thirdHobby],
+            preference,
+            cloudinary)}>
           <Text>Update Profile</Text>
         </TouchableOpacity>
       </View>

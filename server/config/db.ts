@@ -1,15 +1,21 @@
 import mongoose from 'mongoose';
-import { env } from '../config/env';
+
+import { env } from './env';
+
+import { DB_STATE } from './constants';
 
 const { MongoDB } = env;
 
 export default async function connect() {
-  await mongoose
-    .connect(`${MongoDB.ConnString}`)
-    .then(() => {
-      console.log('MongoDB is connected');
-    })
-    .catch((err) => {
-      console.log(`MongoDB connection unsuccessful: ${err}`);
-    });
+  if (!(mongoose.connection.readyState === DB_STATE.CONNECTED)) {
+    return mongoose
+      .connect(`${MongoDB.ConnString}`)
+      .then(() => {
+        console.log('MongoDB is connected');
+      })
+      .catch((err: Error) => {
+        console.error(`MongoDB connection unsuccessful: ${err}`);
+      });
+  }
+  return Promise.resolve();
 }

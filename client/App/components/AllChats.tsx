@@ -60,10 +60,11 @@ const AllChats = () => {
       })
       .catch(e => {
         // throw error
-        console.error(e.message);
+        console.error("fetchChats");
+        console.error(e.response.data.message);
       });
   }
-  
+
   useFocusEffect(
     useCallback(() => {
       fetchChats();
@@ -98,7 +99,7 @@ const AllChats = () => {
           )}
         />
       ) : (
-        <Text style={{textAlign: "center", marginTop: 200}}>No messages available :(</Text>
+        <Text style={{ textAlign: "center", marginTop: 200 }}>No messages available :(</Text>
       )}
     </>
   );

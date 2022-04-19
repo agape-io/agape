@@ -1,46 +1,43 @@
-import React, { useState, useEffect, useRef, FC } from "react";
+/**
+ * Settings Screen
+ */
+// Libraries
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  FC
+} from "react";
 import {
-  StyleSheet,
   Text,
   View,
   StatusBar,
-  Image,
   Platform,
-  RefreshControl,
-  Switch,
+  TouchableOpacity,
   Alert,
   Modal
 } from 'react-native'
-// import Icon from 'react-native-vector-icons/Entypo'
 
+// Components
 import { SettingsScreen, SettingsData } from '../components'
 
-import {
-  HomeTabNavigatorParamList,
-  RootNavigatorParamsList,
-} from "../types";
-import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TouchableOpacity } from "react-native-gesture-handler";
+// Types
+import { SettingsProps } from "../types";
 
+// Utils
 import { useAuth } from '../context';
 
-const fontFamily = Platform.OS === 'ios' ? 'Avenir' : 'sans-serif'
+// Styles
 import styles from "../../assets/styles";
 
-export interface SettingsProps {
-  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Settings'>,
-    NativeStackNavigationProp<RootNavigatorParamsList>>;
-}
-
+const fontFamily = Platform.OS === 'ios' ? 'Avenir' : 'sans-serif';
 const statusBarHeight = Platform.OS === 'ios' ? 35 : 0
 
 const Settings: FC<SettingsProps> = ({ navigation }) => {
   const [refreshing] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-
   const auth = useAuth();
-
+  
   const { userId, token } = auth.authData;
 
   const settingsData: SettingsData = [
@@ -78,7 +75,7 @@ const Settings: FC<SettingsProps> = ({ navigation }) => {
   const signOut = async () => {
     auth.signOut()
       .then(() => {
-        navigation.navigate("Auth", { screen: "SignIn" });
+        navigation.navigate("Auth", { screen: "SignIn"});
       });
   };
 

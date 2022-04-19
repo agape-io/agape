@@ -1,16 +1,25 @@
 /**
  * Card Item Component
  */
-import React from "react";
+// Libraries
+import React, { useEffect } from "react";
 import {
   Text,
   View,
   Image,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  Alert
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+
+//Components
 import Icon from "./Icon";
+
+//Types
 import { CardItemT } from "../types";
+
+//Styles
 import styles, {
   DISLIKE_ACTIONS,
   FLASH_ACTIONS,
@@ -20,11 +29,101 @@ import styles, {
   GRAY
 } from "../../assets/styles";
 
+//Utils
+import { updateSwipedLeft, updateSwipedRight, createChat, postMessage } from '../utils';
+import { useAuth } from '../context';
+
 const CardItem = ({
   data,
   hasActions,
   hasVariant,
+  swipe
+
 }: CardItemT) => {
+  const auth = useAuth();
+
+  const { userId, token } = auth.authData;
+
+  const navigation = useNavigation();
+
+  //send system message for new match
+  const sendMatchMessage = async (message: any) => {
+
+    createChat(
+      userId,
+      data.userId,
+      token)
+      .then((res: any) => {
+        const { _id } = res.data;
+
+        postMessage(userId, token, message, _id)
+          .then((res: any) => {
+            navigation.navigate("Chat");
+          })
+          .catch((e: any) => {
+            console.error(e.response.data.message);
+          });
+
+      })
+      .catch((e: any) => {
+        console.error(e.response.data.message);
+      })
+  }
+
+  const handleMatch = () => {
+    Alert.prompt(
+      "You matched with " + data.profile.name,
+      "Say Hi!",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        {
+          text: "Send",
+          onPress: message => sendMatchMessage(message)
+        }
+      ],
+    );
+  }
+
+  // Update swipedLeft
+  const handleUpdateSwipedLeft = async (
+    matchUserId: string
+  ) => {
+    return updateSwipedLeft(
+      userId,
+      matchUserId,
+      token)
+      .then((res: any) => {
+        //TODO: make card swipe
+      }).catch((e: any) => {
+        console.error(e.response.data.message);
+        // alert(e.message);
+      })
+  }
+
+  // Update swipedRight
+  const handleUpdateSwipedRight = async (
+    matchUserId: string
+  ) => {
+    return updateSwipedRight(
+      userId,
+      token,
+      matchUserId)
+      .then((res: any) => {
+        //TODO:if its true
+        // if ((res.data.match).localeCompare("True")) {
+        handleMatch();
+        // }
+        //TODO: make card swipe
+      }).catch((e: any) => {
+        console.error(e.response.data.message);
+      })
+  }
+
+
   // Custom styling
   const fullWidth = Dimensions.get("window").width;
 
@@ -46,10 +145,15 @@ const CardItem = ({
     },
   ];
 
+  //TODO
+  // useEffect(() => {
+  //   console.log(swipe);
+  // }, []);
+
   return (
     <View style={styles.containerCardItem}>
       {/* IMAGE */}
-      {data.image ? <Image source={data.image} style={imageStyle} /> : <Image source={{ uri: data.profile.photo }} style={imageStyle}/>}
+      {data.image ? <Image source={data.image} style={imageStyle} /> : <Image source={{ uri: data.profile.photo }} style={imageStyle} />}
 
       {/* MATCHES */}
       {!data.matches && (
@@ -62,7 +166,7 @@ const CardItem = ({
 
       {/* NAME */}
       <Text style={nameStyle}>{data.profile.name}</Text>
-      
+
       {/* ABOUT ME */}
       {data.aboutMe && <Text style={styles.descriptionCardItem}>{data.profile.aboutMe}</Text>}
 
@@ -107,17 +211,13 @@ const CardItem = ({
             <Icon name="star" color={STAR_ACTIONS} size={14} />
           </TouchableOpacity> */}
 
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={() => handleUpdateSwipedLeft(data.userId)}>
             <Icon name="close" color={DISLIKE_ACTIONS} size={25} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={() => handleUpdateSwipedRight(data.userId)}>
             <Icon name="heart" color={LIKE_ACTIONS} size={25} />
           </TouchableOpacity>
-
-          {/* <TouchableOpacity style={styles.miniButton}>
-            <Icon name="flash" color={FLASH_ACTIONS} size={14} />
-          </TouchableOpacity> */}
         </View>
       )}
     </View>

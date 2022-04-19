@@ -1,26 +1,21 @@
-import * as React from 'react'
-import { StyleSheet, View, TouchableOpacity, TextStyle } from 'react-native'
+/**
+ * Row Component
+ */
+import React from 'react'
+import {
+    StyleSheet,
+    View,
+    TouchableOpacity
+} from 'react-native'
 import styled from 'styled-components/native'
 
-import { Chevron } from './Chevron'
+import {
+    ContainerProps,
+    TopBorderContainerProps,
+    RowProps
+} from '../types';
+import { Chevron } from './index';
 
-export interface RowData {
-    title: string
-    titleStyle?: TextStyle
-    subtitle?: string
-    subtitleStyle?: TextStyle
-    onPress?: () => void
-    showDisclosureIndicator?: boolean
-    renderAccessory?: () => React.ReactElement<any>
-}
-
-export interface Props extends RowData {
-    titleStyles?: (TextStyle | undefined)[]
-    subtitleStyles?: (TextStyle | undefined)[]
-    isFirst: boolean
-    isLast: boolean
-    children?: any
-}
 export const Row = ({
     title,
     subtitle,
@@ -32,8 +27,8 @@ export const Row = ({
     subtitleStyles,
     isFirst,
     isLast,
-}: Props) => {
-    let ContentContainer = onPress ? TouchableOpacity : View
+}: RowProps) => {
+    let ContentContainer = onPress ? TouchableOpacity : View;
 
     return (
         <Container height={subtitle ? 56 : 46}>
@@ -71,50 +66,45 @@ const styles = StyleSheet.create({
     },
 })
 
-interface ContainerProps {
-    height: number
-}
 const Container = styled.View<ContainerProps>`
   background-color: transparent;
   height: ${p => p.height};
   align-items: stretch;
-`
+`;
 
-interface TopBorderContainerProps {
-    isFirst: boolean
-}
+
 const TopBorderContainer = styled.View<TopBorderContainerProps>`
   align-self: stretch;
   height: ${StyleSheet.hairlineWidth};
   padding-left: ${p => (p.isFirst ? 0 : 15)};
   background-color: white;
-`
+`;
 
 const TopBorder = styled.View`
   flex: 1;
   background-color: #ccc;
-`
+`;
 
 const TitlesContainer = styled.View`
   flex: 1;
   justify-content: space-around;
   align-self: stretch;
-`
+`;
 
 const Title = styled.Text`
   color: black;
   font-size: 18;
   margin-right: 15;
-`
+`;
 
 const Subtitle = styled.Text`
   color: #999;
   font-size: 15;
   margin-right: 15;
-`
+`;
 
 const BottomBorder = styled.View`
   align-self: stretch;
   height: ${StyleSheet.hairlineWidth};
   background-color: #ccc;
-`
+`;

@@ -1,6 +1,7 @@
 /**
  * Profile Screen
  */
+// Libraries
 import React, {
   FC,
   useCallback,
@@ -10,23 +11,26 @@ import React, {
 import {
   ScrollView,
   View,
-  Text,
   ImageBackground,
   TouchableOpacity,
 } from "react-native";
-import { CompositeNavigationProp, useFocusEffect } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useFocusEffect } from "@react-navigation/native";
 
-import { Icon, ProfileItem } from "../components";
+// Components
+import {
+  Icon,
+  ProfileItem
+} from "../components";
+
+// Styles
 import styles, { WHITE } from "../../assets/styles";
+
+// Utils
 import { useAuth } from "../context";
-import { HomeTabNavigatorParamList, RootNavigatorParamsList } from "../types";
 import { getProfile } from '../utils';
 
-export interface ProfileProps {
-  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Discover'>,
-    NativeStackNavigationProp<RootNavigatorParamsList>>;
-}
+// Types
+import { ProfileProps } from "../types";
 
 const Profile: FC<ProfileProps> = ({ navigation }) => {
   const [profile, setProfile] = useState<any>();
@@ -41,10 +45,9 @@ const Profile: FC<ProfileProps> = ({ navigation }) => {
     getProfile(userId, token)
       .then(res => {
         const { profile } = res.data;
-        console.log(profile);
         setProfile(profile);
       }).catch(e => {
-        console.log(e.message);
+        console.error(e.response.data.message);
       });
   }
 
@@ -73,7 +76,7 @@ const Profile: FC<ProfileProps> = ({ navigation }) => {
         {profile ? (
           <>
             <ImageBackground source={{ uri: profile.photo }} style={styles.photo}>
-              <View style={styles.top}>
+              {/* <View style={styles.top}>
                 <TouchableOpacity>
                   <Icon
                     name="chevron-back"
@@ -82,7 +85,7 @@ const Profile: FC<ProfileProps> = ({ navigation }) => {
                     style={styles.topIconLeft}
                   />
                 </TouchableOpacity>
-              </View>
+              </View> */}
             </ImageBackground>
             <ProfileItem
               data={profile}

@@ -18,7 +18,8 @@ import { API_URL } from '@env';
 import { useAuth } from '../context';
 import {
   getMessages,
-  postMessage
+  postMessage,
+  getUserChats
 } from '../utils';
 
 let socket: any;
@@ -63,39 +64,11 @@ const SingleMessage = ({ route, userData }: any) => {
         socket.emit('join chat', chatId);
       })
       .catch((e: any) => {
-        console.error(e.message);
+        console.error(e.response.data.message);
       });
   };
 
-  // socket-io initialization
-  useEffect(() => {
-    socket = io(API_URL);
-    socket.emit('setup', userId);
-    socket.on('connection', () => isSocketConnected(true));
-  }, []);
-
-  // fetch messages
-  useEffect(() => {
-    fetchMessages();
-
-    // cleanup
-    return () => {
-      setMessages([]);
-    }
-  }, []);
-
-  // Check messages recieved
-  useEffect(() => {
-    socket.on('message recieved', (newMessageRecieved: any) => {
-      if (chatId !== newMessageRecieved.chat._id) {
-        // give notification
-      } else {
-        setMessages([...messages, newMessageRecieved]);
-      }
-    })
-  });
-
-   // calls set mesasges
+  // calls set mesasges
   const onSend = useCallback((messages = []) => {
     let content = messages[0].text;
     setLoading(true);
@@ -125,9 +98,37 @@ const SingleMessage = ({ route, userData }: any) => {
         setLoading(false);
       })
       .catch((e: any) => {
-        console.error(e.message);
+        console.error(e.response.data.message);
       });
   }, []);
+
+  // socket-io initialization
+  useEffect(() => {
+    socket = io(API_URL);
+    socket.emit('setup', userId);
+    socket.on('connection', () => isSocketConnected(true));
+  }, []);
+
+  // fetch messages
+  useEffect(() => {
+    fetchMessages();
+
+    // cleanup
+    return () => {
+      setMessages([]);
+    }
+  }, []);
+
+  // Check messages recieved
+  useEffect(() => {
+    socket.on('message recieved', (newMessageRecieved: any) => {
+      if (chatId !== newMessageRecieved.chat._id) {
+        // give notification
+      } else {
+        setMessages([...messages, newMessageRecieved]);
+      }
+    })
+  });
 
   return (
     <>
@@ -143,5 +144,4 @@ const SingleMessage = ({ route, userData }: any) => {
     </>
   );
 }
-
 export default SingleMessage;

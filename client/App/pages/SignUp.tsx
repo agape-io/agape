@@ -1,6 +1,7 @@
 /**
  * Sign Up Screen
  */
+// Libraries
 import React, { 
   FC,
   useEffect,
@@ -10,31 +11,21 @@ import React, {
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
   SafeAreaView,
   Image,
   KeyboardAvoidingView
 } from 'react-native';
-import axios from 'axios';
 import { TextInput } from 'react-native-gesture-handler';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 // Types
-import { AuthNavigatorParamList } from '../types';
+import { SignUpProps } from '../types';
 
-// API
-import { API_URL } from '@env';
+// Utils
+import { signUp } from '../utils';
 
 // Styles
 import styles from "../../assets/styles";
-
-export interface SignUpProps {
-  navigation: NativeStackNavigationProp<AuthNavigatorParamList, 'SignUp'>;
-  email: string;
-  password: string;
-  verifyPassword: string;
-};
 
 const SignUp: FC<SignUpProps> = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -45,20 +36,8 @@ const SignUp: FC<SignUpProps> = ({ navigation }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const isMounted = useRef<any>(null);
 
-  useEffect(() => {
-    isMounted.current = true;
-
-    return () => {
-      isMounted.current = false;
-    }
-  }, []);
-
   const runSignUp = async (email: string, password: string, verifyPassword: string) => {
-    axios.post(`${API_URL}/signup/email`, {
-      email,
-      password,
-      verifyPassword
-    })
+    signUp(email, password, verifyPassword)
       .then(res => {
         // check if there is a response
         // Tell the user try signing in
@@ -69,13 +48,20 @@ const SignUp: FC<SignUpProps> = ({ navigation }) => {
       .catch(e => {
         // display errors to the UI
         isError(true);
-        console.log(e.message);
         setErrorMessage(e.response.data.message);
       })
       .finally(() => {
         if (isMounted.current) setLoading(false);
       });
   }
+
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    }
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>

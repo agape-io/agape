@@ -1,11 +1,14 @@
-import * as React from 'react'
-import { StyleSheet, Image, ImageStyle } from 'react-native'
+/**
+ * Chevron Component
+ */
+import React from 'react'
+import {
+    StyleSheet,
+    Image
+} from 'react-native';
+import { ChevronProps } from '../types';
 
-export interface ChevronProps {
-    style?: ImageStyle
-}
-
-export const Chevron = ({ style }: ChevronProps) => (
+const Chevron = ({ style }: ChevronProps) => (
     <Image
         style={[defaultStyles.chevron, style]}
         source={require('../../assets/images/chevron3.png')}
@@ -20,4 +23,6 @@ const defaultStyles = StyleSheet.create({
         marginRight: 10,
         opacity: 0.35,
     },
-})
+});
+
+export default Chevron;
