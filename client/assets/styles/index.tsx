@@ -459,12 +459,13 @@ export default StyleSheet.create({
     */
     subscriptionContainer: {
         flex: 1,
-        justifyContent: "space-between",
+        justifyContent: "center",
         backgroundColor: WHITE,
         padding: 40,
-        margin: 65,
+        margin: 45,
+        marginBottom: 30,
         borderRadius:10,
-        height: 560,
+        height: 600,
         width: 360,
         shadowOpacity: 0.10,
         shadowRadius: 10,
@@ -481,8 +482,12 @@ export default StyleSheet.create({
         margin: 10,
         alignItems: "center",
     },
-    textTitles : {
-        fontSize: 20,
+    textTitles: {
+        fontSize: 22,
+        paddingLeft: 79
+    },
+    textPlanTitles: {
+        fontSize: 22
     },
     textDescription: {
         fontSize: 15,
@@ -497,10 +502,10 @@ export default StyleSheet.create({
         justifyContent: 'center',
         alignContent: 'space-between',
         height: 40,
-        marginTop: 10,
-        marginBottom: 80,
+        marginTop: 0,
+        marginBottom: 10,
         borderRadius: 10,
-        flexBasis: '50%',
+        flexBasis: '45%',
     },
     addSubscriptionButtonContainer: {
         flex: 1,
@@ -556,5 +561,48 @@ export default StyleSheet.create({
     modalText: {
         marginBottom: 15,
         textAlign: "center"
-    }
+    },
+    // Radio Button test
+    mainContainer: {
+        height: 50,
+        marginTop: 5,
+        marginBottom: 5,
+        marginLeft: 10,
+        marginRight: 10,
+        justifyContent: "center",
+        paddingLeft: 10,
+        paddingRight: 10,
+        borderWidth: 0.5,
+        borderColor: "red",
+        flexDirection: "row",
+        alignItems: "center",
+      },
+      radioButtonIcon: {
+        backgroundColor: "white",
+        borderWidth: 3,
+        borderColor: "red",
+        height: 30,
+        width: 30,
+        borderRadius: 30 / 2,
+        marginRight: 10,
+        alignItems: "center",
+        justifyContent: "center",
+      },
+      radioButtonIconInnerIcon: {
+        height: 25,
+        width: 25,
+        backgroundColor: "red",
+        borderRadius: 25 / 2,
+        borderWidth: 3,
+        borderColor: "white",
+      },
+      radioButtonTextContainer: {
+        flex: 5,
+        height: 50,
+        justifyContent: "center",
+        paddingLeft: 10,
+      },
+      radioButtonText: {
+        fontSize: 18,
+      },
 });

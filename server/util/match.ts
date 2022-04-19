@@ -1,14 +1,14 @@
-import { GENDER, SEXUALITY } from '../config/constants';
+import { GENDER, SEXUALITY, USER } from '../config/constants';
 
 const commonElements = (array1: any[], array2: any[]) => array1.filter((item) => array2.includes(item));
 
-export const getProfile = (user: any) => JSON.parse(JSON.stringify(user)).profile;
+export const getProfile = (user: USER) => JSON.parse(JSON.stringify(user)).profile;
 
-export const getPreferences = (user: any) => JSON.parse(JSON.stringify(user)).preferences;
+export const getPreferences = (user: USER) => JSON.parse(JSON.stringify(user)).preferences;
 
-export const getId = (user: any) => JSON.parse(JSON.stringify(user))._id;
+export const getId = (user: USER) => JSON.parse(JSON.stringify(user))._id;
 
-const isAlreadySwiped = (user1: any, user2: any) => {
+const isAlreadySwiped = (user1: USER, user2: USER) => {
   const { swipedLeft } = JSON.parse(JSON.stringify(user1));
   const { swipedRight } = JSON.parse(JSON.stringify(user1));
   const swiped = swipedLeft.concat(swipedRight);
@@ -16,13 +16,13 @@ const isAlreadySwiped = (user1: any, user2: any) => {
   return swiped.includes(userId);
 };
 
-const commonHobbies = (user1: any, user2: any) => {
+const commonHobbies = (user1: USER, user2: USER) => {
   const user1Profile = getProfile(user1);
   const user2Profile = getProfile(user2);
   return commonElements(user1Profile.hobbies, user2Profile.hobbies).length;
 };
 
-const matchSexuality = (user1: any, user2: any) => {
+const matchSexuality = (user1: USER, user2: USER) => {
   const user1Gender = getProfile(user1).gender.toLowerCase();
   const user1Sexuality = getPreferences(user1).sexuality.toLowerCase();
   const user2Gender = getProfile(user2).gender.toLowerCase();
@@ -56,7 +56,7 @@ const matchSexuality = (user1: any, user2: any) => {
   return false;
 };
 
-const matchAge = (user1: any, user2: any) => {
+const matchAge = (user1: USER, user2: USER) => {
   const user1Profile = getProfile(user1);
   const user1Preferences = getPreferences(user1);
   const user2Profile = getProfile(user2);
@@ -69,7 +69,7 @@ const matchAge = (user1: any, user2: any) => {
   return false;
 };
 
-const matchReligion = (user1: any, user2: any) => {
+const matchReligion = (user1: USER, user2: USER) => {
   const user1Profile = getProfile(user1);
   const user1Preferences = getPreferences(user1);
   const user2Profile = getProfile(user2);
@@ -82,7 +82,7 @@ const matchReligion = (user1: any, user2: any) => {
   return false;
 };
 
-const validateUsers = (user1: any, user2: any, romantic: string) => {
+const validateUsers = (user1: USER, user2: USER, romantic: string) => {
   if (romantic === 'true') {
     if (!matchSexuality(user1, user2)) return false;
   }
@@ -90,7 +90,7 @@ const validateUsers = (user1: any, user2: any, romantic: string) => {
   return true;
 };
 
-export const generatePercentage = (user1: any, user2: any, romantic: string) => {
+export const generatePercentage = (user1: USER, user2: USER, romantic: string) => {
   if (!validateUsers(user1, user2, romantic)) return 0;
   let percentage = 50;
   percentage += commonHobbies(user1, user2) / 3 * 20;
@@ -101,7 +101,7 @@ export const generatePercentage = (user1: any, user2: any, romantic: string) => 
 
 export const sortByPercentage = (users: any[]) => users.sort((user1, user2) => ((user1.percentage > user2.percentage) ? -1 : 1));
 
-export const verifyUser = (user: any) => {
+export const verifyUser = (user: USER) => {
   const profile = getProfile(user);
   const preferences = getPreferences(user);
   // verify profile

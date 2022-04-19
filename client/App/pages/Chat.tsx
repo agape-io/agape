@@ -1,27 +1,27 @@
 /**
  * Chat Screen
  */
+// Libraries
 import React, { FC } from "react";
 import {
     View,
     ImageBackground
 } from 'react-native';
-import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ActivityIndicator } from "react-native-paper";
 
-import styles, { DARK_GRAY } from "../../assets/styles";
+// Styles
+import styles from "../../assets/styles";
+
+// Components
 import { AllChats } from "../components";
+
+// Utils
 import { useAuth } from "../context";
 
-import { HomeTabNavigatorParamList, RootNavigatorParamsList } from "../types";
+// Types
+import { ChatProps } from "../types";
 
-export interface ChatProps {
-    navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Chat'>,
-        NativeStackNavigationProp<RootNavigatorParamsList>>;
-}
-
-const Chat: FC<ChatProps> = ({ navigation }) => {
+const Chat:FC<ChatProps> = ({ navigation }) => {
     const { authData } = useAuth();
 
     //return jsx to render UI
@@ -38,6 +38,5 @@ const Chat: FC<ChatProps> = ({ navigation }) => {
         </ImageBackground >
     );
 };
-
 
 export default Chat;

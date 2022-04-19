@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 
+import { USER } from '../../config/constants';
 import connect from '../../config/db';
 import { MISSING_FIELDS, UNKNOWN_ERROR, USER_ERRORS } from '../../config/errorMessages';
 import { CREATE_PROFILE_SUCCESS, GET_PROFILE_SUCCESS, UPDATE_PROFILE_SUCCESS } from '../../config/statusMessages';
@@ -28,7 +29,7 @@ router.get('/', (req: Request, res: Response) => {
   if (userId) {
     connect()
       .then(() => User.findOne({ _id: userId }, 'profile isOnline'))
-      .then((user: any) => {
+      .then((user: USER) => {
         if (!user) throw new Error(USER_ERRORS.INVALID_ID);
         res.status(200).send({
           status: 200,
@@ -37,7 +38,7 @@ router.get('/', (req: Request, res: Response) => {
           isOnline: user.isOnline,
         });
       })
-      .catch((err: any) => {
+      .catch((err: Error) => {
         if (err.message === USER_ERRORS.INVALID_ID) {
           res.status(400).send({
             status: 400,
@@ -83,12 +84,12 @@ router.get('/', (req: Request, res: Response) => {
  *
  * @apiVersion 0.1.0
  */
-router.post('/create', (req: any, res: Response) => {
+router.post('/create', (req: Request, res: Response) => {
   const {
     userId, name, gender, age, yearBorn, aboutMe, religion, location, hobbies, sexuality, photo,
   } = req.body;
   if (userId && name && gender && age && yearBorn && aboutMe && religion && location && hobbies && sexuality) {
-    const profile: any = {
+    const profile: USER['profile'] = {
       name,
       age,
       gender,
@@ -97,8 +98,8 @@ router.post('/create', (req: any, res: Response) => {
       religion,
       location,
       hobbies,
+      photo,
     };
-    if (photo) profile.photo = photo;
     connect()
       .then(() => User.findOneAndUpdate(
         { _id: userId },
@@ -118,7 +119,7 @@ router.post('/create', (req: any, res: Response) => {
           message: CREATE_PROFILE_SUCCESS,
         });
       })
-      .catch((err: any) => {
+      .catch((err: Error) => {
         console.error(err.message);
         res.status(500).send({
           status: 500,
@@ -157,12 +158,12 @@ router.post('/create', (req: any, res: Response) => {
  *
  * @apiVersion 0.1.0
  */
-router.put('/update', (req: any, res: Response) => {
+router.put('/update', (req: Request, res: Response) => {
   const {
     userId, name, gender, age, yearBorn, aboutMe, religion, location, hobbies, sexuality, photo,
   } = req.body;
   if (userId && name && gender && age && yearBorn && aboutMe && religion && location && hobbies && sexuality) {
-    const profile: any = {
+    const profile: USER['profile'] = {
       name,
       age,
       gender,
@@ -171,8 +172,8 @@ router.put('/update', (req: any, res: Response) => {
       religion,
       location,
       hobbies,
+      photo,
     };
-    if (photo) profile.photo = photo;
     connect()
       .then(() => User.findOneAndUpdate(
         { _id: userId },
@@ -192,7 +193,7 @@ router.put('/update', (req: any, res: Response) => {
           message: UPDATE_PROFILE_SUCCESS,
         });
       })
-      .catch((err: any) => {
+      .catch((err: Error) => {
         console.error(err.message);
         res.status(500).send({
           status: 500,

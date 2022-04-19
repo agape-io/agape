@@ -20,10 +20,6 @@ const AuthProvider:FC = ({ children }) => {
   const [notification, setNotification] = useState<any>();
   const apiVersion = "/api/v1";
 
-  useEffect(() => {
-    loadStorageData();
-  }, []);
-
   const loadStorageData = async () => {
     AsyncStorage.getItem('@auth')
       .then((authDataSerialized:any) => {
@@ -66,6 +62,10 @@ const AuthProvider:FC = ({ children }) => {
         Promise.reject(e.response.data.message);
       });  
   }
+
+  useEffect(() => {
+    loadStorageData();
+  }, []);
 
   return (
     <AuthContext.Provider

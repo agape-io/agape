@@ -1,6 +1,7 @@
 /**
  * Settings Screen
  */
+// Libraries
 import React, {
   useState,
   useEffect,
@@ -18,14 +19,17 @@ import {
   Alert,
   Modal
 } from 'react-native'
-// import Icon from 'react-native-vector-icons/Entypo'
 
+// Components
 import { SettingsScreen, SettingsData } from '../components'
 
+// Types
 import { SettingsProps } from "../types";
 
+// Utils
 import { useAuth } from '../context';
 
+// Styles
 import styles from "../../assets/styles";
 
 const fontFamily = Platform.OS === 'ios' ? 'Avenir' : 'sans-serif';
@@ -34,9 +38,8 @@ const statusBarHeight = Platform.OS === 'ios' ? 35 : 0
 const Settings: FC<SettingsProps> = ({ navigation }) => {
   const [refreshing] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-
   const auth = useAuth();
-
+  
   const { userId, token } = auth.authData;
 
   const settingsData: SettingsData = [

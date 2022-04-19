@@ -1,20 +1,16 @@
 /**
  * Test Screen
  */
+// Libraries
 import React, { FC } from 'react';
 import {
   View,
   Text, 
   TouchableOpacity
 } from 'react-native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { CompositeNavigationProp } from '@react-navigation/native';
 
 // Types
-import {
-  HomeTabNavigatorParamList,
-  RootNavigatorParamsList
-} from '../types';
+import { TestPageProps } from '../types';
 
 // API
 import { useAuth } from '../context';
@@ -27,16 +23,10 @@ import {
   getPreferences,
   createPreferences
 } from '../utils';
-import { StringLiteralLike } from 'typescript';
 
-export interface TestPageProps {
-  navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Test'>,
-    NativeStackNavigationProp<RootNavigatorParamsList>>;
-}
 
 const TestPage:FC<TestPageProps> = ({ navigation }) => {
   const auth = useAuth();
-
   const { userId, token } = auth.authData;
 
   // Dummy test variables

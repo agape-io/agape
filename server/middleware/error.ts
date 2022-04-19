@@ -11,7 +11,7 @@ export const notFound = (req: Request, res: Response, next: NextFunction) => {
 
 const { NODE_ENV } = env;
 
-export const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
+export const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
   const statusCode: number = res.statusCode === 200 ? 500 : res.statusCode;
   res.status(statusCode);
   res.json({
