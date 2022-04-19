@@ -19,9 +19,9 @@ const apiVersion = "/api/v1";
  */
 const signUp = async (email: string, password: string, verifyPassword: string) => {
   return axios.post(`${API_URL + apiVersion}/signup/email`, {
-      email,
-      password,
-      verifyPassword
+    email,
+    password,
+    verifyPassword
   });
 }
 
@@ -173,6 +173,27 @@ const updateProfile = async (
 }
 
 /**
+ * Updates users the logged in user has swipedLeft
+ * 
+ * @param userId 
+ * @param token 
+ * @param matchUserId
+*/
+const updateSwipedLeft = async (
+  userId: string,
+  token: string,
+  matchUserId: string
+) => {
+  // call axios to the API
+  return axios.put(`${API_URL + apiVersion}/swipe/left`, {
+    userId,
+    token,
+    matchUserId,
+  });
+}
+
+/**
+ * 
  * Get user preferences
  * 
  * @param userId User ID
@@ -226,19 +247,39 @@ const createPreferences = async (
 }
 
 /**
- * Updates user preferences
+ * Updates users the logged in user has swipedRight
  * 
  * @param userId 
- * @param token
- * @param sexuality
- * @param maxDist
- * @param minAge
- * @param maxAge
- * @param religion
- * 
- * When calling this function, use a then() and a 
- * catch() to get the response.
+ * @param token 
+ * @param matchUserId
  */
+const updateSwipedRight = async (
+  userId: string,
+  token: string,
+  matchUserId: string
+) => {
+  // call axios to the API
+  return axios.put(`${API_URL + apiVersion}/swipe/right`, {
+    userId,
+    token,
+    matchUserId,
+  });
+}
+
+/**
+* Updates user preferences
+* 
+* @param userId 
+* @param token
+* @param sexuality
+* @param maxDist
+* @param minAge
+* @param maxAge
+* @param religion
+* 
+* When calling this function, use a then() and a 
+* catch() to get the response.
+*/
 const updatePreferences = async (
   userId: string,
   token: string,
@@ -287,8 +328,7 @@ const getUserChats = async (userId: string, token: string) => {
 const createChat = async (userId: string, matchedUserId: string, token: string) => {
   let userIds = [];
   userIds.push(matchedUserId, userId);
-  console.log(userIds);
-  
+
   return axios.post(`${API_URL + apiVersion}/chats`, { userIds, token });
 }
 
@@ -407,10 +447,12 @@ export {
   getProfile,
   updateProfile,
   createProfile,
+  getMatches,
+  updateSwipedLeft,
+  updateSwipedRight,
   getPreferences,
   createPreferences,
   updatePreferences,
-  getMatches,
   getUserChats,
   createChat,
   getMessages,

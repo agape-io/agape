@@ -18,7 +18,8 @@ import { API_URL } from '@env';
 import { useAuth } from '../context';
 import {
   getMessages,
-  postMessage
+  postMessage,
+  getUserChats
 } from '../utils';
 
 let socket: any;
@@ -67,7 +68,7 @@ const SingleMessage = ({ route, userData }: any) => {
       });
   };
 
-   // calls set mesasges
+  // calls set mesasges
   const onSend = useCallback((messages = []) => {
     let content = messages[0].text;
     setLoading(true);
@@ -143,5 +144,4 @@ const SingleMessage = ({ route, userData }: any) => {
     </>
   );
 }
-
 export default SingleMessage;
