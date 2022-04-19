@@ -66,7 +66,6 @@ const styles = StyleSheet.create({
     },
 })
 
-
 const Container = styled.View<ContainerProps>`
   background-color: transparent;
   height: ${p => p.height};

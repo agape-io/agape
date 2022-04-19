@@ -15,7 +15,6 @@ import {
   ScrollView,
   Alert
 } from 'react-native';
-import { RadioButton } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { SubscriptionItem } from './index';

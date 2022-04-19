@@ -23,6 +23,10 @@ const defaultStyles = StyleSheet.create({
         marginRight: 10,
         opacity: 0.35,
     },
+<<<<<<< HEAD
 });
 
 export default Chevron;
+=======
+})
+>>>>>>> main

@@ -199,4 +199,83 @@ router.get('/likesMe', async (req: Request, res: Response) => {
   }
 });
 
+/**
+ * @api {get} /
+ * @apiName Users likes
+ * @apiGroup Users
+ * @apiDescription Fetch user's likes' profiles
+ *
+ * @apiSuccess (200)
+ *
+ * @apiSampleRequest GET /
+ *
+ * @query
+ * userId: string
+ *
+ * @apiVersion 0.1.0
+ */
+router.get('/likes', async (req: Request, res: Response) => {
+  const { userId } = req.query;
+  if (userId) {
+    await connect();
+    await User.findOne({
+      _id: userId,
+    })
+      .populate('swipedRight', 'profile')
+      .then((user) => {
+        res.status(200).send(user.swipedRight);
+      });
+  } else {
+    res.status(500).send({
+      status: 500,
+      message: 'Missing User Id!',
+    });
+  }
+});
+
+/**
+ * @api {get} /
+ * @apiName User's liked profiles
+ * @apiGroup Users
+ * @apiDescription Fetch profiles who liked current user
+ *
+ * @apiSuccess (200)
+ *
+ * @apiSampleRequest GET /
+ *
+ * @query
+ * userId: string
+ *
+ * @apiVersion 0.1.0
+ */
+router.get('/liked', async (req: Request, res: Response) => {
+  const { userId } = req.query;
+  if (userId) {
+    await connect();
+    await User.find({
+      swipedRight: { $elemMatch: { $eq: userId } },
+    }, 'profile')
+      .then(async (results) => {
+        const user = await User.findOne({
+          _id: userId,
+        }, 'swipedLeft swipedRight');
+        const swiped = user.swipedLeft.concat(user.swipedRight);
+        const swipedIds = [];
+        swiped.forEach((swipe) => {
+          swipedIds.push(swipe._id.toString());
+        });
+        const liked = [];
+        results.forEach((user) => {
+          if (!swipedIds.includes(user._id.toString())) liked.push(user);
+        });
+        res.status(200).send(liked);
+      });
+  } else {
+    res.status(500).send({
+      status: 500,
+      message: 'Missing User Id!',
+    });
+  }
+});
+
 export default router;

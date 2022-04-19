@@ -17,9 +17,18 @@ import {
   ScrollView,
 } from 'react-native';
 import axios from 'axios';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { MaterialCommunityIcons } from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as ImagePicker from 'expo-image-picker';
+<<<<<<< HEAD
 import { ProfileModalProps } from '../types';
+=======
+import { CompositeNavigationProp } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import {
+  HomeTabNavigatorParamList,
+  RootNavigatorParamsList
+} from '../types';
+>>>>>>> main
 import { useAuth } from '../context';
 
 // API's

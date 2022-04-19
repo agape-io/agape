@@ -67,34 +67,63 @@ const io = require('socket.io')(server, {
   },
 });
 
+<<<<<<< HEAD
 io.on('connection', (socket: any) => {
   console.log('connected to socket.io');
 
   socket.on('setup', (userId: string) => {
+=======
+io.on('connection', (socket) => {
+  console.log('connected to socket.io');
+
+  socket.on('setup', (userId) => {
+>>>>>>> main
     socket.join(userId);
     socket.emit('connected');
   });
 
+<<<<<<< HEAD
   socket.on('join chat', (room: string) => {
+=======
+  socket.on('join chat', (room) => {
+>>>>>>> main
     socket.join(room);
     console.log(`User joined chat: ${room}`);
   });
 
+<<<<<<< HEAD
   socket.on('new message', (newMessageRecieved: MESSAGE) => {
     const { chat } = newMessageRecieved;
     if (!(chat as CHAT).users) return console.log('chat.users not defined');
     (chat as CHAT).users.forEach((user) => {
       if (user._id == (newMessageRecieved.sender as USER)._id) return;
+=======
+  socket.on('new message', (newMessageRecieved) => {
+    const { chat } = newMessageRecieved;
+    if (!chat.users) return console.log('chat.users not defined');
+    chat.users.forEach((user) => {
+      if (user._id == newMessageRecieved.sender._id) return;
+>>>>>>> main
       socket.in(user._id).emit('message recieved', newMessageRecieved);
     });
   });
 
+<<<<<<< HEAD
   socket.on('typing', (room: string) => socket.in(room).emit('typing'));
   socket.on('stop typing', (room: string) => socket.in(room).emit('stop typing'));
 
   socket.off('setup', () => {
     // @ts-ignore
     // userId is initialized in the socket.on("setup") event
+=======
+  socket.on('typing', (room) => socket.in(room).emit('typing'));
+  socket.on('stop typing', (room) => socket.in(room).emit('stop typing'));
+
+  socket.off('setup', () => {
+    console.log('USER DISCONNECTED');
+    // @ts-ignore
+    // userId is used from the socket.on("setup") event
+>>>>>>> main
     socket.leave(userId);
   });
 });

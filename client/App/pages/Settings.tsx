@@ -12,9 +12,7 @@ import {
   Text,
   View,
   StatusBar,
-  Image,
   Platform,
-  RefreshControl,
   TouchableOpacity,
   Alert,
   Modal
