@@ -17,7 +17,7 @@ import {
   ScrollView,
 } from 'react-native';
 import axios from 'axios';
-import { MaterialCommunityIcons } from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as ImagePicker from 'expo-image-picker';
 import { ProfileModalProps } from '../types';
 import { useAuth } from '../context';
