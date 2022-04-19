@@ -38,27 +38,31 @@ export interface DiscoverProps {
         NativeStackNavigationProp<RootNavigatorParamsList>>;
 }
 
-export const onLiked = () => { //swipe right or like button
-    //pass String "right" to card item
-    console.log('onSwipedRight');
-
-}
-
-const onPass = () => { //swipe left or pass button
-    //pass left to carditem
-    console.log('onSwipedLeft')
-}
-
 const Discover: FC<DiscoverProps> = ({ navigation }) => {
     const [swiper, setSwiper] = useState<CardStack | null>(null);
     //const [loading, setLoading] = useState<boolean>(true);
     const [errorMessage, setErrorMessage] = useState<any>('');
     const [matches, setMatches] = useState<any>(null);
     const isMounted = useRef<any>(null);
+    let tempSwipe = "";
 
     const auth = useAuth();
 
     const { token, userId } = auth.authData;
+
+    const onLiked = () => { //swipe right or like button
+        //pass String "right" to card item
+        tempSwipe = "right";
+        console.log(tempSwipe);
+
+    }
+
+
+    const onPass = () => { //swipe left or pass button
+        //pass left to carditem
+        tempSwipe = "left";
+        console.log(tempSwipe)
+    }
 
     const loadMatches = async () => {
         // get the id's
@@ -122,6 +126,7 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
                                         key={index}
                                         data={item}
                                         hasActions
+                                        swipe={tempSwipe}
                                     />
                                 </Card>
                             )

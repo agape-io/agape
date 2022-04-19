@@ -1,7 +1,8 @@
 /**
  * Card Item Component
  */
-import React from "react";
+import React, { useEffect, useCallback, useState } from "react";
+import { GiftedChat } from 'react-native-gifted-chat';
 import {
   Text,
   View,
@@ -22,52 +23,74 @@ import styles, {
 } from "../../assets/styles";
 
 // API's
-import { updateSwipedLeft, updateSwipedRight, createChat } from '../utils';
+import { updateSwipedLeft, updateSwipedRight, createChat, getUserChats, postMessage } from '../utils';
+
+import io from 'socket.io-client';
 
 import { useAuth } from '../context';
+
+let socket: any;
 
 const CardItem = ({
   data,
   hasActions,
   hasVariant,
+  swipe
 
 }: CardItemT) => {
   const auth = useAuth();
+  // const [, setMessages] = useState<any>([]);
+  const [messages, setMessages] = useState<any>([]);
+  const [loading, setLoading] = useState<any>(false);
+  const [socketConnected, isSocketConnected] = useState<boolean>(false);
 
   const { userId, token } = auth.authData;
+  let message = "";
 
-  const handleMatch = () => {
-    handleMatchCreateChat(data.userId)
+  //send system message for new match
+  const sendMatchMessage = async (message: any) => {
+    console.log(message);
 
-    Alert.alert(
-      "Match!",
-      "You matched with " + data.profile.name,
-      [
-        {
-          text: "Continue Swiping",
-          onPress: () => console.log("Continue Swiping Pressed"),
-          // style: "cancel"
-        },
-        { text: "Chat", onPress: () => console.log("Chat Pressed") } //TODO: navigate to chat screen
-      ]
-    );
-    console.log("handleMatch called");
-  }
-
-  //Create chat
-  const handleMatchCreateChat = async (
-    matchedUserId: string,
-  ) => {
-    return createChat(
+    createChat(
       userId,
-      matchedUserId,
+      data.userId,
       token)
       .then((res: any) => {
-        console.log(res.data);
+        console.log(res.data._id); //chat id
+        const { _id } = res.data;
+
+        postMessage(userId, token, message, _id)
+          .then((res: any) => {
+            console.log("Message Sent!", res.data);
+            //TODO: navigation.navigate to chats 
+          })
+          .catch((e: any) => {
+            console.error(e.response.data.message);
+          });
+
       })
       .catch((e: any) => {
         console.error(e.response.data.message);
       })
+  }
+
+
+  const handleMatch = () => {
+    Alert.prompt(
+      "You matched with " + data.profile.name,
+      "Say Hi!",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        {
+          text: "Send",
+          onPress: message => sendMatchMessage(message)
+        }
+      ],
+    );
   }
 
   // Update swipedLeft
@@ -100,8 +123,9 @@ const CardItem = ({
         // console.log(res.data);
         // console.log(res.data.match);
         //if its true
-        if (res.data.)
-          handleMatch()
+        // if ((res.data.match).localeCompare("True")) {
+        handleMatch();
+        // }
         // alert('swipedRight Updated!');
         //TODO: make card swipe
       }).catch((e: any) => {
@@ -131,6 +155,10 @@ const CardItem = ({
       fontSize: hasVariant ? 15 : 30,
     },
   ];
+
+  useEffect(() => {
+    console.log(swipe);
+  }, []);
 
   return (
     <View style={styles.containerCardItem}>

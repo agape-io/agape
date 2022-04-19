@@ -59,6 +59,7 @@ type CardItemT = {
   data: any;
   hasActions?: boolean;
   hasVariant?: boolean;
+  swipe: string;
 };
 
 type IconT = {
@@ -84,7 +85,7 @@ type MessageT = {
 
 type ProfileModalProps = {
   navigation: CompositeNavigationProp<NativeStackNavigationProp<HomeTabNavigatorParamList, 'Profile'>,
-  NativeStackNavigationProp<RootNavigatorParamsList>>;
+    NativeStackNavigationProp<RootNavigatorParamsList>>;
 }
 
 type SettingsProps = {
