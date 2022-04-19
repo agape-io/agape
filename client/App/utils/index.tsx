@@ -328,7 +328,6 @@ const getUserChats = async (userId: string, token: string) => {
 const createChat = async (userId: string, matchedUserId: string, token: string) => {
   let userIds = [];
   userIds.push(matchedUserId, userId);
-  console.log(userIds);
 
   return axios.post(`${API_URL + apiVersion}/chats`, { userIds, token });
 }

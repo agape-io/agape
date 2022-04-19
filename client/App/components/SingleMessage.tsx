@@ -102,12 +102,6 @@ const SingleMessage = ({ route, userData }: any) => {
       });
   }, []);
 
-  // send system message if there is a new match or if chat contents are empty
-  // useEffect(() => {
-  //   console.log("systemMessageMatch");
-  //   systemMessageMatch();
-  // }, []);
-
   // socket-io initialization
   useEffect(() => {
     socket = io(API_URL);

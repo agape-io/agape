@@ -53,7 +53,7 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
     const onLiked = () => { //swipe right or like button
         //pass String "right" to card item
         tempSwipe = "right";
-        console.log(tempSwipe);
+        // console.log(tempSwipe);
 
     }
 
@@ -61,7 +61,7 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
     const onPass = () => { //swipe left or pass button
         //pass left to carditem
         tempSwipe = "left";
-        console.log(tempSwipe)
+        // console.log(tempSwipe)
     }
 
     const loadMatches = async () => {

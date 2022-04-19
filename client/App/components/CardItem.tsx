@@ -1,8 +1,8 @@
 /**
  * Card Item Component
  */
-import React, { useEffect, useCallback, useState } from "react";
-import { GiftedChat } from 'react-native-gifted-chat';
+// Libraries
+import React, { useEffect } from "react";
 import {
   Text,
   View,
@@ -11,8 +11,15 @@ import {
   TouchableOpacity,
   Alert
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+
+//Components
 import Icon from "./Icon";
+
+//Types
 import { CardItemT } from "../types";
+
+//Styles
 import styles, {
   DISLIKE_ACTIONS,
   FLASH_ACTIONS,
@@ -22,14 +29,9 @@ import styles, {
   GRAY
 } from "../../assets/styles";
 
-// API's
-import { updateSwipedLeft, updateSwipedRight, createChat, getUserChats, postMessage } from '../utils';
-
-import io from 'socket.io-client';
-
+//Utils
+import { updateSwipedLeft, updateSwipedRight, createChat, postMessage } from '../utils';
 import { useAuth } from '../context';
-
-let socket: any;
 
 const CardItem = ({
   data,
@@ -39,30 +41,24 @@ const CardItem = ({
 
 }: CardItemT) => {
   const auth = useAuth();
-  // const [, setMessages] = useState<any>([]);
-  const [messages, setMessages] = useState<any>([]);
-  const [loading, setLoading] = useState<any>(false);
-  const [socketConnected, isSocketConnected] = useState<boolean>(false);
 
   const { userId, token } = auth.authData;
-  let message = "";
+
+  const navigation = useNavigation();
 
   //send system message for new match
   const sendMatchMessage = async (message: any) => {
-    console.log(message);
 
     createChat(
       userId,
       data.userId,
       token)
       .then((res: any) => {
-        console.log(res.data._id); //chat id
         const { _id } = res.data;
 
         postMessage(userId, token, message, _id)
           .then((res: any) => {
-            console.log("Message Sent!", res.data);
-            //TODO: navigation.navigate to chats 
+            navigation.navigate("Chat");
           })
           .catch((e: any) => {
             console.error(e.response.data.message);
@@ -73,7 +69,6 @@ const CardItem = ({
         console.error(e.response.data.message);
       })
   }
-
 
   const handleMatch = () => {
     Alert.prompt(
@@ -102,8 +97,6 @@ const CardItem = ({
       matchUserId,
       token)
       .then((res: any) => {
-        // console.log(res.data);
-        // alert('swipedLeft Updated!');
         //TODO: make card swipe
       }).catch((e: any) => {
         console.error(e.response.data.message);
@@ -120,17 +113,13 @@ const CardItem = ({
       token,
       matchUserId)
       .then((res: any) => {
-        // console.log(res.data);
-        // console.log(res.data.match);
-        //if its true
+        //TODO:if its true
         // if ((res.data.match).localeCompare("True")) {
         handleMatch();
         // }
-        // alert('swipedRight Updated!');
         //TODO: make card swipe
       }).catch((e: any) => {
         console.error(e.response.data.message);
-        // alert(e.message);
       })
   }
 
@@ -156,9 +145,10 @@ const CardItem = ({
     },
   ];
 
-  useEffect(() => {
-    console.log(swipe);
-  }, []);
+  //TODO
+  // useEffect(() => {
+  //   console.log(swipe);
+  // }, []);
 
   return (
     <View style={styles.containerCardItem}>
@@ -228,10 +218,6 @@ const CardItem = ({
           <TouchableOpacity style={styles.button} onPress={() => handleUpdateSwipedRight(data.userId)}>
             <Icon name="heart" color={LIKE_ACTIONS} size={25} />
           </TouchableOpacity>
-
-          {/* <TouchableOpacity style={styles.miniButton}>
-            <Icon name="flash" color={FLASH_ACTIONS} size={14} />
-          </TouchableOpacity> */}
         </View>
       )}
     </View>
