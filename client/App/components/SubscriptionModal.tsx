@@ -6,48 +6,114 @@ import React, {
   useState,
   useLayoutEffect,
   useEffect,
+  useRef
 } from 'react';
 import {
   Text,
   View,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  Alert
 } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import { SubscriptionItem } from './index';
 import { ProfileModalProps } from '../types';
 import { useAuth } from '../context';
+
+// API's
+import {
+  getSubscription,
+  getmyPlan,
+  cancelSubscription,
+} from '../utils';
 
 // Styles
 import styles, { 
   PRIMARY_COLOR, 
-  SECONDARY_COLOR, 
-  GRAY, 
+  SECONDARY_COLOR,
   WHITE
 } from '../../assets/styles';
 
+ // Cancel Button for header
+ const CancelButton = ({ onPress }:any) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <MaterialCommunityIcons name="arrow-left" size={26} color="black" />
+    </TouchableOpacity>
+  );
+}
+
 const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
   const auth = useAuth();
-  const [checked, setChecked] = React.useState('silver');
-  const data = [
-    {
-      color: 'silver',
-    },
-    {
-      value: 'gold',
-    },
-    {
-      value: 'unlimited'
-    },
-  ];
 
-  // Cancel Button for header
-  const CancelButton = ({ onPress }:any) => {
-    return (
-      <TouchableOpacity onPress={onPress}>
-        <MaterialCommunityIcons name="arrow-left" size={26} color="black" />
-      </TouchableOpacity>
-    );
+  const [loadPlans, setLoadPlans] = useState<any>([]);
+  const [loadCurrentPlan, setCurrentPlan] = useState<any>();
+  const [errorMessage, setErrorMessage] = useState<any>('');
+  const isMounted = useRef<any>(null);
+
+  const { userId, token } = auth.authData;
+  
+  // Get subscription plans available
+  const getSubscriptionPlans  = async () => {
+    getSubscription(token)
+      .then((res: any) => {
+        const { plans } = res.data;
+        setLoadPlans(plans);
+      })
+      .catch((e: any) => {
+        console.error(e.response.data.message);
+      });
+  }
+
+  const getMyCurrentPlan = async () => {
+    getmyPlan(userId, token)
+      .then((res: any) => {
+        setCurrentPlan(res.data);
+      })
+      .catch((e: any) => {
+        console.error(e.response.data.message);
+      });
+  }
+
+  const currentPlanAlert = () =>{
+    if (loadCurrentPlan){
+      Alert.alert(
+        `Current Plan`,
+        `Plan: ${loadCurrentPlan.subscription.name}\n` +
+        `Price: $${loadCurrentPlan.subscription.price}\n` +
+        `Expires: ${loadCurrentPlan.endingDate}`
+      )
+    } else {
+      Alert.alert(
+        `No plan found! :(`
+      )
+    }
+  }
+
+  const cancelAlert = () =>{
+    if (loadCurrentPlan){
+      Alert.alert(
+        'Subscription Canceled!',
+        `Current plan will be changed to Basic at the end of the billing date.`,
+        [{text: "OK", onPress: () => navigation.navigate('Profile')}]
+      )
+    }
+  }
+
+  // Handler for Cancel Subscription
+  const handleCancelSubscription = async () => {
+    return cancelSubscription(
+      userId,
+      token)
+      .then((res: any) => {
+        // Go back to Profile Screen
+        cancelAlert();
+      })
+      .catch((e: any) => {
+        alert(e.response.data.message);
+      });
   }
 
   // Header button initialization
@@ -59,62 +125,64 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
     })
   }, [navigation]);
 
+  useEffect(() => {
+    getSubscriptionPlans();
+    getMyCurrentPlan();
+    
+    return () => {
+      // make the states null again to clean userEffect
+      setLoadPlans(null);
+      setCurrentPlan(null);
+    }
+  }, []);
+
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    }
+  }, []);
 
   return (
-      <ScrollView contentContainerStyle={styles.modalContainer}>
-     
-        <View style={styles.subscriptionContainer}>
+    <ScrollView contentContainerStyle={styles.modalContainer}>
+    <View style={styles.subscriptionContainer}>
+      <Text style={styles.textTitles}>Subscription</Text>
+        {loadPlans ? (
+          <>
+          {/* API Call made here */}
+          {loadPlans.map((item: any, index: any) => {
+            return (       
+                <SubscriptionItem
+                  key={index}
+                  data={item}
+                />
+            )
+            })
+          }
+          </>
+        ):(
+          <>
+          {/* if no data */}
+          <Text style={{textAlign: 'center', marginTop: 250}}>{errorMessage}</Text>
+          </>
+        )}
+      </View>
 
-          <Text style={styles.textTitles}>Select the plan that fits you:</Text>
-
-          <View style={styles.subscriptionOptions}>
-            <Text style={styles.textTitles}>Agape Silver</Text>
-            <Text style={styles.textDescription}>- Get 15 more Likes per day.</Text>
-            <Text style={styles.textDescription}>- Profile booster.</Text>
-            <Text style={styles.textDescription}>- Customize location.</Text>
-            <RadioButton
-              value="silver"
-              color={PRIMARY_COLOR}
-              status={ checked === 'silver' ? 'checked' : 'unchecked' }
-              onPress={() => setChecked('silver')}
-            />
-          </View>
-
-          <View style={styles.subscriptionOptions}>
-            <Text style={styles.textTitles}>Agape Gold</Text>
-            <Text style={styles.textDescription}>- Get 30 more Likes per day.</Text>
-            <Text style={styles.textDescription}>- Customize location and others.</Text>
-            <Text style={styles.textDescription}>- 50% less Ads.</Text>
-            <RadioButton 
-              value="gold"
-              color={PRIMARY_COLOR}
-              status={ checked === 'gold' ? 'checked' : 'unchecked' }
-              onPress={() => setChecked('gold')}
-            />
-          </View>
-        
-          <View style={styles.subscriptionOptions}>
-            <Text style={styles.textTitles}></Text>
-            <Text style={styles.textDescription}>- Send as many Likes as you want.</Text>
-            <Text style={styles.textDescription}>- Customize all the features.</Text>
-            <Text style={styles.textDescription}>- Turn off Ads.</Text>
-            <RadioButton 
-              value="unlimited"
-              color={PRIMARY_COLOR}
-              status={ checked === 'unlimited' ? 'checked' : 'unchecked' }
-              onPress={() => setChecked('unlimited')}
-            />
-          </View>
-        </View>
-
-        <View style={styles.addSubscriptionButtonContainer}>
+      <View style={styles.addSubscriptionButtonContainer}>
+          {/* Subscription button */}
           <TouchableOpacity
             style={[styles.addSubscriptionButton, { backgroundColor: SECONDARY_COLOR }]}
-          >
-            <Text>Subscribe</Text>
+            onPress={() => handleCancelSubscription()}>
+            <Text>Cancel Subscription</Text>
           </TouchableOpacity>
-        </View>
-        
+          {/* Current Plan button */}
+          <TouchableOpacity
+            style={[styles.addSubscriptionButton, { backgroundColor: SECONDARY_COLOR }]}
+            onPress={currentPlanAlert}>
+            <Text>Current Plan</Text>
+          </TouchableOpacity>
+      </View>
       </ScrollView>
   );
 }

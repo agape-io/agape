@@ -7,6 +7,7 @@ import City from './City';
 import Filters from './Filters';
 import ProfileItem from './ProfileItem';
 import SubscriptionModal from './SubscriptionModal';
+import SubscriptionItem from './SubscriptionItem';
 import ProfileModal from './ProfileModal';
 import Chevron from './Chevron';
 import {
@@ -25,6 +26,7 @@ export {
   Filters,
   ProfileItem,
   SubscriptionModal,
+  SubscriptionItem,
   Chevron,
   SettingsScreen,
   SettingsData,
