@@ -65,21 +65,22 @@ const SubscriptionItem = ({ data }: SubscriptionItemT) => {
             <Text style={styles.textPlanTitles}>{data.name.slice(0,1).toUpperCase() + data.name.slice(1)}</Text>
             <Text style={styles.textDescription}>${data.price}</Text>
             {/* <Text style={styles.textDescription}>${data._id}</Text> */}
-            {/* <Text style={styles.textDescription}>{data.name === 'premium' ? '- Get 15 more Likes per day' : ''}</Text>
-            <Text style={styles.textDescription}>{data.name === 'elite' ? '- Get 30 more Likes per day' : ''}</Text> */}
+            {/* {/* <Text style={styles.textDescription}>{data.name === 'premium' ? '- Get 15 more Likes per day' : ''}</Text> */}
+            <Text style={styles.textDescription}>{data.name === 'elite' ? '- Get 30 more Likes per day' : ''}</Text>
             <Button
               onPress={() => handleUpdateSubscription(data._id) }
               color={PRIMARY_COLOR}
-              title={"Select Plan"}
+              title={"Select Plan \u2713"}
     
             />
+            {/* <Icon name="checkmark-outline" size={30} color={PRIMARY_COLOR} /> */}
             {/* <RadioButton
               value='premium'
               color={PRIMARY_COLOR}
               status={checked === 'premium' ? "checked" : "unchecked"}
               onPress={() => setChecked(data.name)}
             />  */}
-            <Text>{checked + ' | ' + data.name}</Text>
+            {/* <Text>{checked + ' | ' + data.name}</Text> */}
         </>
       ) : (
         <>
