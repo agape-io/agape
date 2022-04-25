@@ -16,7 +16,6 @@ import {
   Alert
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import { SubscriptionItem } from './index';
 import { ProfileModalProps } from '../types';
 import { useAuth } from '../context';
@@ -167,19 +166,18 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
           </>
         )}
       </View>
-
       <View style={styles.addSubscriptionButtonContainer}>
           {/* Subscription button */}
           <TouchableOpacity
-            style={[styles.addSubscriptionButton, { backgroundColor: SECONDARY_COLOR }]}
+            style={[styles.addSubscriptionButton, { backgroundColor: PRIMARY_COLOR }]}
             onPress={() => handleCancelSubscription()}>
-            <Text>Cancel Subscription</Text>
+            <Text style={styles.textSubscriptionButton}>Cancel Subscription</Text>
           </TouchableOpacity>
           {/* Current Plan button */}
           <TouchableOpacity
-            style={[styles.addSubscriptionButton, { backgroundColor: SECONDARY_COLOR }]}
+            style={[styles.addSubscriptionButton, { backgroundColor: PRIMARY_COLOR }]}
             onPress={currentPlanAlert}>
-            <Text>Current Plan</Text>
+            <Text style={styles.textSubscriptionButton}>Current Plan</Text>
           </TouchableOpacity>
       </View>
       </ScrollView>

@@ -491,7 +491,9 @@ export default StyleSheet.create({
     },
     textDescription: {
         fontSize: 15,
-        margin: 1
+        margin: 1,
+        paddingTop: 5,
+        paddingBottom: 5
     },
     addRadioButton: {
         backgroundColor: PRIMARY_COLOR
@@ -506,12 +508,26 @@ export default StyleSheet.create({
         marginBottom: 10,
         borderRadius: 10,
         flexBasis: '45%',
+        color: SECONDARY_COLOR,
+    },
+    textSubscriptionButton: {
+        color: 'white'
     },
     addSubscriptionButtonContainer: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
+    },
+    subscriptionCircledButton: {
+        width: 40,
+        height: 40,
+        borderRadius: 25,
+        backgroundColor: PRIMARY_COLOR,
+        justifyContent: "center",
+        alignItems: "center",
+        marginRight: 10,
+        marginLeft: 10,
     },
     /* 
     * Settings Styles
@@ -561,48 +577,5 @@ export default StyleSheet.create({
     modalText: {
         marginBottom: 15,
         textAlign: "center"
-    },
-    // Radio Button test
-    mainContainer: {
-        height: 50,
-        marginTop: 5,
-        marginBottom: 5,
-        marginLeft: 10,
-        marginRight: 10,
-        justifyContent: "center",
-        paddingLeft: 10,
-        paddingRight: 10,
-        borderWidth: 0.5,
-        borderColor: "red",
-        flexDirection: "row",
-        alignItems: "center",
-      },
-      radioButtonIcon: {
-        backgroundColor: "white",
-        borderWidth: 3,
-        borderColor: "red",
-        height: 30,
-        width: 30,
-        borderRadius: 30 / 2,
-        marginRight: 10,
-        alignItems: "center",
-        justifyContent: "center",
-      },
-      radioButtonIconInnerIcon: {
-        height: 25,
-        width: 25,
-        backgroundColor: "red",
-        borderRadius: 25 / 2,
-        borderWidth: 3,
-        borderColor: "white",
-      },
-      radioButtonTextContainer: {
-        flex: 5,
-        height: 50,
-        justifyContent: "center",
-        paddingLeft: 10,
-      },
-      radioButtonText: {
-        fontSize: 18,
-      },
+    }
 });
