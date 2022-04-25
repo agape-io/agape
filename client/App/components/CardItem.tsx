@@ -22,7 +22,6 @@ import { CardItemT } from "../types";
 //Styles
 import styles, {
   DISLIKE_ACTIONS,
-  FLASH_ACTIONS,
   LIKE_ACTIONS,
   STAR_ACTIONS,
   WHITE,
@@ -46,7 +45,7 @@ const CardItem = ({
 
   const navigation = useNavigation();
 
-  //send system message for new match
+  //send message for new match
   const sendMatchMessage = async (message: any) => {
 
     createChat(
@@ -71,6 +70,7 @@ const CardItem = ({
   }
 
   const handleMatch = () => {
+    console.log("handleMatch called");
     Alert.prompt(
       "You matched with " + data.profile.name,
       "Say Hi!",
@@ -94,13 +94,13 @@ const CardItem = ({
   ) => {
     return updateSwipedLeft(
       userId,
-      matchUserId,
-      token)
+      token,
+      matchUserId)
       .then((res: any) => {
         //TODO: make card swipe
       }).catch((e: any) => {
         console.error(e.response.data.message);
-        // alert(e.message);
+        alert(e.message);
       })
   }
 
@@ -113,10 +113,9 @@ const CardItem = ({
       token,
       matchUserId)
       .then((res: any) => {
-        //TODO:if its true
-        // if ((res.data.match).localeCompare("True")) {
-        handleMatch();
-        // }
+        if ((res.data.match) === (true)) {
+          handleMatch();
+        }
         //TODO: make card swipe
       }).catch((e: any) => {
         console.error(e.response.data.message);
