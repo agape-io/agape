@@ -400,7 +400,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
             [firstHobby, secondHobby, thirdHobby],
             preference,
             cloudinary)}>
-          <Text>Update Profile</Text>
+          <Text style={styles.textSubscriptionButton}>Update Profile</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

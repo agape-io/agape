@@ -4,9 +4,13 @@
 import React, { useState } from "react";
 import { Text, View, TouchableOpacity, Button, Alert} from "react-native";
 import Icon from "./Icon";
+import { AntDesign } from '@expo/vector-icons';
 import { RadioButton } from 'react-native-paper';
 import { SubscriptionItemT } from "../types";
 import { useAuth } from '../context';
+// import { Button } from 'react-native-elements';
+import LinearGradient from 'react-native-linear-gradient';
+// import Icon from 'react-native-vector-icons/FontAwesome';
 
 // API's
 import { updateSubscription } from '../utils';
@@ -64,23 +68,12 @@ const SubscriptionItem = ({ data }: SubscriptionItemT) => {
         <>
             <Text style={styles.textPlanTitles}>{data.name.slice(0,1).toUpperCase() + data.name.slice(1)}</Text>
             <Text style={styles.textDescription}>${data.price}</Text>
-            {/* <Text style={styles.textDescription}>${data._id}</Text> */}
+            <Text style={styles.textDescription}>Select Plan</Text>
             {/* {/* <Text style={styles.textDescription}>{data.name === 'premium' ? '- Get 15 more Likes per day' : ''}</Text> */}
-            <Text style={styles.textDescription}>{data.name === 'elite' ? '- Get 30 more Likes per day' : ''}</Text>
-            <Button
-              onPress={() => handleUpdateSubscription(data._id) }
-              color={PRIMARY_COLOR}
-              title={"Select Plan \u2713"}
-    
-            />
-            {/* <Icon name="checkmark-outline" size={30} color={PRIMARY_COLOR} /> */}
-            {/* <RadioButton
-              value='premium'
-              color={PRIMARY_COLOR}
-              status={checked === 'premium' ? "checked" : "unchecked"}
-              onPress={() => setChecked(data.name)}
-            />  */}
-            {/* <Text>{checked + ' | ' + data.name}</Text> */}
+            {/* <Text style={styles.textDescription}>{data.name === 'elite' ? '- Get 30 more Likes per day' : ''}</Text> */}
+            <TouchableOpacity style={styles.subscriptionCircledButton} onPress={() => handleUpdateSubscription(data._id)}>
+            <Icon name="checkmark-outline" size={30} color={SECONDARY_COLOR} />
+          </TouchableOpacity>
         </>
       ) : (
         <>
