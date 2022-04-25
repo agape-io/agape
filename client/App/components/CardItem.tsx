@@ -2,7 +2,7 @@
  * Card Item Component
  */
 // Libraries
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Text,
   View,
@@ -23,13 +23,17 @@ import { CardItemT } from "../types";
 import styles, {
   DISLIKE_ACTIONS,
   LIKE_ACTIONS,
-  STAR_ACTIONS,
   WHITE,
   GRAY
 } from "../../assets/styles";
 
 //Utils
-import { updateSwipedLeft, updateSwipedRight, createChat, postMessage } from '../utils';
+import {
+  updateSwipedLeft,
+  updateSwipedRight,
+  createChat,
+  postMessage
+} from '../utils';
 import { useAuth } from '../context';
 
 const CardItem = ({
@@ -37,7 +41,6 @@ const CardItem = ({
   hasActions,
   hasVariant,
   swipe
-
 }: CardItemT) => {
   const auth = useAuth();
 
@@ -97,6 +100,7 @@ const CardItem = ({
       token,
       matchUserId)
       .then((res: any) => {
+        alert('User removed from match.');
         //TODO: make card swipe
       }).catch((e: any) => {
         console.error(e.response.data.message);
@@ -113,8 +117,11 @@ const CardItem = ({
       token,
       matchUserId)
       .then((res: any) => {
-        if ((res.data.match) === (true)) {
+        // if both users swiped right
+        if (res.data.match === true) {
           handleMatch();
+        } else {
+          alert('User added to match.');
         }
         //TODO: make card swipe
       }).catch((e: any) => {
@@ -143,11 +150,6 @@ const CardItem = ({
       fontSize: hasVariant ? 15 : 30,
     },
   ];
-
-  //TODO
-  // useEffect(() => {
-  //   console.log(swipe);
-  // }, []);
 
   return (
     <View style={styles.containerCardItem}>

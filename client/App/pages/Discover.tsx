@@ -45,9 +45,7 @@ const Discover: FC<DiscoverProps> = ({ navigation }) => {
         //pass String "right" to card item
         tempSwipe = "right";
         // console.log(tempSwipe);
-
     }
-
 
     const onPass = () => { //swipe left or pass button
         //pass left to carditem
