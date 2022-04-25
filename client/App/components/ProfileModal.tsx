@@ -32,7 +32,10 @@ import {
 import { CLOUDINARY_API_URL } from '@env';
 
 // Styles
-import styles, { PRIMARY_COLOR } from '../../assets/styles';
+import styles, {
+  PRIMARY_COLOR,
+  WHITE
+} from '../../assets/styles';
 
 // Cancel Button for header
 const CancelButton = ({ onPress }:any) => {
@@ -401,7 +404,7 @@ const ProfileModal: FC<ProfileModalProps> = ({navigation}) => {
             [firstHobby, secondHobby, thirdHobby],
             preference,
             cloudinary)}>
-          <Text>Update Profile</Text>
+          <Text style={[styles.textSubscriptionButton, { color: WHITE}]}>Update Profile</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
