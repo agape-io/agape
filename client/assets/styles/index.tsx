@@ -492,7 +492,8 @@ export default StyleSheet.create({
     textDescription: {
         fontSize: 15,
         margin: 1,
-        paddingTop: 5
+        paddingTop: 5,
+        paddingBottom: 5
     },
     addRadioButton: {
         backgroundColor: PRIMARY_COLOR
@@ -510,7 +511,7 @@ export default StyleSheet.create({
         color: SECONDARY_COLOR,
     },
     textSubscriptionButton: {
-        color: SECONDARY_COLOR
+        color: 'white'
     },
     addSubscriptionButtonContainer: {
         flex: 1,

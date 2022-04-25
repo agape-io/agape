@@ -15,9 +15,7 @@ import {
   ScrollView,
   Alert
 } from 'react-native';
-import { RadioButton } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import { SubscriptionItem } from './index';
 import { ProfileModalProps } from '../types';
 import { useAuth } from '../context';
@@ -168,7 +166,6 @@ const SubscriptionModal: FC<ProfileModalProps> = ({navigation}) => {
           </>
         )}
       </View>
-
       <View style={styles.addSubscriptionButtonContainer}>
           {/* Subscription button */}
           <TouchableOpacity
